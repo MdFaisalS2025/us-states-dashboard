@@ -71,7 +71,7 @@ GitHub Pages:
 
 
 Visit your site at:
-https://github.com/MdFaisalS2025/us-states-dashboard
+http://myweb.usf.edu/~sindhi/us-states-dashboard/index.html
 
 👥 Team & Roles
 Member	Role	Contributions
