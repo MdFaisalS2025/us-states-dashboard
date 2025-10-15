@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chatbot • US States</title>
+
+  <!-- Bootstrap + your styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+
+  <!-- Accessibility / PWA niceties -->
+  <meta name="theme-color" content="#0d6efd">
+  <meta name="description" content="StateBot answers questions about U.S. states using a Botpress table-backed knowledge base." />
+</head>
+<body>
+  <header class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h3 mb-0" id="page-title">StateBot (Botpress)</h1>
+      <nav aria-label="Utility">
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-secondary btn-sm" href="index.html" aria-label="Go to Home page">Home</a>
+          <a class="btn btn-outline-secondary btn-sm" href="data.html" aria-label="Open Charts page">Charts</a>
+          <button id="toggleTheme" class="btn btn-outline-secondary btn-sm" type="button" aria-pressed="false">🌙 Dark</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container pb-5" aria-labelledby="page-title">
+    <section class="card rounded-4 shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">About this bot</h2>
+        <p class="text-body-secondary mb-2">
+          <strong>StateBot</strong> is powered by a Botpress <em>Table</em> and <em>Knowledge Base</em>.
+          It can answer questions about selected U.S. states, including
+          <span class="text-nowrap">capital</span>, <span class="text-nowrap">region</span>,
+          population, GDP, and area.
+        </p>
+        <ul class="small mb-0">
+          <li>Dataset: 10–12 states with columns — <code>State_ID</code>, <code>State_Name</code>, <code>Capital</code>, <code>Region</code>, <code>Population_Million</code>, <code>GDP_Billion</code>, <code>Area_sqmi</code>.</li>
+          <li>Workflow: <em>Start</em> → <em>Autonomous</em> with <em>Search Knowledge</em> enabled.</li>
+          <li>Try: “Which state has the largest GDP?”, “What is the capital of Texas?”, “Which region is Florida in?”</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
+<script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+  <!-- Bootstrap bundle + your app scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/app.js"></script>
+
+  <!-- Fallback for users with JS disabled -->
+  <noscript>
+    <div class="container py-3">
+      <div class="alert alert-warning rounded-4" role="alert">
+        JavaScript is disabled, so the chatbot cannot load. Please enable JavaScript to use StateBot.
+      </div>
+    </div>
+  </noscript>
+</body>
+</html>

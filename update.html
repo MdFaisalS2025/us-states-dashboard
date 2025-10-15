@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Update State • US States</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Update State</h2>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary btn-sm" href="index.html">Home</a>
+        <a class="btn btn-outline-secondary btn-sm" href="read.html">Read</a>
+        <a class="btn btn-outline-secondary btn-sm" href="delete.html">Delete</a>
+        <button id="toggleTheme" class="btn btn-outline-secondary btn-sm">🌙 Dark</button>
+      </div>
+    </div>
+
+    <div class="card rounded-4 shadow-sm">
+      <div class="card-body">
+        <form id="updateForm" class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">State ID</label>
+            <input type="text" class="form-control" id="id" maxlength="2" placeholder="e.g., FL" required />
+          </div>
+          <div class="col-md-9 d-flex align-items-end">
+            <button type="button" class="btn btn-outline-primary me-2" id="load">Load</button>
+            <span class="small text-body-secondary">Enter an existing ID and click Load to populate fields.</span>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" required />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Region</label>
+            <select class="form-select" id="region" required>
+              <option>West</option>
+              <option>Midwest</option>
+              <option>South</option>
+              <option>Northeast</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Capital</label>
+            <input type="text" class="form-control" id="capital" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Population</label>
+            <input type="number" class="form-control" id="population" min="0" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">GDP (billions)</label>
+            <input type="number" class="form-control" id="gdp" min="0" step="0.1" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Area (sq mi)</label>
+            <input type="number" class="form-control" id="area" min="0" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Cities Count</label>
+            <input type="number" class="form-control" id="citiesCount" min="0" required />
+          </div>
+
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    document.getElementById('load').onclick = () => {
+      const id = document.getElementById('id').value.trim().toUpperCase();
+      const s = getState(id);
+      if (!s) return alert('State not found');
+      setFormValues(s);
+    };
+
+    document.getElementById('updateForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const s = collectFormValues();
+      try {
+        updateState(s);
+        alert('State updated!');
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>
