@@ -4,7 +4,7 @@
   const btns = () => document.querySelectorAll('#toggleTheme');
   const apply = (on) => {
     document.documentElement.classList.toggle('dark', on);
-    btns().forEach(b => b.textContent = on ? '☀️ Light' : '🌙 Dark');
+    btns().forEach(b => b.textContent = on ? ' Light' : ' Dark');
     localStorage.setItem(key, on ? '1' : '0');
   };
   const saved = localStorage.getItem(key) === '1';
