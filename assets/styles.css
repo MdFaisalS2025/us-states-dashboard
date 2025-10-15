@@ -1,0 +1,117 @@
+/* ------------------------------
+   Global Variables
+------------------------------ */
+:root {
+  --radius: 1.2rem;
+}
+
+/* ------------------------------
+   Dark Theme
+------------------------------ */
+html.dark body {
+  background: #0f1115;
+  color: #e7e9ee;
+}
+
+html.dark .card {
+  background: #161a22;
+  color: #e7e9ee;
+}
+
+html.dark .table {
+  color: #e7e9ee;
+}
+
+html.dark .table thead {
+  background: #1e2430;
+}
+
+html.dark .navbar,
+html.dark .bg-body-tertiary {
+  background: #12151b !important;
+}
+
+/* ------------------------------
+   Subtle Gradient Hero Background
+------------------------------ */
+.bg-gradient {
+  background:
+    radial-gradient(1200px 600px at 20% 20%, #cfe2ff 0%, transparent 60%),
+    linear-gradient(180deg, #ffffff, #f8f9fa);
+}
+
+html.dark .bg-gradient {
+  background:
+    radial-gradient(1200px 600px at 20% 20%, #203354 0%, transparent 60%),
+    linear-gradient(180deg, #0f1115, #0f1115);
+}
+
+/* ------------------------------
+   Glass Effect Cards
+------------------------------ */
+.glass-card {
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+html.dark .glass-card {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ------------------------------
+   Hero Blob Accent
+------------------------------ */
+.hero-blob {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    600px 300px at 80% 20%,
+    rgba(13, 110, 253, 0.15),
+    transparent 60%
+  );
+}
+
+/* ------------------------------
+   Cards & Buttons
+------------------------------ */
+.card {
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .btn {
+  border-radius: 0.6rem;
+}
+
+/* ------------------------------
+   Table Tweaks
+------------------------------ */
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+/* ------------------------------
+   Smooth Fade-in Animation
+------------------------------ */
+body {
+  animation: fade 0.3s ease-out;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
