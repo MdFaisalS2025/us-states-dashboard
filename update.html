@@ -2,101 +2,132 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Update State • US States</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Update State • US States Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-  <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Update State</h2>
-      <div class="d-flex gap-2">
-        <a class="btn btn-outline-secondary btn-sm" href="index.html">Home</a>
-        <a class="btn btn-outline-secondary btn-sm" href="read.html">Read</a>
-        <a class="btn btn-outline-secondary btn-sm" href="delete.html">Delete</a>
-        <button id="toggleTheme" class="btn btn-outline-secondary btn-sm"> Dark</button>
+
+  <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-sm border-bottom">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">US States Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav5">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav5">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="data.html">Data & Charts</a></li>
+          <li class="nav-item"><a class="nav-link" href="read.html">Data Table</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#">CRUD</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="create.html">Create</a></li>
+              <li><a class="dropdown-item active" href="update.html">Update</a></li>
+              <li><a class="dropdown-item" href="delete.html">Delete</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="mybot.html">Chatbot</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About / ERD</a></li>
+        </ul>
+
+        <button id="toggleTheme" class="btn btn-outline-secondary btn-sm">🌙 Dark</button>
       </div>
     </div>
+  </nav>
 
-    <div class="card rounded-4 shadow-sm">
-      <div class="card-body">
-        <form id="updateForm" class="row g-3">
-          <div class="col-md-3">
-            <label class="form-label">State ID</label>
-            <input type="text" class="form-control" id="id" maxlength="2" placeholder="e.g., FL" required />
-          </div>
-          <div class="col-md-9 d-flex align-items-end">
-            <button type="button" class="btn btn-outline-primary me-2" id="load">Load</button>
-            <span class="small text-body-secondary">Enter an existing ID and click Load to populate fields.</span>
-          </div>
+  <main class="py-5">
+    <div class="container" style="max-width:760px;">
+      <h2 class="h4 fw-bold mb-3">Update Existing State</h2>
+      <p class="small-muted mb-4">
+        Step 1: Enter the state ID and click "Load State".<br>
+        Step 2: Edit fields and click "Save Changes".
+      </p>
 
+      <div class="card rounded-4 shadow-sm p-4 mb-4">
+        <div class="row g-3 align-items-end">
           <div class="col-md-4">
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" required />
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">Region</label>
-            <select class="form-select" id="region" required>
-              <option>West</option>
-              <option>Midwest</option>
-              <option>South</option>
-              <option>Northeast</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">Capital</label>
-            <input type="text" class="form-control" id="capital" required />
+            <label class="form-label small">State ID</label>
+            <input id="upd_id" class="form-control form-control-sm" placeholder="CA">
           </div>
           <div class="col-md-4">
-            <label class="form-label">Population</label>
-            <input type="number" class="form-control" id="population" min="0" required />
+            <button id="loadForEdit" class="btn btn-outline-primary btn-sm w-100">Load State</button>
           </div>
-          <div class="col-md-4">
-            <label class="form-label">GDP (billions)</label>
-            <input type="number" class="form-control" id="gdp" min="0" step="0.1" required />
+          <div class="col-md-4 text-md-end">
+            <a class="btn btn-outline-secondary btn-sm w-100" href="read.html">Back to Table</a>
           </div>
-          <div class="col-md-4">
-            <label class="form-label">Area (sq mi)</label>
-            <input type="number" class="form-control" id="area" min="0" required />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">Cities Count</label>
-            <input type="number" class="form-control" id="citiesCount" min="0" required />
+        </div>
+      </div>
+
+      <div class="card rounded-4 shadow-sm p-4">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label small">Name</label>
+            <input id="upd_name" class="form-control form-control-sm" placeholder="California">
           </div>
 
-          <div class="col-12">
-            <button class="btn btn-primary" type="submit">Update</button>
+          <div class="col-md-6">
+            <label class="form-label small">Region</label>
+            <input id="upd_region" class="form-control form-control-sm" placeholder="West">
           </div>
-        </form>
+
+          <div class="col-md-6">
+            <label class="form-label small">Capital</label>
+            <input id="upd_capital" class="form-control form-control-sm" placeholder="Sacramento">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small">Population</label>
+            <input id="upd_population" type="number" class="form-control form-control-sm" placeholder="39237836">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small">GDP (Billions USD)</label>
+            <input id="upd_gdp" type="number" class="form-control form-control-sm" placeholder="3500">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small">Area (sq mi)</label>
+            <input id="upd_area" type="number" class="form-control form-control-sm" placeholder="163695">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small"># of Cities</label>
+            <input id="upd_citiesCount" type="number" class="form-control form-control-sm" placeholder="482">
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+          <button id="saveEdit" class="btn btn-primary btn-sm">Save Changes</button>
+          <a class="btn btn-outline-secondary btn-sm" href="read.html">Done</a>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
+  <footer class="py-4 border-top">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+      <div class="small-muted">© 2025 U.S. States Data Dashboard</div>
+      <div class="small-muted"><a href="read.html">View Data</a></div>
+    </div>
+  </footer>
+
+  <!-- scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/app.js"></script>
-  <script>
-    document.getElementById('load').onclick = () => {
-      const id = document.getElementById('id').value.trim().toUpperCase();
-      const s = getState(id);
-      if (!s) return alert('State not found');
-      setFormValues(s);
-    };
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    document.getElementById('updateForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const s = collectFormValues();
-      try {
-        updateState(s);
-        alert('State updated!');
-      } catch (err) {
-        alert(err.message);
-      }
-    });
+  <script src="assets/model.js"></script>
+  <script src="assets/controller.js"></script>
+  <script src="assets/charts.js"></script>
+  <script src="assets/api.js"></script>
+  <script src="assets/app.js"></script>
+
+  <script>
+    initUpdatePage();
   </script>
 
-<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-<script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
-
+  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
+  <script src="https://files.bpcontent.cloud/YOUR-BOTPRESS-CONFIG.js" defer></script>
 </body>
 </html>
