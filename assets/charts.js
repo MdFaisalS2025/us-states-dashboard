@@ -1,121 +1,80 @@
-// Build charts from the shared store
-(function(){
-  if (typeof Chart === 'undefined') return; // Only on data.html
+// assets/charts.js
+// VIEW LAYER: Chart rendering using Chart.js
 
-  const ctxBar = document.getElementById('barPop');
-  const ctxDoughnut = document.getElementById('doughnutGDP');
-  const ctxLine = document.getElementById('lineTrend');
+let gdpChart;
+let populationChart;
+let areaChart;
 
-  const paletteLight = [
-    '#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#edc949','#af7aa1','#ff9da7','#9c755f','#bab0ab'
-  ];
-  const paletteDark = [
-    '#8ab4f8','#f6bf26','#f28b82','#80cbc4','#81c995','#fde293','#c58af9','#faa7b6','#d7ccc8','#e8eaed'
-  ];
+function refreshCharts() {
+  const data = StateDataService.getAll();
 
-  function isDark(){ return document.documentElement.classList.contains('dark'); }
-  function colors(){ return isDark() ? paletteDark : paletteLight; }
+  const labels = data.map(s => s.name);
+  const gdpData = data.map(s => s.gdp);
+  const popData = data.map(s => s.population);
+  const areaData = data.map(s => s.area);
 
-  function buildBar(){
-    const top = getStates().slice().sort((a,b)=>b.population-a.population).slice(0,10);
-    return new Chart(ctxBar, {
+  // GDP BAR
+  const gdpCtx = document.getElementById('gdpChart');
+  if (gdpCtx) {
+    if (gdpChart) gdpChart.destroy();
+    gdpChart = new Chart(gdpCtx, {
       type: 'bar',
       data: {
-        labels: top.map(s=>s.name),
+        labels,
         datasets: [{
-          label: 'Population',
-          data: top.map(s=>s.population),
-          backgroundColor: colors(),
-          borderRadius: 12,
+          label: 'GDP (Billions USD)',
+          data: gdpData
         }]
       },
       options: {
         responsive: true,
-        plugins: {
-          tooltip: { mode:'index', intersect:false },
-          legend: { display:false },
-          title: { display:false }
-        },
-        scales: {
-          y: { ticks: { callback: v => v.toLocaleString() }, grid: { drawBorder:false } },
-          x: { grid: { display:false } }
-        }
+        plugins: { legend: { display: true } },
+        scales: { y: { beginAtZero: true } }
       }
     });
   }
 
-  function buildDoughnut(){
-    const groups = {};
-    for (const s of getStates()) groups[s.region] = (groups[s.region]||0) + s.gdp;
-    const labels = Object.keys(groups);
-    const data = Object.values(groups);
-    return new Chart(ctxDoughnut, {
-      type: 'doughnut',
-      data: { labels, datasets: [{ data, backgroundColor: colors() }] },
-      options: {
-        cutout: '60%',
-        plugins: {
-          legend: { position:'bottom' },
-          tooltip: { callbacks: { label: (ctx)=> `${ctx.label}: ${ctx.raw.toLocaleString()} B` } }
-        }
-      }
-    });
-  }
-
-  function buildLine(){
-    // Dummy trend series for FL and TX
-    const years = [2019,2020,2021,2022,2023,2024,2025];
-    const flBase = getState('FL').gdp;
-    const txBase = getState('TX').gdp;
-    const jitter = (base, i) => Math.round(base * (0.85 + 0.05*i + (Math.random()*0.04-0.02)));
-
-    return new Chart(ctxLine, {
-      type: 'line',
+  // POPULATION PIE
+  const popCtx = document.getElementById('populationChart');
+  if (popCtx) {
+    if (populationChart) populationChart.destroy();
+    populationChart = new Chart(popCtx, {
+      type: 'pie',
       data: {
-        labels: years,
-        datasets: [
-          {
-            label: 'Florida GDP (B)',
-            data: years.map((_,i)=> jitter(flBase, i)/1),
-            tension: 0.35,
-            fill: false,
-          },
-          {
-            label: 'Texas GDP (B)',
-            data: years.map((_,i)=> jitter(txBase, i)/1),
-            tension: 0.35,
-            fill: false,
-          }
-        ]
+        labels,
+        datasets: [{
+          label: 'Population',
+          data: popData
+        }]
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { position:'bottom' },
-        },
-        scales: {
-          y: { grid: { drawBorder:false } },
-          x: { grid: { display:false } }
-        }
+        plugins: { legend: { position: 'bottom' } }
       }
     });
   }
 
-  let bar, doughnut, line;
-  function renderAll(){
-    if (!ctxBar || !ctxDoughnut || !ctxLine) return;
-    if (bar) bar.destroy(); if (doughnut) doughnut.destroy(); if (line) line.destroy();
-    bar = buildBar();
-    doughnut = buildDoughnut();
-    line = buildLine();
+  // AREA LINE
+  const areaCtx = document.getElementById('areaChart');
+  if (areaCtx) {
+    if (areaChart) areaChart.destroy();
+    areaChart = new Chart(areaCtx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Area (sq mi)',
+          data: areaData,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: true } }
+      }
+    });
   }
+}
 
-  // Initial render
-  renderAll();
-
-  // Re-render when theme toggles or user clicks refresh
-  document.addEventListener('click', (e)=>{
-    if (e.target && e.target.id === 'toggleTheme') setTimeout(renderAll, 50);
-    if (e.target && e.target.id === 'refreshCharts') renderAll();
-  });
-})();
+// expose globally
+window.refreshCharts = refreshCharts;
