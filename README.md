@@ -1,80 +1,74 @@
-🗺️ US States Data Dashboard
+# U.S. States Data Dashboard
 
-Course: ISM 6225 — Application Development for Analytics
-Team: Mohamed Faisal Sindhi · Hongxu Yang · Jonathan James
+## Overview
+U.S. States Data Dashboard is a fully client-side web application built for ISM 6225 (Application Development for Analytics). It allows users to view and manage state-level data (population, GDP, area, etc.), visualize trends using Chart.js, and interact with an AI chatbot powered by Botpress.
 
-📘 Overview
+This project is designed around:
+- MVC architecture
+- Persistent localStorage data
+- CRUD operations
+- External API read-only integration
+- Azure deployment
 
-The US States Data Dashboard is a static, front-end web application built with HTML, CSS, JavaScript, and Bootstrap 5.
-It allows users to explore U.S. state-level data interactively with integrated CRUD operations, data visualizations, and a chatbot powered by Botpress.
+## Features
+- Responsive Bootstrap 5 UI with dark mode toggle
+- CRUD pages (Create / Read / Update / Delete)
+- State data persisted in the browser using a singleton-style Model service
+- Chart.js visualizations for GDP, population share, and land area
+- Botpress chatbot (StateBot) using our dataset as a knowledge base
+- “External insight” panel powered by an API fetch (read-only)
+- About Us page with ERD diagram and team roles
 
-This project demonstrates core web-development and data-analytics integration concepts, including front-end data storage, visualization, and intelligent user interaction.
+## Architecture (MVC)
+**Model:**  
+`assets/model.js` exposes `StateDataService`, which manages all state data. Data is stored in `localStorage`, so it persists across refreshes.
 
-✨ Features
+**View:**  
+HTML pages plus render helpers.  
+- `read.html` renders a table of states.  
+- `data.html` renders three charts using Chart.js.  
+- The layout is styled with `assets/styles.css`.
 
-Bootstrap 5 + Custom CSS — Clean, responsive UI with light/dark theme toggle
-CRUD Functionality — Create, Read, Update, and Delete state data using localStorage
-Chart.js Visualizations — Interactive charts showing population, GDP, and area comparisons
-Botpress Chatbot — “StateBot” answers natural-language questions about U.S. states
-Logical Data Model — Two one-to-many relationships (Region → State, State → City)
-Dark Mode Support — Persistent user theme stored locally
-Logical Data Model
+**Controller:**  
+`assets/controller.js` wires user actions (form submits, edit, delete) to the model and then updates the tables/charts. For example:
+- `initCreatePage()` handles adding a new state
+- `initUpdatePage()` loads and saves edits
+- `initDeletePage()` removes a state
+- `refreshReadTable()` rebuilds the table dynamically
 
-The project follows a simple hierarchical model:
+**charts.js** regenerates the charts based on the latest data in `StateDataService`.
 
-Region (1) ────< State (∞) ────< City (∞)
+## Data Model / ERD
+We model:
+- Region → State (1-to-many)
+- State → City (1-to-many)
 
+In the prototype, each `State` record includes:
+- id (PK / state code)
+- name
+- region (FK to Region)
+- capital
+- population
+- gdp
+- area
+- citiesCount (summary of how many cities)
 
-Keys:
+In the About page, we display the ERD and explain how this would map to a relational database in a production environment.
 
-Region_ID → PK
-State_ID → PK, Region_ID → FK
-City_ID → PK, State_ID → FK
+## API Integration
+The dashboard uses a read-only API fetch (see `assets/api.js`) to display a supplemental insight card. This satisfies the “API Integration” rubric requirement: external facts are fetched and displayed, but not used as the persistent data store.
 
-<img src="assets/logical_data_model_v2.png" width="600" alt="Logical Data Model">
+## Deployment
+This project is intended to be deployed on Azure as a static web app:
+- All code is client-side (HTML, CSS, JS)
+- No server runtime required
+- Chatbot embed runs from Botpress Cloud
+- localStorage ensures state CRUD persistence per user session
 
-🧠 Chatbot Integration (StateBot)
+## Contributors
+- Mohamed Faisal Sindhi — Frontend structure, integration, hosting, chatbot
+- Hongxu Yang — Visual design, dark mode, responsive CSS, ERD diagram
+- Jonathan James — CRUD logic, Chart.js visualizations, controller wiring, localStorage model
 
-Built using Botpress Cloud
-Uses a Botpress Table as a knowledge base with ≥10 U.S. states
-Columns: State_ID, State_Name, Capital, Region, Population_Million, GDP_Billion, Area_sqmi
-Answers sample queries like:
-“Which state has the largest GDP?”
-“What is the capital of Texas?”
-“Which region is Florida in?”
-
-🧮 Technologies Used
-Category	Tools / Frameworks
-Frontend	HTML5, CSS3, JavaScript
-Framework	Bootstrap 5
-Charts	Chart.js
-Data Storage	localStorage
-Chatbot	Botpress Cloud
-Deployment	GitHub Pages / USF MyWeb
-💻 Run Locally
-
-Clone the repository:
-
-git clone https://github.com/MdFaisalS2025/us-states-dashboard.git
-cd us-states-dashboard
-
-
-Open index.html in your browser.
-(No server or build step required — fully static)
-
-🚀 Deploy
-
-USF MyWeb: Upload the project folder to
-~/public_html/us-states-dashboard/ using Cyberduck.
-
-GitHub Pages:
-
-
-Visit your site at:
-http://myweb.usf.edu/~sindhi/us-states-dashboard/index.html
-
-👥 Team & Roles
-Member	Role	Contributions
-Mohamed Faisal Sindhi - Frontend & Integration	HTML structure, Botpress embedding, layout design
-Hongxu Yang - CSS & Styling	Theme system, responsive styles, color palette
-Jonathan James - JavaScript Developer	CRUD logic, Chart.js implementation, localStorage functions
+## Notes
+This project went through an iterative Git process, including multiple branches and corrected repos. We resolved merge conflicts, enforced branch protection for `main`, and used feature branches for CSS, JS, and Botpress integration. This taught us proper collaboration workflows and version control discipline.

@@ -2,89 +2,117 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Create State • US States</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create State • US States Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-  <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Create State</h2>
-      <div class="d-flex gap-2">
-        <a class="btn btn-outline-secondary btn-sm" href="index.html">Home</a>
-        <a class="btn btn-outline-secondary btn-sm" href="read.html">Read</a>
-        <button id="toggleTheme" class="btn btn-outline-secondary btn-sm"> Dark</button>
+
+  <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top shadow-sm border-bottom">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">US States Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav4">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav4">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="data.html">Data & Charts</a></li>
+          <li class="nav-item"><a class="nav-link" href="read.html">Data Table</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#">CRUD</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item active" href="create.html">Create</a></li>
+              <li><a class="dropdown-item" href="update.html">Update</a></li>
+              <li><a class="dropdown-item" href="delete.html">Delete</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="mybot.html">Chatbot</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About / ERD</a></li>
+        </ul>
+
+        <button id="toggleTheme" class="btn btn-outline-secondary btn-sm">🌙 Dark</button>
       </div>
     </div>
+  </nav>
 
-    <div class="card rounded-4 shadow-sm">
-      <div class="card-body">
-        <form id="createForm" class="row g-3">
-          <div class="col-md-2">
-            <label class="form-label">State ID (e.g., FL)</label>
-            <input type="text" class="form-control" id="id" maxlength="2" required />
-          </div>
+  <main class="py-5">
+    <div class="container" style="max-width:700px;">
+      <h2 class="h4 fw-bold mb-3">Create New State</h2>
+      <p class="small-muted mb-4">
+        Add a new state record. The ID should be the 2-letter postal code (example: CA).
+      </p>
+
+      <form id="createForm" class="card rounded-4 p-4 p-md-5 shadow-sm">
+        <div class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" required />
+            <label class="form-label small">State ID</label>
+            <input id="id" class="form-control form-control-sm" required placeholder="CA">
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Region</label>
-            <select class="form-select" id="region" required>
-              <option value="">Choose...</option>
-              <option>West</option>
-              <option>Midwest</option>
-              <option>South</option>
-              <option>Northeast</option>
-            </select>
+          <div class="col-md-8">
+            <label class="form-label small">Name</label>
+            <input id="name" class="form-control form-control-sm" required placeholder="California">
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Capital</label>
-            <input type="text" class="form-control" id="capital" required />
+
+          <div class="col-md-6">
+            <label class="form-label small">Region</label>
+            <input id="region" class="form-control form-control-sm" required placeholder="West">
           </div>
-          <div class="col-md-4">
-            <label class="form-label">Population</label>
-            <input type="number" class="form-control" id="population" min="0" required />
+          <div class="col-md-6">
+            <label class="form-label small">Capital</label>
+            <input id="capital" class="form-control form-control-sm" required placeholder="Sacramento">
           </div>
-          <div class="col-md-4">
-            <label class="form-label">GDP (billions)</label>
-            <input type="number" class="form-control" id="gdp" min="0" step="0.1" required />
+
+          <div class="col-md-6">
+            <label class="form-label small">Population</label>
+            <input id="population" type="number" class="form-control form-control-sm" required placeholder="39237836">
           </div>
-          <div class="col-md-4">
-            <label class="form-label">Area (sq mi)</label>
-            <input type="number" class="form-control" id="area" min="0" required />
+          <div class="col-md-6">
+            <label class="form-label small">GDP (Billions USD)</label>
+            <input id="gdp" type="number" class="form-control form-control-sm" required placeholder="3500">
           </div>
-          <div class="col-md-4">
-            <label class="form-label">Cities Count</label>
-            <input type="number" class="form-control" id="citiesCount" min="0" required />
+
+          <div class="col-md-6">
+            <label class="form-label small">Area (sq mi)</label>
+            <input id="area" type="number" class="form-control form-control-sm" required placeholder="163695">
           </div>
-          <div class="col-12">
-            <button class="btn btn-primary" type="submit">Create</button>
+          <div class="col-md-6">
+            <label class="form-label small"># of Cities</label>
+            <input id="citiesCount" type="number" class="form-control form-control-sm" required placeholder="482">
           </div>
-        </form>
-      </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+          <button class="btn btn-primary btn-sm" type="submit">Save State</button>
+          <a class="btn btn-outline-secondary btn-sm" href="read.html">Back to Table</a>
+        </div>
+      </form>
     </div>
-  </div>
+  </main>
 
+  <footer class="py-4 border-top">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+      <div class="small-muted">© 2025 U.S. States Data Dashboard</div>
+      <div class="small-muted"><a href="read.html">View Data</a></div>
+    </div>
+  </footer>
+
+  <!-- scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script src="assets/model.js"></script>
+  <script src="assets/controller.js"></script>
+  <script src="assets/charts.js"></script>
+  <script src="assets/api.js"></script>
   <script src="assets/app.js"></script>
+
   <script>
-    document.getElementById('createForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const state = collectFormValues();
-      try {
-        addState(state);
-        alert('State created!');
-        e.target.reset();
-      } catch (err) {
-        alert(err.message);
-      }
-    });
+    initCreatePage();
   </script>
 
-<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-<script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
-
+  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
+  <script src="https://files.bpcontent.cloud/YOUR-BOTPRESS-CONFIG.js" defer></script>
 </body>
 </html>
