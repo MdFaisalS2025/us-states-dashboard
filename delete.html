@@ -1,76 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Delete State — US States Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="assets/styles.css" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Delete — US States</title>
+  <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="index.html">US States Dashboard</a>
-      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navBar"><span class="navbar-toggler-icon"></span></button>
-      <div id="navBar" class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="read.html">Data Table</a></li>
-          <li class="nav-item"><a class="nav-link" href="create.html">Create</a></li>
-          <li class="nav-item"><a class="nav-link" href="update.html">Update</a></li>
-          <li class="nav-item"><a class="nav-link active" href="delete.html">Delete</a></li>
-          <li class="nav-item"><a class="nav-link" href="data.html">Charts</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-        </ul>
-        <a class="btn btn-outline-light btn-sm" href="read.html">Back</a>
+<header class="nav">
+  <div><strong>US States Dashboard</strong></div>
+  <nav class="right">
+    <a href="read.html">Data Table</a>
+    <a href="create.html">Create</a>
+    <a href="update.html">Update</a>
+    <a href="delete.html">Delete</a>
+    <a href="data.html">Charts</a>
+    <a class="btn btn-ghost" href="index.html">Back</a>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="panel">
+    <h2 style="margin:0 0 6px">Delete a State</h2>
+    <p class="muted" style="margin-top:0">This action cannot be undone.</p>
+
+    <div class="row">
+      <div class="field">
+        <label class="muted">Choose by ID</label>
+        <select id="idSelect"></select>
+      </div>
+      <div class="field">
+        <label class="muted">Or enter ID manually</label>
+        <input id="idInput" placeholder="e.g., CA"/>
       </div>
     </div>
-  </nav>
 
-  <main class="container py-4">
-    <div class="card p-4">
-      <h4 class="mb-3">Delete a State</h4>
-      <p class="text-warning">This action cannot be undone.</p>
+    <div id="preview" class="card muted" style="margin:12px 0;padding:14px">You are about to delete: Select a record below.</div>
 
-      <form id="deleteForm" class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Choose by ID</label>
-          <select id="idSelect" name="id" class="form-select"></select>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Or enter ID manually</label>
-          <input class="form-control" name="id" placeholder="CA"/>
-        </div>
-
-        <div class="col-12">
-          <div class="alert alert-dark mb-0">
-            You are about to delete: <strong id="deletePreview">Select a record below.</strong>
-          </div>
-        </div>
-
-        <div class="col-12 d-flex gap-2">
-          <button class="btn btn-danger" type="submit">Delete</button>
-          <a class="btn btn-outline-light" href="read.html">Cancel</a>
-        </div>
-      </form>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-danger" id="btnDelete">Delete</button>
+      <a class="btn" href="read.html">Cancel</a>
     </div>
-  </main>
+  </div>
 
-  <footer class="container py-4">
-    <div class="d-flex justify-content-between">
-      <span>© 2025 US States Dashboard</span>
-      <span class="text-muted-2">Delete (CRUD D)</span>
-    </div>
-  </footer>
+  <p class="muted" style="margin-top:12px;text-align:right">Delete (CRUD D)</p>
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
-  <script type="module">
-    import { initDeletePage } from "./assets/controller.js";
-    import "./assets/model.js";
-    initDeletePage();
-  </script>
+<footer class="footer">© 2025 US States Dashboard</footer>
 
-  <!-- Botpress -->
-  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+<script src="assets/utils.js"></script>
+<script src="assets/model.js"></script>
+<script>
+  const fmt = (n)=>Number(n||0).toLocaleString('en-US');
+
+  // Robustly pick whichever store object your app exposes
+  const Store = (window.StateStore || window.App?.StateStore || window.Model);
+
+  function getAllStates(){
+    if (Store?.getAll) return Store.getAll();
+    // fallback: try common key used earlier
+    const pack = JSON.parse(localStorage.getItem('US_STATES_DB_V3')||'{"states":[]}');
+    return Array.isArray(pack.states) ? pack.states : (Array.isArray(pack) ? pack : []);
+  }
+  function setAllStates(arr){
+    if (Store?.setAll) return Store.setAll(arr);
+    localStorage.setItem('US_STATES_DB_V3', JSON.stringify({states:arr}));
+  }
+
+  const idSel = document.getElementById('idSelect');
+  const idIn  = document.getElementById('idInput');
+  const prev  = document.getElementById('preview');
+
+  let STATES = getAllStates();
+
+  function fillSelect(){
+    idSel.innerHTML = '<option value="">— Select —</option>' +
+      STATES.map(s=>`<option value="${s.id}">${s.id} — ${s.name}</option>`).join('');
+  }
+
+  function findById(id){
+    return STATES.find(s => String(s.id).toUpperCase() === String(id).toUpperCase());
+  }
+
+  function updatePreview(id){
+    const s = findById(id);
+    if(!s){ prev.innerHTML = 'You are about to delete: Select a record below.'; return; }
+    prev.innerHTML = `
+      <strong>${s.name}</strong> (${s.id}) — Capital: ${s.capital || '—'}<br/>
+      Population: ${fmt(s.population)} | GDP: $${fmt(s.gdp)} | Area: ${fmt(s.land_area)} km² | Cities: ${fmt(s.cities)}
+    `;
+  }
+
+  idSel.addEventListener('change', e=>{
+    idIn.value = e.target.value;
+    updatePreview(e.target.value);
+  });
+  idIn.addEventListener('input', e=> updatePreview(e.target.value));
+
+  document.getElementById('btnDelete').addEventListener('click', ()=>{
+    const id = (idIn.value || idSel.value || '').trim();
+    if(!id){ alert('Choose or enter an ID to delete.'); return; }
+    const s = findById(id);
+    if(!s){ alert('ID not found.'); return; }
+    if(!confirm(`Delete ${s.name} (${s.id})? This cannot be undone.`)) return;
+
+    STATES = STATES.filter(x => String(x.id).toUpperCase() !== String(id).toUpperCase());
+    setAllStates(STATES);
+    fillSelect();
+    updatePreview('');
+    alert('Deleted successfully.');
+    // return user to table
+    location.href = 'read.html';
+  });
+
+  // Deep-link support ?id=CA
+  const params = new URLSearchParams(location.search);
+  const preId = params.get('id');
+  fillSelect();
+  if(preId){
+    idSel.value = preId;
+    idIn.value = preId;
+    updatePreview(preId);
+  }
+</script>
+
+<!-- bot -->
+<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
+<script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
 </html>
