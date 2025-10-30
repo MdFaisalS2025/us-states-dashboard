@@ -1,80 +1,80 @@
-// assets/charts.js
-// VIEW LAYER: Chart rendering using Chart.js
+import { DB } from "./model.js";
+import { fmtNumber, fmtCurrency } from "./utils.js";
 
-let gdpChart;
-let populationChart;
-let areaChart;
+// Chart.js v4 required via CDN in pages
 
-function refreshCharts() {
-  const data = StateDataService.getAll();
+let chartPop, chartGDP, chartArea;
 
-  const labels = data.map(s => s.name);
-  const gdpData = data.map(s => s.gdp);
-  const popData = data.map(s => s.population);
-  const areaData = data.map(s => s.area);
-
-  // GDP BAR
-  const gdpCtx = document.getElementById('gdpChart');
-  if (gdpCtx) {
-    if (gdpChart) gdpChart.destroy();
-    gdpChart = new Chart(gdpCtx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          label: 'GDP (Billions USD)',
-          data: gdpData
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: true } },
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-  }
-
-  // POPULATION PIE
-  const popCtx = document.getElementById('populationChart');
-  if (popCtx) {
-    if (populationChart) populationChart.destroy();
-    populationChart = new Chart(popCtx, {
-      type: 'pie',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Population',
-          data: popData
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } }
-      }
-    });
-  }
-
-  // AREA LINE
-  const areaCtx = document.getElementById('areaChart');
-  if (areaCtx) {
-    if (areaChart) areaChart.destroy();
-    areaChart = new Chart(areaCtx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Area (sq mi)',
-          data: areaData,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: true } }
-      }
-    });
-  }
+function makeChart(ctx, type, data, options){
+  return new Chart(ctx, { type, data, options });
 }
 
-// expose globally
-window.refreshCharts = refreshCharts;
+export function destroyCharts(){
+  [chartPop, chartGDP, chartArea].forEach(c => c && c.destroy());
+}
+
+export function renderAllCharts(){
+  destroyCharts();
+  const states = DB.listStates();
+
+  // Population share (doughnut)
+  const topPop = [...states].sort((a,b)=>b.population-a.population).slice(0,6);
+  chartPop = makeChart(
+    document.getElementById("chartPopulation"),
+    "doughnut",
+    {
+      labels: topPop.map(s=>s.name),
+      datasets: [{ data: topPop.map(s=>s.population) }]
+    },
+    {
+      plugins: {
+        legend: { position: "bottom", labels: { color: "#e6ecf2" } },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${fmtNumber(ctx.parsed)} people` } }
+      }
+    }
+  );
+
+  // GDP bar
+  const topGDP = [...states].sort((a,b)=>b.gdp-a.gdp).slice(0,8);
+  chartGDP = makeChart(
+    document.getElementById("chartGDP"),
+    "bar",
+    {
+      labels: topGDP.map(s=>s.name),
+      datasets: [{ label: "GDP", data: topGDP.map(s=>s.gdp) }]
+    },
+    {
+      scales: {
+        x: { ticks: { color: "#9fb1c5" } },
+        y: { ticks: { color: "#9fb1c5", callback: v => `$${Number(v).toLocaleString()}` } }
+      },
+      plugins: { legend: { labels: { color: "#e6ecf2" } } }
+    }
+  );
+
+  // Area line
+  const sortedArea = [...states].sort((a,b)=>b.area-a.area).slice(0,10);
+  chartArea = makeChart(
+    document.getElementById("chartArea"),
+    "line",
+    {
+      labels: sortedArea.map(s=>s.name),
+      datasets: [{ label: "Land Area (km²)", data: sortedArea.map(s=>s.area), tension: .35 }]
+    },
+    {
+      scales: {
+        x: { ticks: { color: "#9fb1c5" } },
+        y: { ticks: { color: "#9fb1c5", callback: v => Number(v).toLocaleString() } }
+      },
+      plugins: { legend: { labels: { color: "#e6ecf2" } } }
+    }
+  );
+
+  // KPI cards
+  const k1 = document.getElementById("kpiTotalPop");
+  const k2 = document.getElementById("kpiTotalGDP");
+  const k3 = document.getElementById("kpiTotalArea");
+  if (k1) k1.textContent = fmtNumber(DB.totalPopulation());
+  if (k2) k2.textContent = fmtCurrency(DB.totalGDP());
+  if (k3) k3.textContent = fmtNumber(DB.totalArea());
+}
