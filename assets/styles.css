@@ -22,7 +22,7 @@ nav{
   border-bottom:1px solid rgba(255,255,255,.05);
 }
 .navbar{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:18px; }
-.navbar .brand{ font-weight:700; margin-right:auto; }
+.navbar .brand{ font-weight:700; margin-right:auto; color:var(--text); text-decoration:none; }
 .navbar a{ color:var(--muted); text-decoration:none; padding:6px 10px; border-radius:8px; }
 .navbar a.active, .navbar a:hover{ color:var(--text); background:rgba(255,255,255,.06); }
 .navbar .right{ margin-left:auto; }
@@ -79,3 +79,28 @@ nav{
 img.erd{ width:100%; max-width:780px; display:block; border-radius:12px; border:1px solid rgba(255,255,255,.1); }
 
 .kpi-card{ display:flex; flex-direction:column; justify-content:space-between; min-height:130px; }
+
+/* === Floating Bot Widget === */
+.bot-fab{
+  position:fixed; right:22px; bottom:22px; z-index:9999;
+  width:56px; height:56px; border-radius:50%;
+  background:var(--accent); display:flex; align-items:center; justify-content:center;
+  color:#062827; font-weight:900; box-shadow:var(--shadow); cursor:pointer; user-select:none;
+}
+.bot-fab:hover{ filter:brightness(.95); }
+
+.bot-panel{
+  position:fixed; right:22px; bottom:86px; z-index:9999;
+  width:360px; max-width:92vw; height:520px; max-height:70vh;
+  display:none; flex-direction:column; background:var(--panel);
+  border-radius:14px; box-shadow:var(--shadow); overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+}
+.bot-panel.open{ display:flex; }
+.bot-panel .head{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.06);
+}
+.bot-panel .head .ttl{ font-weight:700; }
+.bot-panel .head .xbtn{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:4px 8px; cursor:pointer; }
+.bot-iframe{ border:0; width:100%; height:100%; background:#0d1826; }
