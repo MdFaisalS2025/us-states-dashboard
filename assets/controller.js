@@ -1,126 +1,147 @@
-// assets/controller.js
-// CONTROLLER LAYER
-// Handles events (form submits, button clicks) + triggers view refreshes.
+import { DB } from "./model.js";
+import { Bus, qs, fmtNumber } from "./utils.js";
+import { renderAllCharts } from "./charts.js";
 
-function collectFormValues(prefix = "") {
-  const getVal = (id) => document.getElementById(prefix + id).value.trim();
+// Re-render listeners so views update when CRUD occurs
+function emitRefresh(){ Bus.emit("refresh", {}); }
 
-  return {
-    id: getVal('id').toUpperCase(),
-    name: getVal('name'),
-    region: getVal('region'),
-    capital: getVal('capital'),
-    population: Number(getVal('population')),
-    gdp: Number(getVal('gdp')),
-    area: Number(getVal('area')),
-    citiesCount: Number(getVal('citiesCount'))
-  };
-}
+// ---------- READ (table) ----------
+export function refreshReadTable(){
+  const tbl = document.getElementById("statesTableBody");
+  const search = (document.getElementById("searchInput")?.value || "").toLowerCase();
+  const regionFilter = document.getElementById("regionFilter")?.value || "ALL";
 
-function fillFormFromState(state, prefix = "") {
-  const setVal = (id, val) => {
-    const el = document.getElementById(prefix + id);
-    if (el) el.value = val ?? '';
-  };
-  setVal('id', state.id);
-  setVal('name', state.name);
-  setVal('region', state.region);
-  setVal('capital', state.capital);
-  setVal('population', state.population);
-  setVal('gdp', state.gdp);
-  setVal('area', state.area);
-  setVal('citiesCount', state.citiesCount);
-}
+  let rows = DB.listStates();
+  if (search){
+    rows = rows.filter(r =>
+      r.id.toLowerCase().includes(search) ||
+      r.name.toLowerCase().includes(search) ||
+      r.capital.toLowerCase().includes(search)
+    );
+  }
+  if (regionFilter !== "ALL"){
+    rows = rows.filter(r => r.region === regionFilter);
+  }
 
-// CREATE PAGE
-function initCreatePage() {
-  const form = document.getElementById('createForm');
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const newState = collectFormValues("");
-    try {
-      StateDataService.create(newState);
-      alert('State added!');
-      form.reset();
-      refreshReadTable();
-      refreshCharts();
-    } catch (err) {
-      alert(err.message);
-    }
-  });
-}
-
-// READ PAGE
-function refreshReadTable() {
-  const tableBody = document.getElementById('statesTableBody');
-  if (!tableBody) return;
-
-  const data = StateDataService.getAll();
-  tableBody.innerHTML = data.map(s => `
+  rows.sort((a,b)=>a.name.localeCompare(b.name));
+  tbl.innerHTML = rows.map(s => `
     <tr>
-      <td>${s.id}</td>
+      <td><span class="badge bg-secondary">${s.id}</span></td>
       <td>${s.name}</td>
-      <td>${s.region}</td>
       <td>${s.capital}</td>
-      <td>${s.population.toLocaleString()}</td>
-      <td>$${s.gdp}B</td>
-      <td>${s.area.toLocaleString()} sq mi</td>
+      <td>${fmtNumber(s.population)}</td>
+      <td>$${fmtNumber(s.gdp)}</td>
+      <td>${fmtNumber(s.area)}</td>
       <td>${s.citiesCount}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-light" href="update.html?id=${encodeURIComponent(s.id)}">Edit</a>
+        <a class="btn btn-sm btn-outline-light ms-2" href="delete.html?id=${encodeURIComponent(s.id)}">Delete</a>
+      </td>
     </tr>
-  `).join('');
+  `).join("");
+  document.getElementById("rowCount").textContent = `${rows.length} record(s)`;
 }
 
-// UPDATE PAGE
-function initUpdatePage() {
-  const loadBtn = document.getElementById('loadForEdit');
-  const saveBtn = document.getElementById('saveEdit');
-  if (!loadBtn || !saveBtn) return;
-
-  loadBtn.addEventListener('click', () => {
-    const id = document.getElementById('upd_id').value.trim().toUpperCase();
-    const st = StateDataService.getById(id);
-    if (!st) {
-      alert('State not found');
-      return;
-    }
-    fillFormFromState(st, 'upd_');
-  });
-
-  saveBtn.addEventListener('click', () => {
-    const updatedState = collectFormValues('upd_');
+// ---------- CREATE ----------
+export function initCreatePage(){
+  const form = document.getElementById("createForm");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const formData = new FormData(form);
     try {
-      StateDataService.update(updatedState);
-      alert('State updated!');
-      refreshReadTable();
-      refreshCharts();
-    } catch (err) {
+      DB.createState({
+        id: formData.get("id"),
+        name: formData.get("name"),
+        region: formData.get("region"),
+        capital: formData.get("capital"),
+        population: formData.get("population"),
+        gdp: formData.get("gdp"),
+        area: formData.get("area"),
+        citiesCount: formData.get("citiesCount")
+      });
+      emitRefresh();
+      window.location.href = "read.html?created=1";
+    } catch(err){
       alert(err.message);
     }
   });
 }
 
-// DELETE PAGE
-function initDeletePage() {
-  const delBtn = document.getElementById('deleteBtn');
-  if (!delBtn) return;
+// ---------- UPDATE ----------
+export function initUpdatePage(){
+  const id = qs("id");
+  if (!id) { alert("Missing state id"); window.location.href="read.html"; return; }
+  const s = DB.getState(id);
+  if (!s) { alert("State not found"); window.location.href="read.html"; return; }
 
-  delBtn.addEventListener('click', () => {
-    const id = document.getElementById('del_id').value.trim().toUpperCase();
-    if (!id) {
-      alert('Enter a state ID first.');
-      return;
+  // fill form
+  ["id","name","region","capital","population","gdp","area","citiesCount"].forEach(k=>{
+    const input = document.getElementById(k);
+    if (input) {
+      input.value = s[k];
+      if (k==="id") input.readOnly = true;
     }
-    StateDataService.remove(id);
-    alert('State deleted if it existed.');
-    refreshReadTable();
-    refreshCharts();
+  });
+
+  document.getElementById("updateForm").addEventListener("submit", e=>{
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    try {
+      DB.updateState(id, {
+        name: formData.get("name"),
+        region: formData.get("region"),
+        capital: formData.get("capital"),
+        population: formData.get("population"),
+        gdp: formData.get("gdp"),
+        area: formData.get("area"),
+        citiesCount: formData.get("citiesCount")
+      });
+      emitRefresh();
+      window.location.href = "read.html?updated=1";
+    } catch(err){
+      alert(err.message);
+    }
   });
 }
 
-// expose globals so pages can call them inline in <script>
-window.initCreatePage = initCreatePage;
-window.initUpdatePage = initUpdatePage;
-window.initDeletePage = initDeletePage;
-window.refreshReadTable = refreshReadTable;
+// ---------- DELETE ----------
+export function initDeletePage(){
+  const id = qs("id");
+  const s = id ? DB.getState(id) : null;
+  if (s) {
+    document.getElementById("deletePreview").textContent = `${s.id} — ${s.name}`;
+  } else {
+    document.getElementById("deletePreview").textContent = "Select a record below.";
+  }
+
+  document.getElementById("deleteForm")?.addEventListener("submit", e=>{
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const deleteId = (formData.get("id") || id || "").toUpperCase().trim();
+    if (!deleteId) { alert("Provide a State ID"); return; }
+    try {
+      DB.deleteState(deleteId);
+      emitRefresh();
+      window.location.href = "read.html?deleted=1";
+    } catch(err){
+      alert(err.message);
+    }
+  });
+
+  // populate select
+  const sel = document.getElementById("idSelect");
+  if (sel) {
+    sel.innerHTML = DB.listStates().map(s=>`<option value="${s.id}">${s.id} — ${s.name}</option>`).join("");
+    if (id) sel.value = id;
+  }
+}
+
+// ---------- INDEX / DATA ----------
+export function initHomeKPIs(){
+  // nothing special, charts.js will set KPI numbers too when rendering
+}
+
+// Listen to bus updates (so data page re-renders after CRUD)
+Bus.on("refresh", ()=>{
+  try { renderAllCharts(); } catch {}
+});

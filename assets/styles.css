@@ -1,181 +1,111 @@
-/* ------------------------------
-   Global Variables
------------------------------- */
-:root {
-  --radius: 1.2rem;
-  --border-color-light: rgba(0,0,0,0.07);
-  --border-color-dark: rgba(255,255,255,0.07);
+
+
+/* --- Base / Layout --- */
+:root{
+  --bg: #0b1220;
+  --card: #111a2b;
+  --text: #e6ecf2;
+  --muted: #9fb1c5;
+  --accent: #5ba8ff;
+  --accent-2: #6af8c5;
+  --danger: #ff6b6b;
+  --warning: #ffd166;
+  --success: #00d09c;
+  --shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
-/* ------------------------------
-   Dark Theme
------------------------------- */
-html.dark body {
-  background: #0f1115;
-  color: #e7e9ee;
-}
-
-html.dark .card {
-  background: #161a22;
-  color: #e7e9ee;
-  border: 1px solid var(--border-color-dark);
-}
-
-html.dark .table {
-  color: #e7e9ee;
-}
-
-html.dark .table thead {
-  background: #1e2430;
-  color: #e7e9ee;
-}
-
-html.dark .navbar,
-html.dark .bg-body-tertiary {
-  background: #12151b !important;
-  border-bottom: 1px solid #1f242f;
-}
-
-html.dark .navbar a.nav-link,
-html.dark .navbar .navbar-brand {
-  color: #e7e9ee !important;
-}
-
-html.dark footer {
-  background: #12151b;
-  border-top: 1px solid #1f242f;
-  color: #e7e9ee;
-}
-
-/* ------------------------------
-   Light Theme Defaults
------------------------------- */
+html, body { height: 100%; }
 body {
-  background: #f8f9fa;
-  color: #212529;
-  animation: fade 0.3s ease-out;
-  transition: background 0.5s ease, color 0.5s ease;
+  background: linear-gradient(180deg, #0b1220 0%, #0a0f1a 100%);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* ------------------------------
-   Gradient Hero / Banner
------------------------------- */
-.bg-gradient {
-  background:
-    radial-gradient(1200px 600px at 20% 20%, #cfe2ff 0%, transparent 60%),
-    linear-gradient(180deg, #ffffff, #f8f9fa);
+/* --- Navigation --- */
+.navbar {
+  backdrop-filter: saturate(120%) blur(8px);
+  background: rgba(10,15,26,.6);
+  border-bottom: 1px solid rgba(255,255,255,.06);
 }
 
-html.dark .bg-gradient {
-  background:
-    radial-gradient(1200px 600px at 20% 20%, #203354 0%, transparent 60%),
-    linear-gradient(180deg, #0f1115, #0f1115);
-}
-
-/* ------------------------------
-   Glass Panel Accent
------------------------------- */
-.glass-card {
-  backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius);
-  border: 1px solid var(--border-color-light);
-  box-shadow: 0 20px 60px rgba(0,0,0,.08);
-}
-html.dark .glass-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-color-dark);
-  box-shadow: 0 20px 60px rgba(0,0,0,.6);
-}
-
-/* ------------------------------
-   Hero Blob Accent
------------------------------- */
-.hero-blob {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    600px 300px at 80% 20%,
-    rgba(13, 110, 253, 0.15),
-    transparent 60%
-  );
-}
-
-/* ------------------------------
-   Cards & Tables
------------------------------- */
+/* --- Cards --- */
 .card {
-  border-radius: var(--radius);
-  border: 1px solid var(--border-color-light);
-  box-shadow: 0 12px 40px rgba(0,0,0,.04);
-  transition: all 0.25s ease;
+  background: linear-gradient(180deg, var(--card), #0e1726);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
 }
 
-.card:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 18px 60px rgba(0,0,0,.07);
+.card h5, .card h4 { color: #fff; }
+.card .muted { color: var(--muted); }
+
+/* --- Buttons --- */
+.btn-accent {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border: none;
+  color: #08101d;
+  font-weight: 700;
+  transition: transform .1s ease-in-out;
+}
+.btn-accent:hover { transform: translateY(-1px); }
+
+.btn-outline-light {
+  border-color: rgba(255,255,255,.25);
+  color: var(--text);
+}
+.btn-outline-light:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
 }
 
-.table td,
-.table th {
-  vertical-align: middle;
+/* --- Tables --- */
+.table thead th {
+  border-color: rgba(255,255,255,.12);
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: .85rem;
+  letter-spacing: .08em;
+}
+.table tbody tr {
+  border-color: rgba(255,255,255,.06);
+}
+.table tbody tr:hover {
+  background: rgba(255,255,255,.03);
 }
 
-/* ------------------------------
-   Buttons
------------------------------- */
-.navbar .btn,
-.btn {
-  border-radius: 0.6rem;
+/* --- Forms --- */
+.form-control, .form-select {
+  background: #0d1524;
+  border: 1px solid rgba(255,255,255,.08);
+  color: #eaf1f7;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 .2rem rgba(91,168,255,.15);
 }
 
-/* ------------------------------
-   Section Headings
------------------------------- */
-.section-heading {
-  font-size: clamp(1.1rem, 0.3vw + 1rem, 1.25rem);
-  font-weight: 600;
-  color: #0d6efd;
-}
-html.dark .section-heading {
-  color: #6ea8fe;
+/* --- Chips/Bages --- */
+.badge-soft {
+  background: rgba(106,248,197,.12);
+  color: var(--accent-2);
+  border: 1px solid rgba(106,248,197,.35);
 }
 
-/* ------------------------------
-   Footer
------------------------------- */
+/* --- Footer --- */
 footer {
-  background: #ffffff;
-  border-top: 1px solid rgba(0,0,0,.07);
-  font-size: 0.8rem;
-}
-footer a {
-  text-decoration: none;
-}
-footer a:hover {
-  text-decoration: underline;
+  color: var(--muted);
+  border-top: 1px solid rgba(255,255,255,.06);
+  margin-top: 56px;
 }
 
-/* ------------------------------
-   Smooth Fade-in Animation
------------------------------- */
-@keyframes fade {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
+/* --- Utilities --- */
+.shadow-soft { box-shadow: var(--shadow); }
+.text-muted-2 { color: var(--muted); }
 
-/* Utility */
-.small-muted {
-  font-size: .8rem;
-  color: #6c757d;
+/* Responsive helpers */
+@media (max-width: 768px){
+  .responsive-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
 }
-html.dark .small-muted {
-  color: #8b94a7;
+@media (min-width: 769px){
+  .responsive-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 }
