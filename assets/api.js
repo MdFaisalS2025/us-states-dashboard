@@ -1,9 +1,7 @@
-// Read-only external API integration (DataUSA): population & GDP snapshots
-// NOTE: Never persists remote data into our local storage — rubric compliance.
 const DATAUSA_BASE = "https://datausa.io/api/data";
 
 async function fetchJson(url){
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store", mode: "cors" });
   if (!res.ok) throw new Error(`API error ${res.status}`);
   return res.json();
 }
@@ -11,7 +9,6 @@ async function fetchJson(url){
 export async function fetchLatestPopulation() {
   const url = `${DATAUSA_BASE}?drilldowns=State&measures=Population&year=latest`;
   const data = await fetchJson(url);
-  // return top 5 states by population (latest)
   const rows = (data?.data ?? []).sort((a,b)=>b.Population - a.Population).slice(0,5);
   return rows.map(r => ({ state: r.State, population: r.Population, year: r.Year }));
 }
@@ -42,23 +39,34 @@ export async function renderApiInsight(containerId){
   `;
 
   async function load(){
-    const [pop, gdp] = await Promise.all([fetchLatestPopulation(), fetchLatestGDP()]);
-    const popList = pop.map(p=>`<li>${p.state}: <strong>${p.population.toLocaleString()}</strong> <span class="badge badge-soft ms-2">(${p.year})</span></li>`).join("");
-    const gdpList = gdp.map(p=>`<li>${p.state}: <strong>$${p.gdp.toLocaleString()}</strong> <span class="badge badge-soft ms-2">(${p.year})</span></li>`).join("");
+    const body = document.getElementById("apiInsightBody");
+    try {
+      body.innerHTML = `<div class="text-muted-2">Loading…</div>`;
+      const [pop, gdp] = await Promise.all([fetchLatestPopulation(), fetchLatestGDP()]);
+      const popList = pop.map(p=>`<li>${p.state}: <strong>${p.population.toLocaleString()}</strong> <span class="badge badge-soft ms-2">(${p.year})</span></li>`).join("");
+      const gdpList = gdp.map(p=>`<li>${p.state}: <strong>$${p.gdp.toLocaleString()}</strong> <span class="badge badge-soft ms-2">(${p.year})</span></li>`).join("");
 
-    document.getElementById("apiInsightBody").innerHTML = `
-      <div class="row g-3">
-        <div class="col-md-6">
-          <h6 class="mb-2">Population</h6>
-          <ul class="mb-0 ps-3">${popList}</ul>
+      body.innerHTML = `
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h6 class="mb-2">Population</h6>
+            <ul class="mb-0 ps-3">${popList}</ul>
+          </div>
+          <div class="col-md-6">
+            <h6 class="mb-2">GDP</h6>
+            <ul class="mb-0 ps-3">${gdpList}</ul>
+          </div>
         </div>
-        <div class="col-md-6">
-          <h6 class="mb-2">GDP</h6>
-          <ul class="mb-0 ps-3">${gdpList}</ul>
+        <small class="d-block mt-3 text-muted-2">Source: datausa.io — fetched dynamically (read-only).</small>
+      `;
+    } catch (e) {
+      body.innerHTML = `
+        <div class="alert alert-warning mb-0">
+          Couldn’t load insights. This might be a network/privacy-blocker issue.<br/>
+          <small class="text-muted">Tip: try clicking “Refresh”, or disable aggressive shields for this page.</small>
         </div>
-      </div>
-      <small class="d-block mt-3 text-muted-2">Source: datausa.io — fetched dynamically (not stored).</small>
-    `;
+      `;
+    }
   }
 
   document.getElementById("apiRefreshBtn").addEventListener("click", load);

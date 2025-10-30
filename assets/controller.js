@@ -69,40 +69,57 @@ export function initCreatePage(){
 
 // ---------- UPDATE ----------
 export function initUpdatePage(){
-  const id = qs("id");
-  if (!id) { alert("Missing state id"); window.location.href="read.html"; return; }
-  const s = DB.getState(id);
-  if (!s) { alert("State not found"); window.location.href="read.html"; return; }
+  const idParam = qs("id");
+  const form = document.getElementById("updateForm");
+  const chooserWrap = document.getElementById("chooseContainer");
 
-  // fill form
-  ["id","name","region","capital","population","gdp","area","citiesCount"].forEach(k=>{
-    const input = document.getElementById(k);
-    if (input) {
-      input.value = s[k];
-      if (k==="id") input.readOnly = true;
-    }
-  });
+  function loadForm(id){
+    const s = DB.getState(id);
+    if (!s) { alert("State not found"); return; }
+    ["id","name","region","capital","population","gdp","area","citiesCount"].forEach(k=>{
+      const input = document.getElementById(k);
+      if (input) {
+        input.value = s[k];
+        if (k==="id") input.readOnly = true;
+      }
+    });
+    form.classList.remove("d-none");
+    if (chooserWrap) chooserWrap.classList.add("d-none");
+  }
 
-  document.getElementById("updateForm").addEventListener("submit", e=>{
+  // If no id in URL, show a dropdown to choose first
+  if (!idParam) {
+    if (!chooserWrap) { alert("Missing state id"); window.location.href="read.html"; return; }
+    const sel = document.getElementById("chooseId");
+    sel.innerHTML = DB.listStates().sort((a,b)=>a.name.localeCompare(b.name))
+      .map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join("");
+    document.getElementById("chooseBtn").addEventListener("click", ()=>{
+      const chosen = sel.value;
+      if (chosen) loadForm(chosen);
+    });
+  } else {
+    loadForm(idParam);
+  }
+
+  form.addEventListener("submit", e=>{
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const id = document.getElementById("id").value;
+    const fd = new FormData(form);
     try {
       DB.updateState(id, {
-        name: formData.get("name"),
-        region: formData.get("region"),
-        capital: formData.get("capital"),
-        population: formData.get("population"),
-        gdp: formData.get("gdp"),
-        area: formData.get("area"),
-        citiesCount: formData.get("citiesCount")
+        name: fd.get("name"),
+        region: fd.get("region"),
+        capital: fd.get("capital"),
+        population: fd.get("population"),
+        gdp: fd.get("gdp"),
+        area: fd.get("area"),
+        citiesCount: fd.get("citiesCount")
       });
-      emitRefresh();
       window.location.href = "read.html?updated=1";
-    } catch(err){
-      alert(err.message);
-    }
+    } catch(err){ alert(err.message); }
   });
 }
+
 
 // ---------- DELETE ----------
 export function initDeletePage(){

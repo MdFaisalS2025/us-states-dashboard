@@ -1,77 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <title>About — US States Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="assets/styles.css" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | US States Dashboard</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <style>
+    /* Additional About-page-specific styling */
+    .erd-img {
+      max-width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 0 16px rgba(255,255,255,.1);
+    }
+    .team-pic {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .about-section h6 { margin-bottom: 0.5rem; }
+  </style>
 </head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+<body data-page="about">
+  <!-- Navbar -->
+  <nav class="navbar">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="index.html">US States Dashboard</a>
-      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navBar"><span class="navbar-toggler-icon"></span></button>
-      <div id="navBar" class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="read.html">Data Table</a></li>
-          <li class="nav-item"><a class="nav-link" href="create.html">Create</a></li>
-          <li class="nav-item"><a class="nav-link" href="update.html">Update</a></li>
-          <li class="nav-item"><a class="nav-link" href="delete.html">Delete</a></li>
-          <li class="nav-item"><a class="nav-link" href="data.html">Charts</a></li>
-          <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
-        </ul>
-        <a class="btn btn-outline-light btn-sm" href="README.md" target="_blank">README (Tech)</a>
-      </div>
+      <div class="nav-brand">US States Dashboard</div>
+      <ul class="nav-links">
+        <li><a href="read.html">Data Table</a></li>
+        <li><a href="create.html">Create</a></li>
+        <li><a href="update.html">Update</a></li>
+        <li><a href="delete.html">Delete</a></li>
+        <li><a href="data.html">Charts</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+      </ul>
     </div>
   </nav>
 
+  <!-- Main content -->
   <main class="container py-4">
     <div class="card p-4">
       <h4 class="mb-3">About Us</h4>
-      <div class="row g-3">
+
+      <!-- Team Section -->
+      <div class="row g-3 mb-4">
         <div class="col-md-4">
-          <div class="card p-3 h-100">
-            <h5 class="mb-1">Mohamed Faisal Sindhi</h5>
-            <div class="muted">Frontend, deployment, chatbot</div>
+          <div class="card p-3 h-100 d-flex flex-row align-items-center gap-3">
+            <img src="assets/faisal.jpg" alt="Mohamed Faisal Sindhi" class="team-pic" />
+            <div>
+              <h6 class="mb-1">Mohamed Faisal Sindhi</h6>
+              <div class="muted">Frontend, Deployment, Chatbot</div>
+            </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card p-3 h-100">
-            <h5 class="mb-1">Hongxu Yang</h5>
-            <div class="muted">UI/UX, ERD & docs</div>
+          <div class="card p-3 h-100 d-flex flex-row align-items-center gap-3">
+            <img src="assets/hongxu.jpg" alt="Hongxu Yang" class="team-pic" />
+            <div>
+              <h6 class="mb-1">Hongxu Yang</h6>
+              <div class="muted">UI/UX, ERD & Documentation</div>
+            </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card p-3 h-100">
-            <h5 class="mb-1">Jonathan James</h5>
-            <div class="muted">Controllers, charts, data service</div>
+          <div class="card p-3 h-100 d-flex flex-row align-items-center gap-3">
+            <img src="assets/jonathan.jpg" alt="Jonathan James" class="team-pic" />
+            <div>
+              <h6 class="mb-1">Jonathan James</h6>
+              <div class="muted">Controllers, Charts, Data Service</div>
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- GitHub / README Links -->
+      <div class="mb-4 d-flex gap-2 flex-wrap">
+        <a class="btn btn-accent" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">
+          GitHub Repository
+        </a>
+        <a class="btn btn-outline-light" href="README.md" target="_blank" rel="noopener">
+          README (Technical Details)
+        </a>
+      </div>
+
+      <!-- ERD -->
+      <h5 class="mb-2">Data Model (ERD)</h5>
+      <img src="assets/logical_data_model_v3.png" class="erd-img" alt="Logical Data Model v3" />
+      <small class="text-muted-2 d-block mt-2">Updated ERD used by the web application.</small>
+
       <hr class="my-4"/>
 
-      <h5 class="mb-2">Data Model (ERD)</h5>
-      <img src="assets/logical_data_model_v3.png" class="img-fluid rounded" alt="ERD diagram"/>
+      <!-- Technical Sections -->
+      <div class="row g-3 about-section">
+        <!-- API Endpoints -->
+        <div class="col-lg-6">
+          <div class="card p-3 h-100">
+            <h6>API Endpoints Used (Read-Only)</h6>
+            <ul class="mb-2">
+              <li><code>https://datausa.io/api/data?drilldowns=State&measures=Population&year=latest</code></li>
+              <li><code>https://datausa.io/api/data?drilldowns=State&measures=GDP&year=latest</code></li>
+            </ul>
+            <small class="text-muted-2">Fetched dynamically for external insights; no data persistence.</small>
+          </div>
+        </div>
 
-      <div class="mt-3">
-        <a class="btn btn-accent" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub Repo</a>
-        <a class="btn btn-outline-light ms-2" href="README.md" target="_blank" rel="noopener">README (Technical Details)</a>
+        <!-- CRUD Overview -->
+        <div class="col-lg-6">
+          <div class="card p-3 h-100">
+            <h6>CRUD Implementation Overview</h6>
+            <ul class="mb-0">
+              <li><strong>Create:</strong> <code>create.html</code> → adds new records to local storage.</li>
+              <li><strong>Read:</strong> <code>read.html</code> → searchable data table view.</li>
+              <li><strong>Update:</strong> <code>update.html</code> → choose or load state via <code>?id=XX</code>.</li>
+              <li><strong>Delete:</strong> <code>delete.html</code> → confirmation-based removal.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- MVC -->
+        <div class="col-lg-6">
+          <div class="card p-3 h-100">
+            <h6>MVC Architecture</h6>
+            <ul class="mb-0">
+              <li><strong>Model:</strong> <code>assets/model.js</code> — persistent localStorage service (v3 seed with 50 states).</li>
+              <li><strong>Controller:</strong> <code>assets/controller.js</code> — handles CRUD actions & data binding.</li>
+              <li><strong>View:</strong> HTML pages with modular scripts and <code>charts.js</code> visualizations.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Challenges -->
+        <div class="col-lg-6">
+          <div class="card p-3 h-100">
+            <h6>Notable Technical Challenges & Solutions</h6>
+            <ul class="mb-0">
+              <li><strong>KPI Blank Fix:</strong> Added safe guards to update KPIs even when charts not on page.</li>
+              <li><strong>Update UX:</strong> Added dynamic state chooser if no query parameter is provided.</li>
+              <li><strong>External Insights:</strong> Implemented retry/error handling for DataUSA API.</li>
+              <li><strong>Persistence:</strong> Used singleton localStorage model with schema versioning.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </main>
 
-  <footer class="container py-4">
-    <div class="d-flex justify-content-between">
-      <span>© 2025 US States Dashboard</span>
-      <span class="text-muted-2">About page + ERD + Roles</span>
-    </div>
+  <!-- Footer -->
+  <footer class="footer text-center py-3">
+    <small>© 2025 US States Dashboard — Built with ❤️ by Faisal, Hongxu & Jonathan</small>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <!-- Scripts -->
+  <script type="module">
+    import "./assets/model.js";
+  </script>
 
-  <!-- Botpress -->
+  <!-- Botpress chatbot (available on all pages) -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
