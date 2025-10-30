@@ -1,124 +1,263 @@
-// assets/controller.js
-import { DB } from "./model.js";
-import { renderAllCharts } from "./charts.js";
-import { mountInsights } from "./api.js";
+/* assets/controller.js
+ * Page controllers wired by <body data-page="...">.
+ * Requires model.js and Chart.js on pages that render charts.
+ */
+(function () {
+  const $$ = sel => document.querySelector(sel);
+  const $$$ = sel => [...document.querySelectorAll(sel)];
+  const fmtInt = n => (isFinite(n) ? n.toLocaleString() : "—");
+  const fmtUSD = n => (isFinite(n) ? `$${n.toLocaleString()}` : "—");
 
-const $ = (sel, root=document)=>root.querySelector(sel);
-export const qs = key => new URLSearchParams(location.search).get(key);
+  // ----- HOME (index.html) -----
+  function initHome() {
+    const { totalPopulation, totalGDP, totalArea } = Model.aggregates();
+    $$("#kpi-pop").textContent = fmtInt(totalPopulation);
+    $$("#kpi-gdp").textContent = fmtUSD(totalGDP);
+    $$("#kpi-area").textContent = fmtInt(totalArea);
 
-// ---------- HOME ----------
-export function initHome(){
-  renderAllCharts();          // always fills KPIs
-  mountInsights("insights");  // shows WB or local fallback
-}
-
-// ---------- READ ----------
-function rowHTML(s){
-  return `
-    <tr>
-      <td><span class="badge">${s.id}</span></td>
-      <td>${s.name}</td>
-      <td>${s.capital||""}</td>
-      <td>${Number(s.population||0).toLocaleString()}</td>
-      <td>$${Number(s.gdp||0).toLocaleString()}</td>
-      <td>${Number(s.area||0).toLocaleString()}</td>
-      <td>${Number(s.citiesCount||0).toLocaleString()}</td>
-      <td class="text-end">
-        <a class="link" href="update.html?id=${encodeURIComponent(s.id)}">Edit</a>
-        <a class="link" style="color:#ffb4b4" href="delete.html?id=${encodeURIComponent(s.id)}">Delete</a>
-      </td>
-    </tr>
-  `;
-}
-export function initRead(){
-  const tbody = $("#dataBody"); if (!tbody) return;
-  const rows = DB.listStates().sort((a,b)=>a.name.localeCompare(b.name)).map(rowHTML).join("");
-  tbody.innerHTML = rows || `<tr><td colspan="8" class="text-center text-muted-2">No data</td></tr>`;
-}
-
-// ---------- CREATE ----------
-export function initCreate(){
-  const form = $("#createForm"); if(!form) return;
-  form.addEventListener("submit", (e)=>{
-    e.preventDefault();
-    const fd = new FormData(form);
-    try{
-      DB.createState({
-        id: fd.get("id"),
-        name: fd.get("name"),
-        region: fd.get("region"),
-        capital: fd.get("capital"),
-        population: fd.get("population"),
-        gdp: fd.get("gdp"),
-        area: fd.get("area"),
-        citiesCount: fd.get("citiesCount")
-      });
-      location.href = "read.html?created=1";
-    }catch(err){ alert(err.message); }
-  });
-}
-
-// ---------- UPDATE ----------
-export function initUpdatePage(){
-  const form = $("#updateForm"); if(!form) return;
-  const chooser = $("#chooseContainer"), sel = $("#chooseId"), loadBtn = $("#chooseBtn");
-
-  function fill(id){
-    const s = DB.getState(id);
-    if (!s){ alert("State not found in data set"); return; }
-    form.classList.remove("d-none");
-    chooser.classList.add("d-none");
-    const map = { id:"id", name:"name", region:"region", capital:"capital", citiesCount:"citiesCount", population:"population", gdp:"gdp", area:"area" };
-    Object.entries(map).forEach(([k,i])=>{ const el = $("#"+i); if (!el) return; el.value = s[k] ?? ""; });
-    $("#id").readOnly = true;
+    // External insights: World Bank API (latest real value) with graceful fallback
+    setupInsightsCard({
+      gdpEl: "#insight-gdp",
+      popEl: "#insight-pop",
+      refreshBtn: "#insight-refresh",
+      loader: "#insight-loader",
+      error: "#insight-error"
+    });
   }
 
-  // populate chooser from whatever data exists (after migration this has content)
-  const opts = DB.listStates().sort((a,b)=>a.name.localeCompare(b.name)).map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join("");
-  sel.innerHTML = opts;
-  loadBtn.addEventListener("click", ()=> fill(sel.value));
+  // ----- READ (read.html) -----
+  function initRead() {
+    const tbody = $$("#table-body");
+    const empty = $$("#empty-note");
+    const rows = Model.list();
+    tbody.innerHTML = "";
+    if (!rows.length) {
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+    for (const s of rows) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><span class="badge">${s.id}</span></td>
+        <td>${s.name}</td>
+        <td>${s.capital}</td>
+        <td class="num">${fmtInt(s.population)}</td>
+        <td class="num">${fmtUSD(s.gdp)}</td>
+        <td class="num">${fmtInt(s.area)}</td>
+        <td class="num">${fmtInt(s.cities)}</td>
+        <td class="actions">
+          <a class="btn btn-xs" href="update.html?id=${encodeURIComponent(s.id)}">Edit</a>
+          <a class="btn btn-xs btn-danger" href="delete.html?id=${encodeURIComponent(s.id)}">Delete</a>
+        </td>`;
+      tbody.appendChild(tr);
+    }
+  }
 
-  const q = qs("id");
-  if (q) fill(q); // direct deep link still works
+  // ----- CREATE (create.html) -----
+  function initCreate() {
+    const form = $$("#state-form");
+    fillRegionSelect("#region");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const item = readForm();
+      if (!/^[A-Z]{2}$/.test(item.id)) return alert("State ID must be two uppercase letters (e.g., CA).");
+      if (!item.name.trim()) return alert("Name is required.");
+      Model.upsert(item);
+      location.href = "read.html";
+    });
+    $$("#cancel").addEventListener("click", (e)=>{ e.preventDefault(); history.back(); });
 
-  form.addEventListener("submit", (e)=>{
-    e.preventDefault();
-    const fd = new FormData(form);
-    try{
-      DB.updateState(fd.get("id"), {
-        name: fd.get("name"),
-        region: fd.get("region"),
-        capital: fd.get("capital"),
-        population: fd.get("population"),
-        gdp: fd.get("gdp"),
-        area: fd.get("area"),
-        citiesCount: fd.get("citiesCount"),
-      });
-      location.href = "read.html?updated=1";
-    }catch(err){ alert(err.message); }
+    function readForm() {
+      return {
+        id: $$("#id").value.trim().toUpperCase(),
+        name: $$("#name").value.trim(),
+        region: $$("#region").value,
+        capital: $$("#capital").value.trim(),
+        population: Number($$("#population").value||0),
+        gdp: Number($$("#gdp").value||0),
+        area: Number($$("#area").value||0),
+        cities: Number($$("#cities").value||0)
+      };
+    }
+  }
+
+  // ----- UPDATE (update.html) -----
+  function initUpdate() {
+    fillRegionSelect("#region");
+    const select = $$("#state-picker");
+    const loadBtn = $$("#load-state");
+    const form = $$("#state-form");
+    const idInput = $$("#id");
+
+    // Populate chooser
+    for (const s of Model.list()) {
+      const opt = document.createElement("option");
+      opt.value = s.id; opt.textContent = `${s.name} (${s.id})`;
+      select.appendChild(opt);
+    }
+
+    // Autofill from query ?id=
+    const url = new URL(location.href);
+    const qid = url.searchParams.get("id");
+    if (qid && Model.get(qid)) {
+      select.value = qid;
+      loadSelected();
+    }
+
+    loadBtn.addEventListener("click", loadSelected);
+
+    function loadSelected() {
+      const id = select.value;
+      const s = Model.get(id);
+      if (!s) return alert("Select a state first.");
+      idInput.value = s.id;
+      $$("#name").value = s.name;
+      $$("#region").value = s.region;
+      $$("#capital").value = s.capital;
+      $$("#population").value = s.population;
+      $$("#gdp").value = s.gdp;
+      $$("#area").value = s.area;
+      $$("#cities").value = s.cities;
+    }
+
+    form.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      const item = {
+        id: idInput.value.trim().toUpperCase(),
+        name: $$("#name").value.trim(),
+        region: $$("#region").value,
+        capital: $$("#capital").value.trim(),
+        population: Number($$("#population").value||0),
+        gdp: Number($$("#gdp").value||0),
+        area: Number($$("#area").value||0),
+        cities: Number($$("#cities").value||0)
+      };
+      Model.upsert(item);
+      location.href = "read.html";
+    });
+    $$("#cancel").addEventListener("click",(e)=>{ e.preventDefault(); history.back(); });
+  }
+
+  // ----- CHARTS (data.html) -----
+  function initCharts() {
+    const topPop = Model.list().slice().sort((a,b)=>b.population-a.population).slice(0,6);
+    const topGDP = Model.list().slice().sort((a,b)=>b.gdp-a.gdp).slice(0,8);
+    const topArea = Model.list().slice().sort((a,b)=>b.area-a.area).slice(0,10);
+
+    const baseGrid = { color: "rgba(255,255,255,0.08)" };
+    const font = { family: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" };
+
+    // Donut: Population
+    new Chart($$("#popChart"), {
+      type: "doughnut",
+      data: {
+        labels: topPop.map(s=>s.name),
+        datasets: [{ data: topPop.map(s=>s.population) }]
+      },
+      options: {
+        plugins: {
+          legend: { position: "bottom", labels:{ color:"#dfe7ee", font } },
+          title: { display:true, text:"Population Share (Top 6)", color:"#dfe7ee", font:{weight:"600", size:16} }
+        },
+        cutout: "55%"
+      }
+    });
+
+    // Bar: GDP
+    new Chart($$("#gdpChart"), {
+      type: "bar",
+      data: {
+        labels: topGDP.map(s=>s.name),
+        datasets: [{ label: "GDP", data: topGDP.map(s=>s.gdp) }]
+      },
+      options: {
+        plugins: {
+          legend: { labels:{ color:"#dfe7ee", font } },
+          title: { display:true, text:"GDP by State (Top 8)", color:"#dfe7ee", font:{weight:"600", size:16} },
+          tooltip: { callbacks: { label: c => ` ${c.dataset.label}: $${Number(c.parsed.y).toLocaleString()}` } }
+        },
+        scales: {
+          x: { ticks: { color:"#b7c1c9", font }, grid: baseGrid },
+          y: { ticks: { color:"#b7c1c9", font, callback:v=>"$"+Number(v).toLocaleString() }, grid: baseGrid }
+        }
+      }
+    });
+
+    // Line: Area
+    new Chart($$("#areaChart"), {
+      type: "line",
+      data: {
+        labels: topArea.map(s=>s.name),
+        datasets: [{ label: "Land Area (km²)", data: topArea.map(s=>s.area), tension:0.25, fill:false }]
+      },
+      options: {
+        plugins: {
+          legend: { labels:{ color:"#dfe7ee", font } },
+          title: { display:true, text:"Land Area (Top 10)", color:"#dfe7ee", font:{weight:"600", size:16} }
+        },
+        scales: {
+          x: { ticks: { color:"#b7c1c9", font }, grid: baseGrid },
+          y: { ticks: { color:"#b7c1c9", font, callback:v=>Number(v).toLocaleString() }, grid: baseGrid }
+        }
+      }
+    });
+
+    // Insights block (same as Home)
+    setupInsightsCard({
+      gdpEl: "#insight-gdp",
+      popEl: "#insight-pop",
+      refreshBtn: "#insight-refresh",
+      loader: "#insight-loader",
+      error: "#insight-error"
+    });
+  }
+
+  // ----- helpers -----
+  function fillRegionSelect(sel) {
+    const el = $$(sel);
+    el.innerHTML = `<option value="">Select Region</option>` + Model.regions().map(r=>`<option>${r}</option>`).join("");
+  }
+
+  function setupInsightsCard({ gdpEl, popEl, refreshBtn, loader, error }) {
+    const refresh = $$(refreshBtn);
+    async function load() {
+      $$(loader).style.display = "block";
+      $$(error).style.display = "none";
+      try {
+        const [gdp, gdpYear] = await latestWorldBank("NY.GDP.MKTP.CD");
+        const [pop, popYear] = await latestWorldBank("SP.POP.TOTL");
+        $$(gdpEl).textContent = `${fmtUSD(gdp)} (Year: ${gdpYear})`;
+        $$(popEl).textContent = `${fmtInt(pop)} (Year: ${popYear})`;
+      } catch (e) {
+        $$(error).style.display = "block";
+      } finally {
+        $$(loader).style.display = "none";
+      }
+    }
+    refresh.addEventListener("click", load);
+    load();
+  }
+
+  // World Bank helper: returns [value, year] for latest non-null USA value
+  async function latestWorldBank(indicator) {
+    const url = `https://api.worldbank.org/v2/country/USA/indicator/${indicator}?format=json`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("wb http");
+    const data = await res.json();
+    const series = (data && data[1]) || [];
+    const row = series.find(r => r.value !== null);
+    if (!row) throw new Error("wb empty");
+    return [Number(row.value), row.date];
+  }
+
+  // Router
+  document.addEventListener("DOMContentLoaded", () => {
+    const page = document.body.dataset.page;
+    if (page === "home")   return initHome();
+    if (page === "read")   return initRead();
+    if (page === "create") return initCreate();
+    if (page === "update") return initUpdate();
+    if (page === "charts") return initCharts();
   });
-}
-
-// ---------- DELETE ----------
-export function initDelete(){
-  const id = qs("id");
-  $("#deleteTarget")?.append(document.createTextNode(id ?? "(none)"));
-  $("#btnDelete")?.addEventListener("click", ()=>{ try{ DB.deleteState(id); location.href="read.html?deleted=1"; }catch(e){ alert(e.message);} });
-  $("#btnCancel")?.addEventListener("click", ()=> history.back());
-}
-
-// ---------- CHARTS ----------
-export function initCharts(){ renderAllCharts(); mountInsights("externalInsights"); }
-
-// ---------- boot ----------
-document.addEventListener("DOMContentLoaded", ()=>{
-  const page = document.body?.dataset?.page;
-  try{
-    if (page==="home")   initHome();
-    if (page==="read")   initRead();
-    if (page==="create") initCreate();
-    if (page==="update") initUpdatePage();
-    if (page==="delete") initDelete();
-    if (page==="charts") initCharts();
-  }catch(e){ console.error(e); }
-});
+})();

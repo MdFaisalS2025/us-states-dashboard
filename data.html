@@ -1,42 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Charts | US States Dashboard</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Charts • US States</title>
   <link rel="stylesheet" href="assets/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body data-page="charts">
-  <nav class="navbar">
-    <div class="container">
-      <div class="nav-brand">US States Dashboard</div>
-      <ul class="nav-links">
-        <li><a href="read.html">Data Table</a></li>
-        <li><a href="create.html">Create</a></li>
-        <li><a href="update.html">Update</a></li>
-        <li><a href="delete.html">Delete</a></li>
-        <li><a class="active" href="data.html">Charts</a></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
-      <a class="btn btn-outline-light" href="index.html">Home</a>
+  <nav class="nav">
+    <div class="brand">US States Dashboard</div>
+    <div class="links">
+      <a href="read.html">Data Table</a>
+      <a href="create.html">Create</a>
+      <a href="update.html">Update</a>
+      <a href="delete.html">Delete</a>
+      <a class="active" href="data.html">Charts</a>
+      <a href="about.html">About</a>
     </div>
+    <a class="btn" href="index.html">Home</a>
   </nav>
 
-  <main class="container py-4">
-    <div class="row g-3">
-      <div class="col-lg-4"><div class="card p-3"><h5>Population Share (Top 6)</h5><canvas id="chartPopulation"></canvas></div></div>
-      <div class="col-lg-4"><div class="card p-3"><h5>GDP by State (Top 8)</h5><canvas id="chartGDP"></canvas></div></div>
-      <div class="col-lg-4"><div class="card p-3"><h5>Land Area (Top 10)</h5><canvas id="chartArea"></canvas></div></div>
+  <main class="container">
+    <div class="grid grid-3">
+      <section class="panel"><canvas id="popChart" height="240"></canvas></section>
+      <section class="panel"><canvas id="gdpChart" height="240"></canvas></section>
+      <section class="panel"><canvas id="areaChart" height="240"></canvas></section>
     </div>
-    <div id="externalInsights" class="mt-3"></div>
+
+    <section class="panel" style="margin-top:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <h3 style="margin:0">External Insights</h3>
+        <button id="insight-refresh" class="btn">Refresh</button>
+      </div>
+      <div id="insight-loader" class="card-subtle mono">Loading latest USA GDP & Population…</div>
+      <div id="insight-error" class="notice" style="display:none">Couldn't load insights (check network/privacy shields). Showing local data only.</div>
+      <div class="insights">
+        <div class="card-subtle">
+          <div style="color:#9bb3c7;font-size:12px;margin-bottom:6px">USA GDP (current US$)</div>
+          <div id="insight-gdp" class="value" style="font-size:28px">—</div>
+          <div style="color:#9bb3c7;font-size:12px;margin-top:6px">Source: World Bank Open Data</div>
+        </div>
+        <div class="card-subtle">
+          <div style="color:#9bb3c7;font-size:12px;margin-bottom:6px">USA Population</div>
+          <div id="insight-pop" class="value" style="font-size:28px">—</div>
+          <div style="color:#9bb3c7;font-size:12px;margin-top:6px">Source: World Bank Open Data</div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer class="footer text-center py-3"><small>© 2025 US States Dashboard</small></footer>
+  <footer>© 2025 US States Dashboard</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script type="module" src="assets/controller.js"></script>
-
-  <!-- Botpress -->
+  <script src="assets/model.js"></script>
+  <script src="assets/controller.js"></script>
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>

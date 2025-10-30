@@ -1,89 +1,84 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Update State | US States Dashboard</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Update State • US States</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body data-page="update">
-  <nav class="navbar">
-    <div class="container">
-      <div class="nav-brand">US States Dashboard</div>
-      <ul class="nav-links">
-        <li><a href="read.html">Data Table</a></li>
-        <li><a href="create.html">Create</a></li>
-        <li><a class="active" href="update.html">Update</a></li>
-        <li><a href="delete.html">Delete</a></li>
-        <li><a href="data.html">Charts</a></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
+  <nav class="nav">
+    <div class="brand">US States Dashboard</div>
+    <div class="links">
+      <a href="read.html">Data Table</a>
+      <a href="create.html">Create</a>
+      <a class="active" href="update.html">Update</a>
+      <a href="delete.html">Delete</a>
+      <a href="data.html">Charts</a>
+      <a href="about.html">About</a>
     </div>
+    <a class="btn" href="read.html">Back to Table</a>
   </nav>
 
-  <main class="container py-4">
-    <h3 class="mb-3">Update State Information</h3>
+  <main class="container">
+    <!-- Chooser block -->
+    <section class="panel" style="margin-bottom:18px">
+      <h3 style="margin:0 0 8px 0">Choose a state to edit</h3>
+      <div style="display:flex;gap:10px;align-items:center">
+        <select id="state-picker" class="mono" style="min-width:280px"></select>
+        <button id="load-state" class="btn">Load</button>
+      </div>
+    </section>
 
-    <!-- Chooser (shows if no ?id=) -->
-    <div id="chooseContainer" class="card p-4 mb-3">
-      <h5 class="mb-2">Choose a state to edit</h5>
-      <div class="d-flex gap-2">
-        <select id="chooseId" class="form-select" style="max-width:360px"></select>
-        <button id="chooseBtn" type="button" class="btn btn-accent">Load</button>
-      </div>
-    </div>
-
-    <form id="updateForm" class="row g-3 d-none">
-      <div class="col-md-4">
-        <label for="id" class="form-label">State ID (2-Letter Code)</label>
-        <input id="id" name="id" class="form-control" readonly />
-      </div>
-      <div class="col-md-4">
-        <label for="name" class="form-label">State Name</label>
-        <input id="name" name="name" class="form-control" required />
-      </div>
-      <div class="col-md-4">
-        <label for="region" class="form-label">Region</label>
-        <select id="region" name="region" class="form-select" required>
-          <option value="">Select Region</option>
-          <option value="NE">Northeast</option>
-          <option value="MW">Midwest</option>
-          <option value="S">South</option>
-          <option value="W">West</option>
-        </select>
-      </div>
-      <div class="col-md-6">
-        <label for="capital" class="form-label">Capital</label>
-        <input id="capital" name="capital" class="form-control" />
-      </div>
-      <div class="col-md-6">
-        <label for="citiesCount" class="form-label">Number of Cities</label>
-        <input id="citiesCount" name="citiesCount" type="number" class="form-control" />
-      </div>
-      <div class="col-md-4">
-        <label for="population" class="form-label">Population</label>
-        <input id="population" name="population" type="number" class="form-control" />
-      </div>
-      <div class="col-md-4">
-        <label for="gdp" class="form-label">GDP (USD)</label>
-        <input id="gdp" name="gdp" type="number" class="form-control" />
-      </div>
-      <div class="col-md-4">
-        <label for="area" class="form-label">Land Area (km²)</label>
-        <input id="area" name="area" type="number" class="form-control" />
-      </div>
-      <div class="col-12 mt-2">
-        <button class="btn btn-accent" type="submit">Save Changes</button>
-        <a class="btn btn-outline-light" href="read.html">Cancel</a>
-      </div>
-    </form>
+    <section class="panel">
+      <h3 style="margin-top:0">Update State Information</h3>
+      <form id="state-form" class="form">
+        <div class="form-grid">
+          <div class="form-row">
+            <label for="id">State ID (2-Letter Code)</label>
+            <input id="id" maxlength="2" required>
+          </div>
+          <div class="form-row">
+            <label for="name">State Name</label>
+            <input id="name" required>
+          </div>
+          <div class="form-row">
+            <label for="region">Region</label>
+            <select id="region" required></select>
+          </div>
+          <div class="form-row">
+            <label for="capital">Capital</label>
+            <input id="capital">
+          </div>
+          <div class="form-row">
+            <label for="cities">Number of Cities</label>
+            <input id="cities" type="number" min="0" step="1">
+          </div>
+          <div class="form-row">
+            <label for="population">Population</label>
+            <input id="population" type="number" min="0" step="1">
+          </div>
+          <div class="form-row">
+            <label for="gdp">GDP (USD)</label>
+            <input id="gdp" type="number" min="0" step="1">
+          </div>
+          <div class="form-row">
+            <label for="area">Land Area (km²)</label>
+            <input id="area" type="number" min="0" step="1">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button class="btn" type="submit">Save Changes</button>
+          <a id="cancel" class="btn btn-danger" href="#">Cancel</a>
+        </div>
+      </form>
+    </section>
   </main>
 
-  <footer class="footer text-center py-3"><small>© 2025 US States Dashboard</small></footer>
+  <footer>© 2025 US States Dashboard</footer>
 
-  <script type="module" src="assets/controller.js"></script>
-
-  <!-- Botpress -->
+  <script src="assets/model.js"></script>
+  <script src="assets/controller.js"></script>
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>

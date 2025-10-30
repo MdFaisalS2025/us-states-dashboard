@@ -1,110 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>About | US States Dashboard</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>About • US States</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
-<body data-page="about">
-  <nav class="navbar">
-    <div class="container">
-      <div class="nav-brand">US States Dashboard</div>
-      <ul class="nav-links">
-        <li><a href="read.html">Data Table</a></li>
-        <li><a href="create.html">Create</a></li>
-        <li><a href="update.html">Update</a></li>
-        <li><a href="delete.html">Delete</a></li>
-        <li><a href="data.html">Charts</a></li>
-        <li><a class="active" href="about.html">About</a></li>
-      </ul>
-      <a class="btn btn-outline-light" target="_blank" href="README.md">README (Tech)</a>
+<body data-page="">
+  <nav class="nav">
+    <div class="brand">US States Dashboard</div>
+    <div class="links">
+      <a href="read.html">Data Table</a>
+      <a href="create.html">Create</a>
+      <a href="update.html">Update</a>
+      <a href="delete.html">Delete</a>
+      <a href="data.html">Charts</a>
+      <a class="active" href="about.html">About</a>
     </div>
+    <a class="btn" href="README.md" target="_blank">README (Tech)</a>
   </nav>
 
-  <main class="container py-4">
-    <div class="card p-4">
-      <h4 class="mb-3">About Us</h4>
-
-      <div class="row g-3 mb-4">
-        <div class="col-md-4">
-          <div class="card p-3 h-100 d-flex align-items-center gap-2 flex-row">
-            <img class="team-pic" src="assets/faisal.jpg" alt="Mohamed Faisal Sindhi">
-            <div><h6 class="mb-1">Mohamed Faisal Sindhi</h6><div class="muted">Frontend, Deployment, Chatbot</div></div>
-          </div>
+  <main class="container grid">
+    <section class="panel">
+      <h3 style="margin-top:0">About Us</h3>
+      <div class="grid grid-3">
+        <div class="card-subtle">
+          <img src="assets/avatars/faisal.png" alt="Mohamed Faisal Sindhi" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px"/>
+          <div style="font-weight:700">Mohamed Faisal Sindhi</div>
+          <div style="color:#9bb3c7">Frontend, deployment, chatbot</div>
         </div>
-        <div class="col-md-4">
-          <div class="card p-3 h-100 d-flex align-items-center gap-2 flex-row">
-            <img class="team-pic" src="assets/hongxu.jpg" alt="Hongxu Yang">
-            <div><h6 class="mb-1">Hongxu Yang</h6><div class="muted">UI/UX, ERD & Documentation</div></div>
-          </div>
+        <div class="card-subtle">
+          <img src="assets/avatars/hongxu.png" alt="Hongxu Yang" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px"/>
+          <div style="font-weight:700">Hongxu Yang</div>
+          <div style="color:#9bb3c7">UI/UX, ERD & documentation</div>
         </div>
-        <div class="col-md-4">
-          <div class="card p-3 h-100 d-flex align-items-center gap-2 flex-row">
-            <img class="team-pic" src="assets/jonathan.jpg" alt="Jonathan James">
-            <div><h6 class="mb-1">Jonathan James</h6><div class="muted">Controllers, Charts, Data Service</div></div>
-          </div>
+        <div class="card-subtle">
+          <img src="assets/avatars/jonathan.png" alt="Jonathan James" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px"/>
+          <div style="font-weight:700">Jonathan James</div>
+          <div style="color:#9bb3c7">Controllers, charts, data service</div>
         </div>
       </div>
-
-      <div class="mb-3 d-flex gap-2 flex-wrap">
-        <a class="btn btn-accent" target="_blank" href="https://github.com/MdFaisalS2025/us-states-dashboard">GitHub Repository</a>
-        <a class="btn btn-outline-light" target="_blank" href="README.md">README (Technical Details)</a>
+      <div style="margin-top:14px">
+        <a class="btn" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub Repository</a>
+        <a class="btn" href="README.md" target="_blank">README (Technical Details)</a>
       </div>
+    </section>
 
-      <h5 class="mb-2">Data Model (ERD)</h5>
-      <img class="erd-img" src="assets/logical_data_model_v3.png" alt="Logical Data Model v3">
-      <small class="text-muted-2 d-block mt-2">Updated ERD used by the application.</small>
+    <section class="panel">
+      <h3 style="margin-top:0">Data Model (ERD)</h3>
+      <img src="logical_data_model_v3.png" alt="ERD" style="max-width:100%;height:auto;border-radius:12px;border:1px solid var(--ring)"/>
+    </section>
 
-      <hr class="my-4"/>
+    <section class="panel">
+      <h3 style="margin-top:0">API Endpoints Used (Read-Only)</h3>
+      <ul style="margin-top:6px">
+        <li>World Bank GDP: <span class="mono">https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json</span></li>
+        <li>World Bank Population: <span class="mono">https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json</span></li>
+      </ul>
+      <div style="color:#9bb3c7;margin-top:6px">Fetched dynamically for external insights; no data persistence.</div>
+    </section>
 
-      <div class="row g-3">
-        <div class="col-lg-6"><div class="card p-3 h-100">
-          <h6>API Endpoints (Read-Only)</h6>
-          <ul class="mb-2">
-            <li><code>https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json&per_page=60</code></li>
-            <li><code>https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json&per_page=60</code></li>
-          </ul>
-          <small class="text-muted-2">We display these values in “External Insights”. Data is not persisted.</small>
-        </div></div>
+    <section class="panel">
+      <h3 style="margin-top:0">CRUD Implementation Overview</h3>
+      <ul>
+        <li><strong>Create:</strong> <span class="mono">create.html</span> → adds new records to local storage (Model.upsert).</li>
+        <li><strong>Read:</strong> <span class="mono">read.html</span> → searchable table (basic), actions for Edit/Delete.</li>
+        <li><strong>Update:</strong> <span class="mono">update.html</span> → picker + form to modify records.</li>
+        <li><strong>Delete:</strong> <span class="mono">delete.html</span> → confirmation removal.</li>
+      </ul>
+    </section>
 
-        <div class="col-lg-6"><div class="card p-3 h-100">
-          <h6>CRUD Implementation</h6>
-          <ul class="mb-0">
-            <li><b>Create:</b> <code>create.html</code> → <code>DB.createState()</code></li>
-            <li><b>Read:</b> <code>read.html</code> searchable table</li>
-            <li><b>Update:</b> <code>update.html</code> dropdown or <code>?id=XX</code></li>
-            <li><b>Delete:</b> <code>delete.html</code> confirmation flow</li>
-          </ul>
-        </div></div>
+    <section class="panel">
+      <h3 style="margin-top:0">MVC Architecture</h3>
+      <ul>
+        <li><strong>Model:</strong> <span class="mono">assets/model.js</span> — singleton with schema versioning & persistence.</li>
+        <li><strong>Controller:</strong> <span class="mono">assets/controller.js</span> — page routers + actions + insights.</li>
+        <li><strong>View:</strong> HTML pages with modular scripts and Chart.js visualizations.</li>
+      </ul>
+    </section>
 
-        <div class="col-lg-6"><div class="card p-3 h-100">
-          <h6>MVC Architecture</h6>
-          <ul class="mb-0">
-            <li><b>Model:</b> <code>assets/model.js</code> (localStorage + schema versioning & migration)</li>
-            <li><b>Controller:</b> <code>assets/controller.js</code></li>
-            <li><b>View:</b> HTML pages + <code>assets/charts.js</code></li>
-          </ul>
-        </div></div>
-
-        <div class="col-lg-6"><div class="card p-3 h-100">
-          <h6>Challenges & Solutions</h6>
-          <ul class="mb-0">
-            <li>KPI blanks → set KPIs separate from chart rendering.</li>
-            <li>Charts not loading → migrated old storage keys to the new one.</li>
-            <li>External API blocked → added World Bank with graceful local fallback.</li>
-            <li>Update UX → added in-page chooser when <code>?id</code> is missing.</li>
-          </ul>
-        </div></div>
-      </div>
-    </div>
+    <section class="panel">
+      <h3 style="margin-top:0">Notable Technical Challenges & Solutions</h3>
+      <ul>
+        <li><strong>KPI blanks:</strong> Compute from model aggregates independent of charts.</li>
+        <li><strong>Update UX:</strong> Added dynamic chooser + query <span class="mono">?id=XX</span> support.</li>
+        <li><strong>External API reliability:</strong> Switched to World Bank with latest non-null fallback and clear errors.</li>
+        <li><strong>Persistence:</strong> LocalStorage with schema versioning to avoid stale structures.</li>
+      </ul>
+    </section>
   </main>
 
-  <footer class="footer text-center py-3"><small>© 2025 US States Dashboard — Built with ❤️ by Faisal, Hongxu & Jonathan</small></footer>
+  <footer>© 2025 US States Dashboard — Built with ❤️ by Faisal, Hongxu & Jonathan</footer>
 
-  <script type="module" src="assets/controller.js"></script>
-
-  <!-- Botpress -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
