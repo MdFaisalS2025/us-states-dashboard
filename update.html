@@ -13,7 +13,7 @@
       <ul class="nav-links">
         <li><a href="read.html">Data Table</a></li>
         <li><a href="create.html">Create</a></li>
-        <li><a href="update.html" class="active">Update</a></li>
+        <li><a class="active" href="update.html">Update</a></li>
         <li><a href="delete.html">Delete</a></li>
         <li><a href="data.html">Charts</a></li>
         <li><a href="about.html">About</a></li>
@@ -24,24 +24,23 @@
   <main class="container py-4">
     <h3 class="mb-3">Update State Information</h3>
 
-    <!-- State Chooser -->
+    <!-- Chooser (shows if no ?id=) -->
     <div id="chooseContainer" class="card p-4 mb-3">
       <h5 class="mb-2">Choose a state to edit</h5>
       <div class="d-flex gap-2">
         <select id="chooseId" class="form-select" style="max-width:360px"></select>
-        <button id="chooseBtn" class="btn btn-accent" type="button">Load</button>
+        <button id="chooseBtn" type="button" class="btn btn-accent">Load</button>
       </div>
     </div>
 
-    <!-- Form -->
     <form id="updateForm" class="row g-3 d-none">
       <div class="col-md-4">
         <label for="id" class="form-label">State ID (2-Letter Code)</label>
-        <input type="text" id="id" name="id" class="form-control" readonly />
+        <input id="id" name="id" class="form-control" readonly />
       </div>
       <div class="col-md-4">
         <label for="name" class="form-label">State Name</label>
-        <input type="text" id="name" name="name" class="form-control" required />
+        <input id="name" name="name" class="form-control" required />
       </div>
       <div class="col-md-4">
         <label for="region" class="form-label">Region</label>
@@ -53,32 +52,29 @@
           <option value="W">West</option>
         </select>
       </div>
-
       <div class="col-md-6">
         <label for="capital" class="form-label">Capital</label>
-        <input type="text" id="capital" name="capital" class="form-control" />
+        <input id="capital" name="capital" class="form-control" />
       </div>
       <div class="col-md-6">
         <label for="citiesCount" class="form-label">Number of Cities</label>
-        <input type="number" id="citiesCount" name="citiesCount" class="form-control" />
+        <input id="citiesCount" name="citiesCount" type="number" class="form-control" />
       </div>
-
       <div class="col-md-4">
         <label for="population" class="form-label">Population</label>
-        <input type="number" id="population" name="population" class="form-control" />
+        <input id="population" name="population" type="number" class="form-control" />
       </div>
       <div class="col-md-4">
         <label for="gdp" class="form-label">GDP (USD)</label>
-        <input type="number" id="gdp" name="gdp" class="form-control" />
+        <input id="gdp" name="gdp" type="number" class="form-control" />
       </div>
       <div class="col-md-4">
         <label for="area" class="form-label">Land Area (km²)</label>
-        <input type="number" id="area" name="area" class="form-control" />
+        <input id="area" name="area" type="number" class="form-control" />
       </div>
-
       <div class="col-12 mt-2">
-        <button type="submit" class="btn btn-accent">Save Changes</button>
-        <a href="read.html" class="btn btn-outline-light">Cancel</a>
+        <button class="btn btn-accent" type="submit">Save Changes</button>
+        <a class="btn btn-outline-light" href="read.html">Cancel</a>
       </div>
     </form>
   </main>
