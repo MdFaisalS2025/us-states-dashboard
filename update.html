@@ -1,85 +1,83 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Update State • US States</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Update • US States</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body data-page="update">
-  <nav class="nav">
-    <div class="brand">US States Dashboard</div>
-    <div class="links">
+  <nav>
+    <div class="navbar">
+      <div class="brand">US States Dashboard</div>
       <a href="read.html">Data Table</a>
       <a href="create.html">Create</a>
-      <a class="active" href="update.html">Update</a>
+      <a href="update.html">Update</a>
       <a href="delete.html">Delete</a>
       <a href="data.html">Charts</a>
       <a href="about.html">About</a>
+      <a class="right btn ghost" href="read.html">Back to Table</a>
     </div>
-    <a class="btn" href="read.html">Back to Table</a>
   </nav>
 
-  <main class="container">
-    <!-- Chooser block -->
-    <section class="panel" style="margin-bottom:18px">
-      <h3 style="margin:0 0 8px 0">Choose a state to edit</h3>
-      <div style="display:flex;gap:10px;align-items:center">
-        <select id="state-picker" class="mono" style="min-width:280px"></select>
-        <button id="load-state" class="btn">Load</button>
+  <main class="wrapper">
+    <section class="panel">
+      <div class="card-title">Choose a state to edit</div>
+      <div style="display:flex;gap:8px;">
+        <select id="stateChooser" class="input" style="max-width:360px;"></select>
+        <button id="btnLoad" class="btn ghost">Load</button>
       </div>
     </section>
 
-    <section class="panel">
-      <h3 style="margin-top:0">Update State Information</h3>
-      <form id="state-form" class="form">
-        <div class="form-grid">
-          <div class="form-row">
-            <label for="id">State ID (2-Letter Code)</label>
-            <input id="id" maxlength="2" required>
+    <section class="panel" style="margin-top:18px;">
+      <div class="card-title">Update State Information</div>
+      <form id="updateForm" class="form">
+        <div class="row">
+          <div>
+            <label class="label">State ID (2-Letter Code)</label>
+            <input id="u_id" class="input" readonly/>
           </div>
-          <div class="form-row">
-            <label for="name">State Name</label>
-            <input id="name" required>
+          <div>
+            <label class="label">State Name</label>
+            <input id="u_name" class="input" required/>
           </div>
-          <div class="form-row">
-            <label for="region">Region</label>
-            <select id="region" required></select>
+          <div>
+            <label class="label">Region</label>
+            <select id="u_region" class="input" required>
+              <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
+            </select>
           </div>
-          <div class="form-row">
-            <label for="capital">Capital</label>
-            <input id="capital">
+          <div>
+            <label class="label">Capital</label>
+            <input id="u_capital" class="input" required/>
           </div>
-          <div class="form-row">
-            <label for="cities">Number of Cities</label>
-            <input id="cities" type="number" min="0" step="1">
+          <div>
+            <label class="label">Number of Cities</label>
+            <input id="u_cities" type="number" class="input" min="0" required/>
           </div>
-          <div class="form-row">
-            <label for="population">Population</label>
-            <input id="population" type="number" min="0" step="1">
+          <div>
+            <label class="label">Population</label>
+            <input id="u_population" type="number" class="input" min="0" required/>
           </div>
-          <div class="form-row">
-            <label for="gdp">GDP (USD)</label>
-            <input id="gdp" type="number" min="0" step="1">
+          <div>
+            <label class="label">GDP (USD)</label>
+            <input id="u_gdp" type="number" class="input" min="0" required/>
           </div>
-          <div class="form-row">
-            <label for="area">Land Area (km²)</label>
-            <input id="area" type="number" min="0" step="1">
+          <div>
+            <label class="label">Land Area (km²)</label>
+            <input id="u_area" type="number" class="input" min="0" required/>
           </div>
         </div>
-        <div style="display:flex;gap:10px;margin-top:8px">
+        <div style="display:flex;gap:10px;margin-top:6px;">
           <button class="btn" type="submit">Save Changes</button>
-          <a id="cancel" class="btn btn-danger" href="#">Cancel</a>
+          <a class="btn ghost" href="read.html">Cancel</a>
         </div>
       </form>
     </section>
+
+    <div class="footer">© 2025 US States Dashboard</div>
   </main>
 
-  <footer>© 2025 US States Dashboard</footer>
-
-  <script src="assets/model.js"></script>
-  <script src="assets/controller.js"></script>
-  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>
