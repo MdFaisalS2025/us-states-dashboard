@@ -20,35 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'about') initAbout();
 });
 
-// -------- Bot widget (every page) ----------
-function mountBot(){
-  // If already mounted (navigations in SPA-like flows), skip
-  if (document.getElementById('bot-fab')) return;
-
-  const fab = document.createElement('div');
-  fab.id = 'bot-fab';
-  fab.className = 'bot-fab';
-  fab.title = 'Open Bot';
-  fab.textContent = '💬';
-
-  const panel = document.createElement('div');
-  panel.id = 'bot-panel';
-  panel.className = 'bot-panel';
-  panel.innerHTML = `
-    <div class="head">
-      <div class="ttl">Travel Assistant Bot</div>
-      <button id="bot-close" class="xbtn">Close</button>
-    </div>
-    <iframe id="bot-iframe" class="bot-iframe" src="mybot.html" title="Bot"></iframe>
-  `;
-
-  document.body.appendChild(fab);
-  document.body.appendChild(panel);
-
-  const toggle = () => panel.classList.toggle('open');
-  fab.addEventListener('click', toggle);
-  panel.querySelector('#bot-close').addEventListener('click', toggle);
-}
 
 // -------- HOME ----------
 async function initHome() {
