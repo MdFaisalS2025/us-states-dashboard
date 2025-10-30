@@ -1,68 +1,77 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>US States Dashboard</title>
   <link rel="stylesheet" href="assets/styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body data-page="home">
-  <nav class="navbar">
-    <div class="container">
-      <div class="nav-brand">US States Dashboard</div>
-      <ul class="nav-links">
-        <li><a href="read.html">Data Table</a></li>
-        <li><a href="create.html">Create</a></li>
-        <li><a href="update.html">Update</a></li>
-        <li><a href="delete.html">Delete</a></li>
-        <li><a href="data.html">Charts</a></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
-      <a class="btn btn-outline-light" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
+  <nav class="nav">
+    <div class="brand">US States Dashboard</div>
+    <div class="links">
+      <a href="read.html">Data Table</a>
+      <a href="create.html">Create</a>
+      <a href="update.html">Update</a>
+      <a href="delete.html">Delete</a>
+      <a href="data.html">Charts</a>
+      <a href="about.html">About</a>
     </div>
+    <a class="btn" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
   </nav>
 
-  <main class="container py-4">
-    <div class="row g-3">
-      <div class="col-lg-4">
-        <div class="card p-4">
-          <h5>Total Population</h5>
-          <div class="display-5" id="kpiTotalPop">—</div>
-          <small class="text-muted-2">Across all states in the dataset</small>
-        </div>
-      </div>
-      <div class="col-lg-4">
-        <div class="card p-4">
-          <h5>Total GDP</h5>
-          <div class="display-5" id="kpiTotalGDP">—</div>
-          <small class="text-muted-2">Aggregate (USD)</small>
-        </div>
-      </div>
-      <div class="col-lg-4">
-        <div class="card p-4">
-          <h5>Total Land Area</h5>
-          <div class="display-5" id="kpiTotalArea">—</div>
-          <small class="text-muted-2">km²</small>
-        </div>
-      </div>
-    </div>
+  <main class="container grid grid-3">
+    <section class="panel kpi">
+      <div class="label">Total Population</div>
+      <div id="kpi-pop" class="value">—</div>
+      <div class="sub">Across all states in the dataset</div>
+    </section>
+    <section class="panel kpi">
+      <div class="label">Total GDP</div>
+      <div id="kpi-gdp" class="value">—</div>
+      <div class="sub">Aggregate (USD)</div>
+    </section>
+    <section class="panel kpi">
+      <div class="label">Total Land Area</div>
+      <div id="kpi-area" class="value">—</div>
+      <div class="sub">km²</div>
+    </section>
 
-    <!-- Insights (WB or local fallback; never blank) -->
-    <div id="insights" class="mt-3"></div>
+    <section class="panel" style="grid-column:1/-1">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <h3 style="margin:0">External Insights</h3>
+        <button id="insight-refresh" class="btn">Refresh</button>
+      </div>
+      <div id="insight-loader" class="card-subtle mono">Loading latest USA GDP & Population…</div>
+      <div id="insight-error" class="notice" style="display:none">Couldn't load insights (check network/privacy shields). Showing local data only.</div>
+      <div class="insights">
+        <div class="card-subtle">
+          <div style="color:#9bb3c7;font-size:12px;margin-bottom:6px">USA GDP (current US$)</div>
+          <div id="insight-gdp" class="value" style="font-size:28px">—</div>
+          <div style="color:#9bb3c7;font-size:12px;margin-top:6px">Source: World Bank Open Data</div>
+        </div>
+        <div class="card-subtle">
+          <div style="color:#9bb3c7;font-size:12px;margin-bottom:6px">USA Population</div>
+          <div id="insight-pop" class="value" style="font-size:28px">—</div>
+          <div style="color:#9bb3c7;font-size:12px;margin-top:6px">Source: World Bank Open Data</div>
+        </div>
+      </div>
+    </section>
 
-    <div class="card p-4 mt-3">
-      <h5>Get Started</h5>
-      <p class="muted">Use CRUD pages to manage records. Charts update automatically.</p>
-      <a href="create.html" class="btn btn-accent">Add a State</a>
-    </div>
+    <section class="panel" style="grid-column:1/-1">
+      <h3 style="margin-top:0">Get Started</h3>
+      <p>Use CRUD pages to manage records. Charts update automatically.</p>
+      <a class="btn" href="create.html">Add a State</a>
+    </section>
   </main>
 
-  <footer class="footer text-center py-3"><small>© 2025 US States Dashboard</small></footer>
+  <footer>© 2025 US States Dashboard</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script type="module" src="assets/controller.js"></script>
+  <script src="assets/model.js"></script>
+  <script src="assets/controller.js"></script>
 
-  <!-- Botpress -->
+  <!-- Bot on every page -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
