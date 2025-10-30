@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Update State | US States Dashboard</title>
-  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body data-page="update">
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="container">
       <div class="nav-brand">US States Dashboard</div>
@@ -34,7 +33,7 @@
       </div>
     </div>
 
-    <!-- Update Form -->
+    <!-- Form -->
     <form id="updateForm" class="row g-3 d-none">
       <div class="col-md-4">
         <label for="id" class="form-label">State ID (2-Letter Code)</label>
@@ -77,25 +76,18 @@
         <input type="number" id="area" name="area" class="form-control" />
       </div>
 
-      <div class="col-12 mt-3">
+      <div class="col-12 mt-2">
         <button type="submit" class="btn btn-accent">Save Changes</button>
         <a href="read.html" class="btn btn-outline-light">Cancel</a>
       </div>
     </form>
   </main>
 
-  <footer class="footer text-center py-3">
-    <small>© 2025 US States Dashboard</small>
-  </footer>
+  <footer class="footer text-center py-3"><small>© 2025 US States Dashboard</small></footer>
 
-  <!-- Scripts -->
-  <script type="module">
-    import { initUpdatePage } from "./assets/controller.js";
-    import "./assets/model.js";
-    initUpdatePage();
-  </script>
+  <script type="module" src="assets/controller.js"></script>
 
-  <!-- Botpress chatbot (on every page) -->
+  <!-- Botpress -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
