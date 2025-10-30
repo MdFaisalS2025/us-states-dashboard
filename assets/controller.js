@@ -2,10 +2,13 @@
 import { getAllStates, getStateById, totals, createState, updateState, deleteState } from './model.js';
 import { fmt, bindNavActive } from './utils.js';
 import { getUsaGdpAndPop } from './api.js';
+import { renderAllCharts } from './charts.js';
 
 // run on every page
 document.addEventListener('DOMContentLoaded', () => {
   bindNavActive();
+  mountBot(); // <- floating bot everywhere
+
   const page = document.body.dataset.page;
 
   if (page === 'home') initHome();
@@ -16,6 +19,36 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'charts') initCharts(); // data.html
   if (page === 'about') initAbout();
 });
+
+// -------- Bot widget (every page) ----------
+function mountBot(){
+  // If already mounted (navigations in SPA-like flows), skip
+  if (document.getElementById('bot-fab')) return;
+
+  const fab = document.createElement('div');
+  fab.id = 'bot-fab';
+  fab.className = 'bot-fab';
+  fab.title = 'Open Bot';
+  fab.textContent = '💬';
+
+  const panel = document.createElement('div');
+  panel.id = 'bot-panel';
+  panel.className = 'bot-panel';
+  panel.innerHTML = `
+    <div class="head">
+      <div class="ttl">Travel Assistant Bot</div>
+      <button id="bot-close" class="xbtn">Close</button>
+    </div>
+    <iframe id="bot-iframe" class="bot-iframe" src="mybot.html" title="Bot"></iframe>
+  `;
+
+  document.body.appendChild(fab);
+  document.body.appendChild(panel);
+
+  const toggle = () => panel.classList.toggle('open');
+  fab.addEventListener('click', toggle);
+  panel.querySelector('#bot-close').addEventListener('click', toggle);
+}
 
 // -------- HOME ----------
 async function initHome() {
@@ -33,6 +66,7 @@ async function initHome() {
 async function fillInsights() {
   const gdpEl = document.getElementById('insGdp');
   const popEl = document.getElementById('insPop');
+  if (!gdpEl || !popEl) return;
   gdpEl.textContent = 'Loading...';
   popEl.textContent = 'Loading...';
   const data = await getUsaGdpAndPop();
@@ -152,14 +186,13 @@ function initDelete() {
 }
 
 // -------- CHARTS ----------
-import { renderAllCharts } from './charts.js';
 function initCharts() {
   renderAllCharts();
-  // also mirror insights block from home for consistency
+  // also mirror insights block (if present)
   fillInsights();
 }
 
 // -------- ABOUT ----------
 function initAbout() {
-  // nothing dynamic; keeping hook for future
+  // placeholder
 }
