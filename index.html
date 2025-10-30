@@ -1,164 +1,71 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>US States Dashboard</title>
-  <link rel="stylesheet" href="assets/styles.css"/>
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
-<body>
-  <header class="nav">
-    <div><strong>US States Dashboard</strong></div>
-    <nav class="right">
+<body data-page="home">
+  <nav>
+    <div class="navbar">
+      <div class="brand">US States Dashboard</div>
       <a href="read.html">Data Table</a>
       <a href="create.html">Create</a>
       <a href="update.html">Update</a>
       <a href="delete.html">Delete</a>
       <a href="data.html">Charts</a>
       <a href="about.html">About</a>
-      <a class="btn btn-ghost" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
-    </nav>
-  </header>
+      <a class="right btn ghost" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank">GitHub</a>
+    </div>
+  </nav>
 
-  <main class="container">
-    <!-- KPIs -->
-    <section class="grid grid-3">
-      <div class="card">
-        <div class="card-title">Total Population</div>
-        <div class="kpi-wrap">
-          <div id="kpiPopulation" class="kpi-number">—</div>
-        </div>
-        <div class="card-sub">Across all states in the dataset</div>
+  <main class="wrapper">
+    <section class="grid kpi">
+      <div class="panel kpi kpi-card">
+        <div class="kpi-title">Total Population</div>
+        <div id="kpiPopulation" class="kpi-value">0</div>
+        <div class="muted">Across all states in the dataset</div>
       </div>
-
-      <div class="card">
-        <div class="card-title">Total GDP</div>
-        <div class="kpi-wrap">
-          <div id="kpiGDP" class="kpi-number">—</div>
-        </div>
-        <div class="card-sub">Aggregate (USD)</div>
+      <div class="panel kpi kpi-card">
+        <div class="kpi-title">Total GDP</div>
+        <div id="kpiGdp" class="kpi-value">$0</div>
+        <div class="muted">Aggregate (USD)</div>
       </div>
+      <div class="panel kpi kpi-card">
+        <div class="kpi-title">Total Land Area</div>
+        <div id="kpiArea" class="kpi-value">0</div>
+        <div class="muted">km²</div>
+      </div>
+    </section>
 
-      <div class="card">
-        <div class="card-title">Total Land Area</div>
-        <div class="kpi-wrap">
-          <div id="kpiArea" class="kpi-number">—</div>
-          <span class="kpi-unit">km²</span>
+    <section class="grid" style="margin-top:20px;">
+      <div class="panel">
+        <div class="card-title">External Insights</div>
+        <button id="btnInsightsRefresh" class="btn btn-xs ghost" style="float:right;margin-top:-34px;">Refresh</button>
+
+        <div class="grid" style="grid-template-columns:1fr 1fr;">
+          <div class="panel">
+            <div class="muted">USA GDP (current US$)</div>
+            <div id="insGdp" class="kpi-value" style="font-size:clamp(1.2rem,3.5vw,2rem);"></div>
+          </div>
+          <div class="panel">
+            <div class="muted">USA Population</div>
+            <div id="insPop" class="kpi-value" style="font-size:clamp(1.2rem,3.5vw,2rem);"></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- External Insights (World Bank) -->
-    <section class="card" style="margin-top:20px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 class="section-title" style="margin:0">External Insights</h3>
-        <button id="wbRefresh" class="btn btn-ghost">Refresh</button>
-      </div>
-      <p class="muted" style="margin-top:8px">World Bank (USA)</p>
-
-      <div class="row" style="margin-top:10px">
-        <div class="panel">
-          <div class="muted">USA GDP (current US$)</div>
-          <div id="wbGDP" style="font-weight:800;font-size:1.4rem;margin-top:6px">—</div>
-          <div id="wbGDPYear" class="muted" style="margin-top:4px"></div>
-          <div class="muted" style="margin-top:6px">Source: World Bank Open Data</div>
-        </div>
-        <div class="panel">
-          <div class="muted">USA Population</div>
-          <div id="wbPOP" style="font-weight:800;font-size:1.4rem;margin-top:6px">—</div>
-          <div id="wbPOPYear" class="muted" style="margin-top:4px"></div>
-          <div class="muted" style="margin-top:6px">Source: World Bank Open Data</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" style="margin-top:20px">
-      <h3 class="section-title">Get Started</h3>
+    <section class="panel" style="margin-top:20px;">
+      <div class="card-title">Get Started</div>
       <p class="muted">Use CRUD pages to manage records. Charts update automatically.</p>
-      <a class="btn btn-primary" href="create.html" style="margin-top:10px">Add a State</a>
+      <a class="btn" href="create.html">Add a State</a>
     </section>
+
+    <div class="footer">© 2025 US States Dashboard</div>
   </main>
 
-  <footer class="footer">© 2025 US States Dashboard</footer>
-
-  <!-- Scripts (keep order) -->
-  <script src="assets/utils.js"></script>
-  <script src="assets/model.js"></script>
-  <script src="assets/api.js"></script>
-  <script>
-    // --- Format helper (fallback if utils doesn’t expose one) ---
-    const fmt = (n) => {
-      try { return Number(n).toLocaleString('en-US'); }
-      catch { return n; }
-    };
-
-    // --- Load local totals for KPIs ---
-    function loadKPIs(){
-      try{
-        const store = (window.StateStore || window.App?.StateStore || window.Model);
-        const all = store?.getAll ? store.getAll() : (JSON.parse(localStorage.getItem('US_STATES_DB_V3')||'{"states":[]}').states);
-        const totals = all.reduce((acc, s)=>({
-          pop: acc.pop + (Number(s.population)||0),
-          gdp: acc.gdp + (Number(s.gdp)||0),
-          area: acc.area + (Number(s.land_area)||0)
-        }), {pop:0,gdp:0,area:0});
-
-        document.getElementById('kpiPopulation').textContent = fmt(totals.pop);
-        document.getElementById('kpiGDP').textContent = '$' + fmt(totals.gdp);
-        document.getElementById('kpiArea').textContent = fmt(totals.area);
-      }catch(e){
-        console.error('KPI error', e);
-      }
-    }
-
-    // --- World Bank cards (latest year automatically) ---
-    async function loadWB(){
-      const gdpEl = document.getElementById('wbGDP');
-      const gdpY = document.getElementById('wbGDPYear');
-      const popEl = document.getElementById('wbPOP');
-      const popY = document.getElementById('wbPOPYear');
-
-      const GDP_URL = 'https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json';
-      const POP_URL = 'https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json';
-
-      try{
-        const [gdpRes, popRes] = await Promise.all([fetch(GDP_URL), fetch(POP_URL)]);
-        const [gdpJson, popJson] = await Promise.all([gdpRes.json(), popRes.json()]);
-
-        const gdpRow = (gdpJson?.[1]||[]).find(r => r.value !== null);
-        const popRow = (popJson?.[1]||[]).find(r => r.value !== null);
-
-        if(gdpRow){
-          gdpEl.textContent = '$' + fmt(gdpRow.value);
-          gdpY.textContent = `(Year: ${gdpRow.date})`;
-        }else{
-          gdpEl.textContent = '—';
-          gdpY.textContent = '';
-        }
-        if(popRow){
-          popEl.textContent = fmt(popRow.value);
-          popY.textContent = `(Year: ${popRow.date})`;
-        }else{
-          popEl.textContent = '—';
-          popY.textContent = '';
-        }
-      }catch(err){
-        console.warn('World Bank fetch failed', err);
-        gdpEl.textContent = '—';
-        popEl.textContent = '—';
-        gdpY.textContent = '';
-        popY.textContent = '';
-      }
-    }
-
-    document.getElementById('wbRefresh').addEventListener('click', loadWB);
-
-    loadKPIs();
-    loadWB();
-  </script>
-
-  <!-- bot on every page -->
-  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>

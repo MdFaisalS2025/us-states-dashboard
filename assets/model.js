@@ -1,75 +1,92 @@
-/* assets/model.js
- * Singleton data layer with schema versioning + localStorage persistence.
- * Exposes CRUD + aggregates used by KPIs/charts.
- */
-const Model = (() => {
-  const STORAGE_KEY = "us_states_dashboard.v3";
-  const SCHEMA_VERSION = 3;
+// assets/model.js
+// Persistent LocalStorage model with safe seeding + helpers
 
-  // Regions for select controls
-  const REGIONS = ["Northeast", "South", "Midwest", "West", "Other"];
+const LS_KEY = 'us-states-v3';
 
-  // Minimal clean seed (edit/extend freely). You can paste your 50-state set here.
-  const DEMO_SEED = [
-    { id:"CA", name:"California", region:"West",  capital:"Sacramento", cities:482, population:39500000, gdp:3100000000000, area:423967 },
-    { id:"TX", name:"Texas",      region:"South", capital:"Austin",     cities:1216,population:29500000, gdp:1870000000000, area:695662 },
-    { id:"FL", name:"Florida",    region:"South", capital:"Tallahassee",cities:411, population:21900000, gdp:1200000000000, area:170312 },
-    { id:"NY", name:"New York",   region:"Northeast", capital:"Albany", cities:62,  population:19400000, gdp:2100000000000, area:141297 },
-    { id:"IL", name:"Illinois",   region:"Midwest", capital:"Springfield", cities:1297, population:12500000, gdp:870000000000, area:149995 },
-    { id:"PA", name:"Pennsylvania", region:"Northeast", capital:"Harrisburg", cities:2567, population:13000000, gdp:900000000000, area:119280 },
-    { id:"OH", name:"Ohio",       region:"Midwest", capital:"Columbus", cities:938, population:11800000, gdp:780000000000, area:116098 },
-    { id:"GA", name:"Georgia",    region:"South", capital:"Atlanta", cities:535, population:10800000, gdp:680000000000, area:153910 },
-    { id:"NC", name:"North Carolina", region:"South", capital:"Raleigh", cities:552, population:10800000, gdp:700000000000, area:139391 },
-    { id:"AZ", name:"Arizona",    region:"West", capital:"Phoenix", cities:91, population:7600000, gdp:420000000000, area:295234 }
-  ];
+// ------- seed if empty (first load) -------
+const SEED = [
+  { id: 'AZ', name: 'Arizona',  region: 'West',     capital: 'Phoenix',     population: 7600000,  gdp: 420000000000, area: 295234, cities: 91 },
+  { id: 'CA', name: 'California',region: 'West',     capital: 'Sacramento',  population: 39500000, gdp: 3100000000000, area: 423967, cities: 482 },
+  { id: 'FL', name: 'Florida',   region: 'South',    capital: 'Tallahassee', population: 21900000, gdp: 1200000000000, area: 170312, cities: 411 },
+  { id: 'GA', name: 'Georgia',   region: 'South',    capital: 'Atlanta',     population: 10800000, gdp: 680000000000,  area: 153910, cities: 535 },
+  { id: 'IL', name: 'Illinois',  region: 'Midwest',  capital: 'Springfield', population: 12500000, gdp: 870000000000,  area: 149995, cities: 1297 },
+  { id: 'NY', name: 'New York',  region: 'Northeast',capital: 'Albany',      population: 19400000, gdp: 2100000000000, area: 141297, cities: 62 },
+];
 
-  function loadRaw() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }
-    catch { return null; }
+function _load() {
+  const raw = localStorage.getItem(LS_KEY);
+  if (!raw) {
+    localStorage.setItem(LS_KEY, JSON.stringify(SEED));
+    return [...SEED];
   }
-  function saveRaw(payload) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }
+  try {
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr)) return arr;
+  } catch {}
+  localStorage.setItem(LS_KEY, JSON.stringify(SEED));
+  return [...SEED];
+}
 
-  function migrateIfNeeded(raw) {
-    if (!raw || raw.version !== SCHEMA_VERSION) {
-      // Fresh payload from seed
-      const payload = { version: SCHEMA_VERSION, states: DEMO_SEED };
-      saveRaw(payload);
-      return payload;
-    }
-    return raw;
-  }
+function _save(arr) {
+  localStorage.setItem(LS_KEY, JSON.stringify(arr));
+}
 
-  // Public API
-  let state = migrateIfNeeded(loadRaw());
+export function getAllStates() {
+  return _load().sort((a,b) => a.name.localeCompare(b.name));
+}
 
-  function list() {
-    return [...state.states].sort((a,b)=>a.name.localeCompare(b.name));
-  }
-  function get(id) {
-    return state.states.find(s => s.id === id) || null;
-  }
-  function upsert(item) {
-    const i = state.states.findIndex(s => s.id === item.id);
-    if (i >= 0) state.states[i] = {...item};
-    else state.states.push({...item});
-    saveRaw(state);
-    return get(item.id);
-  }
-  function remove(id) {
-    state.states = state.states.filter(s => s.id !== id);
-    saveRaw(state);
-  }
-  function aggregates() {
-    const all = state.states;
-    const totalPopulation = all.reduce((t,s)=>t + (Number(s.population)||0),0);
-    const totalGDP = all.reduce((t,s)=>t + (Number(s.gdp)||0),0);
-    const totalArea = all.reduce((t,s)=>t + (Number(s.area)||0),0);
-    return { totalPopulation, totalGDP, totalArea };
-  }
-  function regions() { return REGIONS; }
+export function getStateById(id) {
+  return _load().find(s => s.id.toUpperCase() === id.toUpperCase()) || null;
+}
 
-  return { list, get, upsert, remove, aggregates, regions };
-})();
-window.Model = Model;
+export function createState(state) {
+  const data = _load();
+  if (data.some(s => s.id.toUpperCase() === state.id.toUpperCase())) {
+    throw new Error('A state with this ID already exists.');
+  }
+  data.push({
+    id: state.id.toUpperCase(),
+    name: state.name.trim(),
+    region: state.region,
+    capital: state.capital.trim(),
+    population: Number(state.population) || 0,
+    gdp: Number(state.gdp) || 0,
+    area: Number(state.area) || 0,
+    cities: Number(state.cities) || 0
+  });
+  _save(data);
+}
+
+export function updateState(id, patch) {
+  const data = _load();
+  const idx = data.findIndex(s => s.id.toUpperCase() === id.toUpperCase());
+  if (idx === -1) throw new Error('State not found.');
+  data[idx] = {
+    ...data[idx],
+    ...patch,
+    id: data[idx].id.toUpperCase(),
+    name: (patch.name ?? data[idx].name).trim(),
+    capital: (patch.capital ?? data[idx].capital).trim(),
+    population: Number(patch.population ?? data[idx].population),
+    gdp: Number(patch.gdp ?? data[idx].gdp),
+    area: Number(patch.area ?? data[idx].area),
+    cities: Number(patch.cities ?? data[idx].cities)
+  };
+  _save(data);
+}
+
+export function deleteState(id) {
+  const data = _load();
+  const next = data.filter(s => s.id.toUpperCase() !== id.toUpperCase());
+  _save(next);
+}
+
+export function totals() {
+  const data = _load();
+  return data.reduce((acc, s) => {
+    acc.population += s.population || 0;
+    acc.gdp        += s.gdp || 0;
+    acc.area       += s.area || 0;
+    return acc;
+  }, { population:0, gdp:0, area:0 });
+}

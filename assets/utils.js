@@ -1,33 +1,32 @@
-// Query string helpers & DOM utils
-export function qs(name, url) {
-  const params = new URL(url || window.location.href).searchParams;
-  return params.get(name);
-}
+// assets/utils.js
+export const fmt = {
+  int(n) {
+    if (n === null || n === undefined) return '0';
+    return Number(n).toLocaleString('en-US');
+  },
+  money(n) {
+    return `$${fmt.int(n)}`;
+  },
+  bigAbbrev(n) {
+    if (!n) return '0';
+    const abs = Math.abs(n);
+    const units = [
+      { v: 1e12, s: 'T' },
+      { v: 1e9,  s: 'B' },
+      { v: 1e6,  s: 'M' },
+      { v: 1e3,  s: 'K' },
+    ];
+    for (const u of units) {
+      if (abs >= u.v) return (n / u.v).toFixed(1).replace(/\.0$/,'') + u.s;
+    }
+    return String(n);
+  }
+};
 
-export function uid(prefix = "ST") {
-  // simple unique id for states (e.g., ST-173031489...)
-  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
-}
-
-export function fmtNumber(n) {
-  if (n === null || n === undefined || Number.isNaN(Number(n))) return "";
-  return Number(n).toLocaleString();
-}
-
-export function fmtCurrency(n) {
-  if (n === null || n === undefined || Number.isNaN(Number(n))) return "";
-  return `$${Number(n).toLocaleString()}`;
-}
-
-export function onReady(fn) {
-  if (document.readyState !== "loading") fn();
-  else document.addEventListener("DOMContentLoaded", fn);
-}
-
-// Simple event bus
-export const Bus = new class {
-  #target = document.createElement("span");
-  on(evt, cb){ this.#target.addEventListener(evt, cb); }
-  off(evt, cb){ this.#target.removeEventListener(evt, cb); }
-  emit(evt, detail){ this.#target.dispatchEvent(new CustomEvent(evt, { detail })); }
+export function bindNavActive() {
+  const href = location.pathname.split('/').pop();
+  document.querySelectorAll('nav a').forEach(a => {
+    const is = a.getAttribute('href') === href;
+    a.classList.toggle('active', is);
+  });
 }

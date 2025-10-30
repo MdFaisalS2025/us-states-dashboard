@@ -1,77 +1,76 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Create State • US States</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create • US States</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body data-page="create">
-  <nav class="nav">
-    <div class="brand">US States Dashboard</div>
-    <div class="links">
+  <nav>
+    <div class="navbar">
+      <div class="brand">US States Dashboard</div>
       <a href="read.html">Data Table</a>
-      <a class="active" href="create.html">Create</a>
+      <a href="create.html">Create</a>
       <a href="update.html">Update</a>
       <a href="delete.html">Delete</a>
       <a href="data.html">Charts</a>
       <a href="about.html">About</a>
+      <a class="right btn ghost" href="read.html">Back to Table</a>
     </div>
-    <a class="btn" href="read.html">Back to Table</a>
   </nav>
 
-  <main class="container">
+  <main class="wrapper">
     <section class="panel">
-      <h3 style="margin-top:0">Add a New State</h3>
-      <form id="state-form" class="form">
-        <div class="form-grid">
-          <div class="form-row">
-            <label for="id">ID (USPS)</label>
-            <input id="id" maxlength="2" placeholder="CA" required>
+      <div class="card-title">Add a New State</div>
+      <form id="createForm" class="form">
+        <div class="row">
+          <div>
+            <label class="label">ID (USPS)</label>
+            <input class="input" name="id" maxlength="2" placeholder="e.g., CA" required/>
           </div>
-          <div class="form-row">
-            <label for="name">Name</label>
-            <input id="name" placeholder="California" required>
+          <div>
+            <label class="label">Name</label>
+            <input class="input" name="name" required/>
           </div>
-          <div class="form-row">
-            <label for="region">Region</label>
-            <select id="region" required></select>
+          <div>
+            <label class="label">Region</label>
+            <select name="region" class="input" required>
+              <option value="" disabled selected>Select Region</option>
+              <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
+            </select>
           </div>
-          <div class="form-row">
-            <label for="capital">Capital</label>
-            <input id="capital" placeholder="Sacramento">
+          <div>
+            <label class="label">Capital</label>
+            <input class="input" name="capital" required/>
           </div>
-          <div class="form-row">
-            <label for="population">Population</label>
-            <input id="population" type="number" min="0" step="1" placeholder="39500000">
+          <div>
+            <label class="label">Population</label>
+            <input class="input" name="population" type="number" min="0" step="1" required/>
           </div>
-          <div class="form-row">
-            <label for="gdp">GDP (USD)</label>
-            <input id="gdp" type="number" min="0" step="1" placeholder="3100000000000">
+          <div>
+            <label class="label">GDP (USD)</label>
+            <input class="input" name="gdp" type="number" min="0" step="1" required/>
           </div>
-          <div class="form-row">
-            <label for="area">Area (km²)</label>
-            <input id="area" type="number" min="0" step="1" placeholder="423967">
+          <div>
+            <label class="label">Area (km²)</label>
+            <input class="input" name="area" type="number" min="0" step="1" required/>
           </div>
-          <div class="form-row">
-            <label for="cities"># Cities</label>
-            <input id="cities" type="number" min="0" step="1" placeholder="482">
+          <div>
+            <label class="label"># Cities</label>
+            <input class="input" name="cities" type="number" min="0" step="1" required/>
           </div>
         </div>
-        <div style="display:flex;gap:10px;margin-top:8px">
+        <div style="display:flex;gap:10px;margin-top:6px;">
           <button class="btn" type="submit">Create</button>
-          <a id="cancel" class="btn btn-danger" href="#">Cancel</a>
+          <a class="btn ghost" href="read.html">Cancel</a>
         </div>
       </form>
+      <div class="muted" style="text-align:right;margin-top:8px;">Create (CRUD C)</div>
     </section>
-    <div style="text-align:right;color:#8aa1b3">Create (CRUD C)</div>
+    <div class="footer">© 2025 US States Dashboard</div>
   </main>
 
-  <footer>© 2025 US States Dashboard</footer>
-
-  <script src="assets/model.js"></script>
-  <script src="assets/controller.js"></script>
-  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>

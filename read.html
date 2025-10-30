@@ -1,100 +1,46 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Data Table — US States</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Data Table • US States</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
-<body>
-<header class="nav">
-  <div><strong>US States Dashboard</strong></div>
-  <nav class="right">
-    <a href="read.html">Data Table</a>
-    <a href="create.html">Create</a>
-    <a href="update.html">Update</a>
-    <a href="delete.html">Delete</a>
-    <a href="data.html">Charts</a>
-    <a href="index.html" class="btn btn-ghost">Home</a>
-  </nav>
-</header>
-
-<main class="container">
-  <div class="card table-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h3 class="section-title" style="margin:0">States</h3>
-      <a class="btn btn-primary" href="create.html">+ Add State</a>
+<body data-page="read">
+  <nav>
+    <div class="navbar">
+      <div class="brand">US States Dashboard</div>
+      <a href="read.html">Data Table</a>
+      <a href="create.html">Create</a>
+      <a href="update.html">Update</a>
+      <a href="delete.html">Delete</a>
+      <a href="data.html">Charts</a>
+      <a href="about.html">About</a>
+      <a class="right btn ghost" href="index.html">Home</a>
     </div>
+  </nav>
 
-    <table class="table" id="statesTable">
-      <thead>
-      <tr>
-        <th style="width:70px">ID</th>
-        <th style="width:180px">Name</th>
-        <th style="width:180px">Capital</th>
-        <th style="width:160px">Population</th>
-        <th style="width:180px">GDP (USD)</th>
-        <th style="width:150px">Area (km²)</th>
-        <th style="width:110px">Cities</th>
-        <th style="width:160px">Actions</th>
-      </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+  <main class="wrapper">
+    <section class="panel">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>States</span>
+        <a class="btn" href="create.html">+ Add State</a>
+      </div>
+      <div class="panel" style="padding:0;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Capital</th><th>Population</th><th>GDP (USD)</th><th>Area (km²)</th><th>Cities</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="statesBody"></tbody>
+        </table>
+      </div>
+      <div class="muted" style="text-align:right;margin-top:8px;">Read view (CRUD R)</div>
+    </section>
+    <div class="footer">© 2025 US States Dashboard</div>
+  </main>
 
-  <p class="muted" style="margin-top:10px;text-align:right">Read view (CRUD R)</p>
-</main>
-
-<footer class="footer">© 2025 US States Dashboard</footer>
-
-<script src="assets/utils.js"></script>
-<script src="assets/model.js"></script>
-<script>
-  const fmt = (n)=>Number(n||0).toLocaleString('en-US');
-
-  function loadTable(){
-    const store = (window.StateStore || window.App?.StateStore || window.Model);
-    const states = store?.getAll ? store.getAll() : (JSON.parse(localStorage.getItem('US_STATES_DB_V3')||'{"states":[]}').states);
-    const tbody = document.getElementById('tbody');
-    tbody.innerHTML = '';
-
-    if(!states.length){
-      const tr = document.createElement('tr');
-      const td = document.createElement('td');
-      td.colSpan = 8;
-      td.className = 'muted';
-      td.textContent = '0 record(s)';
-      tr.appendChild(td);
-      tbody.appendChild(tr);
-      return;
-    }
-
-    for(const s of states){
-      const tr = document.createElement('tr');
-
-      tr.innerHTML = `
-        <td><span class="badge">${s.id||''}</span></td>
-        <td title="${s.name||''}">${s.name||''}</td>
-        <td title="${s.capital||''}">${s.capital||''}</td>
-        <td>${fmt(s.population)}</td>
-        <td>$${fmt(s.gdp)}</td>
-        <td>${fmt(s.land_area)}</td>
-        <td>${fmt(s.cities)}</td>
-        <td class="actions">
-          <a class="btn btn-ghost" href="update.html?id=${encodeURIComponent(s.id)}">Edit</a>
-          <a class="btn btn-ghost" href="delete.html?id=${encodeURIComponent(s.id)}">Delete</a>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    }
-  }
-
-  loadTable();
-</script>
-
-<!-- bot -->
-<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-<script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>

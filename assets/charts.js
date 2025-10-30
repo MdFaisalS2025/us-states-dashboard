@@ -1,67 +1,100 @@
 // assets/charts.js
-import { DB } from "./model.js";
+import { getAllStates } from './model.js';
+import { fmt } from './utils.js';
 
-let chartPop, chartGDP, chartArea;
-const byId = id => document.getElementById(id);
-const mk = (id, type, data, options) => {
-  const el = byId(id); if (!el) return null;
-  // eslint-disable-next-line no-undef
-  return new Chart(el.getContext("2d"), { type, data, options });
-};
-const kill = () => [chartPop, chartGDP, chartArea].forEach(c => c?.destroy?.());
+let charts = [];
 
-function setKPIs(){
-  const p = byId("kpiTotalPop"), g = byId("kpiTotalGDP"), a = byId("kpiTotalArea");
-  if (p) p.textContent = DB.totalPopulation().toLocaleString();
-  if (g) g.textContent = ("$" + DB.totalGDP().toLocaleString());
-  if (a) a.textContent = DB.totalArea().toLocaleString();
+function destroyAll() {
+  charts.forEach(c => c.destroy());
+  charts = [];
 }
 
-export function renderAllCharts(){
-  // Always update KPIs (home or charts page)
-  try { setKPIs(); } catch {}
+function noDataCard(el, msg = 'No data to display.') {
+  el.innerHTML = `<div class="empty-card">${msg}</div>`;
+}
 
-  // Only make charts if canvases exist
-  const have = byId("chartPopulation") || byId("chartGDP") || byId("chartArea");
-  if (!have) return;
-
-  const data = DB.listStates();
-  if (!data.length) return;
-
-  kill();
-
-  const opts = {
-    plugins:{
-      legend:{ position:"bottom", labels:{ color:"#e6eef7" } },
-      tooltip:{ callbacks:{ label:(ctx)=>{
-        const v = ctx.parsed;
-        const name = ctx.label || "";
-        const isGDP = /gdp/i.test(ctx.dataset.label||"");
-        return isGDP ? `${name}: $${Number(v).toLocaleString()}` : `${name}: ${Number(v).toLocaleString()}`;
-      }}}
+function buildDonut(el) {
+  const data = getAllStates().slice().sort((a,b)=>b.population-a.population).slice(0,6);
+  if (!data.length) return noDataCard(el);
+  const ctx = el.getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: data.map(d => d.name),
+      datasets: [{
+        data: data.map(d => d.population),
+        hoverOffset: 6
+      }]
     },
-    scales:{
-      x:{ ticks:{ color:"#9fb1c5" }, grid:{ color:"rgba(255,255,255,.08)" } },
-      y:{ ticks:{ color:"#9fb1c5" }, grid:{ color:"rgba(255,255,255,.08)" } }
+    options: {
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 14 } },
+        tooltip: { callbacks: { label: (c)=> `${c.label}: ${fmt.int(c.parsed)}` } }
+      },
+      cutout: '60%'
+    }
+  });
+  charts.push(chart);
+}
+
+function buildBar(el) {
+  const data = getAllStates().slice().sort((a,b)=>b.gdp-a.gdp).slice(0,8);
+  if (!data.length) return noDataCard(el);
+  const ctx = el.getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(d => d.name),
+      datasets: [{
+        label: 'GDP',
+        data: data.map(d => d.gdp)
+      }]
     },
-    animation:{ duration:800 }
-  };
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        y: { ticks: { callback: (v)=>'$'+fmt.bigAbbrev(v) }, grid: { color: 'rgba(255,255,255,.06)' } },
+        x: { grid: { display:false } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (c)=> `GDP: ${fmt.money(c.parsed.y)}` } }
+      }
+    }
+  });
+  charts.push(chart);
+}
 
-  const pop6 = [...data].sort((a,b)=>b.population-a.population).slice(0,6);
-  chartPop = mk("chartPopulation","doughnut",{
-    labels: pop6.map(s=>s.name),
-    datasets:[{ label:"Population", data: pop6.map(s=>s.population) }]
-  }, { plugins:opts.plugins, animation:opts.animation });
+function buildLine(el) {
+  const data = getAllStates().slice().sort((a,b)=>b.area-a.area).slice(0,10);
+  if (!data.length) return noDataCard(el);
+  const ctx = el.getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.map(d => d.name),
+      datasets: [{
+        label: 'Land Area (km²)',
+        data: data.map(d => d.area),
+        tension: 0.35,
+        pointRadius: 3
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        y: { ticks: { callback: (v)=>fmt.bigAbbrev(v) }, grid: { color: 'rgba(255,255,255,.06)' } },
+        x: { grid: { display:false } }
+      },
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+  charts.push(chart);
+}
 
-  const gdp8 = [...data].sort((a,b)=>b.gdp-a.gdp).slice(0,8);
-  chartGDP = mk("chartGDP","bar",{
-    labels: gdp8.map(s=>s.name),
-    datasets:[{ label:"GDP", data: gdp8.map(s=>s.gdp) }]
-  }, opts);
-
-  const area10 = [...data].sort((a,b)=>b.area-a.area).slice(0,10);
-  chartArea = mk("chartArea","line",{
-    labels: area10.map(s=>s.name),
-    datasets:[{ label:"Land Area (km²)", data: area10.map(s=>s.area), tension:.35, fill:false }]
-  }, opts);
+export function renderAllCharts() {
+  destroyAll();
+  buildDonut(document.getElementById('popChart'));
+  buildBar(document.getElementById('gdpChart'));
+  buildLine(document.getElementById('areaChart'));
 }
