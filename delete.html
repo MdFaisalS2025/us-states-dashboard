@@ -2,67 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Delete — US States Dashboard</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="assets/styles.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <nav class="navbar navbar-dark navbar-expand-lg sticky-top">
-    <div class="container container-narrow">
-      <a class="navbar-brand fw-bold" href="index.html">US States Dashboard</a>
-      <div class="ms-auto">
-        <a class="me-3" href="read.html">Data Table</a>
-        <a class="me-3" href="create.html">Create</a>
-        <a class="me-3" href="update.html">Update</a>
-        <a class="me-3" href="delete.html">Delete</a>
-        <a class="me-3" href="data.html">Charts</a>
-        <a class="me-3" href="about.html">About</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="container container-narrow py-4">
-    <div class="card p-4">
-      <h5>Delete a State</h5>
-      <p class="text-warning">This action cannot be undone.</p>
-
-      <div class="row g-3 mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Choose by ID</label>
-          <select id="delete-select" class="form-select"></select>
+  <div class="container">
+    <div class="card">
+      <h3>Delete a State</h3>
+      <p class="subtle">This action cannot be undone.</p>
+      <form class="form-grid">
+        <div class="full">
+          <label>Choose by ID</label>
+          <select id="sel" class="input"></select>
         </div>
-        <div class="col-md-6">
-          <label class="form-label">Or enter ID manually</label>
-          <input id="delete-id" class="form-control" placeholder="e.g., CA" maxlength="2">
+        <div class="full">
+          <label>Or enter ID manually</label>
+          <input id="manual" class="input" placeholder="e.g., CA" maxlength="2"/>
         </div>
-      </div>
-
-      <div class="alert alert-secondary small">
-        You are about to delete: <strong id="delete-confirm">Select a record below.</strong>
-      </div>
-
-      <div class="d-flex gap-2">
-        <button id="btn-delete" class="btn btn-danger">Delete</button>
-        <a class="btn btn-outline-light" href="read.html">Cancel</a>
-      </div>
+        <div class="full actions mt-2">
+          <button class="btn danger" type="submit">Delete</button>
+          <a class="btn ghost" href="read.html">Cancel</a>
+        </div>
+      </form>
     </div>
-  </main>
+  </div>
 
   <script type="module">
-    import { initDelete } from "./assets/controller.js";
-    initDelete();
+    import { mountChrome, initDelete } from './assets/controller.js';
+    mountChrome('delete'); initDelete();
   </script>
-
-<footer class="container container-narrow py-4">
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-    <span>© 2025 US States Dashboard</span>
-    <span class="text-muted-2">
-      Built with <span aria-label="love">❤️</span> by Faisal, Hongxu & Jonathan
-    </span>
-  </div>
-</footer>
-
 
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>

@@ -2,100 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>US States Dashboard — Home</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="assets/styles.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <nav class="navbar navbar-dark navbar-expand-lg sticky-top">
-    <div class="container container-narrow">
-      <a class="navbar-brand fw-bold" href="index.html">US States Dashboard</a>
-      <div class="ms-auto">
-        <a class="me-3" href="read.html">Data Table</a>
-        <a class="me-3" href="create.html">Create</a>
-        <a class="me-3" href="update.html">Update</a>
-        <a class="me-3" href="delete.html">Delete</a>
-        <a class="me-3" href="data.html">Charts</a>
-        <a class="me-3" href="about.html">About</a>
-        <a class="btn btn-outline-light btn-sm" href="https://github.com/">GitHub</a>
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card kpi">
+        <h3>Total Population</h3>
+        <div id="kpi-pop" class="value">0</div>
+        <div class="subtle">Across all states in the dataset</div>
+      </div>
+      <div class="card kpi">
+        <h3>Total GDP</h3>
+        <div id="kpi-gdp" class="value">$0</div>
+        <div class="subtle">Aggregate (USD)</div>
+      </div>
+      <div class="card kpi">
+        <h3>Total Land Area</h3>
+        <div id="kpi-area" class="value">0</div>
+        <div class="subtle">km²</div>
       </div>
     </div>
-  </nav>
 
-  <main class="container container-narrow py-4">
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card p-4">
-          <div class="text-muted-2">Total Population</div>
-          <div id="kpi-pop" class="kpi-number mt-2">0</div>
-          <div class="text-muted-2 mt-2">Across all states in the dataset</div>
-        </div>
+    <div class="card mt-3">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">External Insights</h3>
+        <button id="btn-refresh" class="btn ghost">Refresh</button>
       </div>
-      <div class="col-md-4">
-        <div class="card p-4">
-          <div class="text-muted-2">Total GDP</div>
-          <div id="kpi-gdp" class="kpi-number mt-2">$0</div>
-          <div class="text-muted-2 mt-2">Aggregate (USD)</div>
+      <div class="grid grid-2 mt-2">
+        <div class="card soft">
+          <div class="subtle">USA GDP (current US$)</div>
+          <div id="wb-gdp" class="value">$—</div>
+          <div id="wb-gdp-meta" class="subtle mt-2">Source: World Bank Open Data</div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-4">
-          <div class="text-muted-2">Total Land Area</div>
-          <div id="kpi-area" class="kpi-number mt-2">0</div>
-          <div class="text-muted-2 mt-2">km²</div>
+        <div class="card soft">
+          <div class="subtle">USA Population</div>
+          <div id="wb-pop" class="value">—</div>
+          <div id="wb-pop-meta" class="subtle mt-2">Source: World Bank Open Data</div>
         </div>
       </div>
     </div>
 
-    <div class="card p-4 mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">External Insights</h5>
-        <button id="btn-refresh" class="btn btn-sm btn-outline-light">Refresh</button>
-      </div>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <div class="p-3 rounded" style="background:#0f1b24;border:1px solid #223544">
-            <div class="text-muted-2">USA GDP (current US$)</div>
-            <div id="ext-gdp" class="fs-4 fw-bold mt-1">—</div>
-            <div class="text-muted-2 small mt-1">Source: <span class="ext-source">World Bank Open Data</span></div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="p-3 rounded" style="background:#0f1b24;border:1px solid #223544">
-            <div class="text-muted-2">USA Population</div>
-            <div id="ext-pop" class="fs-4 fw-bold mt-1">—</div>
-            <div class="text-muted-2 small mt-1">Source: <span class="ext-source">World Bank Open Data</span></div>
-          </div>
-        </div>
-      </div>
+    <div class="card mt-3">
+      <h3>Get Started</h3>
+      <p class="subtle">Use CRUD pages to manage records. Charts update automatically.</p>
+      <a class="btn" href="create.html">Add a State</a>
     </div>
-
-    <div class="card p-4 mt-4">
-      <h5>Get Started</h5>
-      <p class="text-muted-2 mb-3">Use CRUD pages to manage records. Charts update automatically.</p>
-      <a class="btn btn-primary" href="create.html">Add a State</a>
-    </div>
-  </main>
-
-<footer class="container container-narrow py-4">
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-    <span>© 2025 US States Dashboard</span>
-    <span class="text-muted-2">
-      Built with <span aria-label="love">❤️</span> by Faisal, Hongxu & Jonathan
-    </span>
   </div>
-</footer>
 
-
+  <!-- JS -->
   <script type="module">
-    import { renderKPIs, renderExternal } from "./assets/controller.js";
-    renderKPIs();
-    renderExternal();
-    document.querySelector("#btn-refresh").addEventListener("click", renderExternal);
+    import { mountChrome, initHome } from './assets/controller.js';
+    mountChrome('home'); initHome();
   </script>
 
-  <!-- Botpress (blue bubble only) -->
+  <!-- Botpress (single blue bubble) -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>

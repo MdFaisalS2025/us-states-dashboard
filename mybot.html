@@ -1,81 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Bot — US States Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="assets/styles.css" rel="stylesheet" />
-  <style>
-    body {
-      background-color: #0f1b2a;
-      color: #dbe7ff;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      margin: 0;
-    }
-    .bot-container {
-      max-width: 780px;
-      margin: 60px auto;
-      background-color: #132235;
-      border-radius: 14px;
-      padding: 40px;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
-      text-align: center;
-    }
-    h3 {
-      margin-bottom: 10px;
-    }
-    .muted {
-      color: #9bb1ce;
-    }
-    nav {
-      background-color: rgba(15, 27, 42, 0.75);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 12px 20px;
-      position: sticky;
-      top: 0;
-    }
-    .brand {
-      font-weight: 700;
-      color: #dbe7ff;
-      text-decoration: none;
-    }
-    footer {
-      color: #9bb1ce;
-      text-align: center;
-      margin: 40px 0 10px;
-    }
-    .fallback {
-      display: none;
-      margin-top: 20px;
-      color: #9bb1ce;
-    }
-    .fallback a {
-      color: #52d6c6;
-      text-decoration: underline;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <nav>
-    <a class="brand" href="index.html">US States Dashboard</a>
-  </nav>
-
-  <main>
-    <div class="bot-container">
-      <h3>Chat with StateBot</h3>
-      <p class="muted">Your intelligent assistant for state data and insights.</p>
-      <div id="bp-fallback" class="fallback">
-        Couldn’t load chat widget. Check your connection or open
-        <a href="https://botpress.com/docs/cloud/webchat" target="_blank">Botpress Docs</a>.
-      </div>
+  <div class="container">
+    <div class="card center" style="padding:48px">
+      <h2 style="margin:0 0 8px">Chat with StateBot</h2>
+      <p class="subtle">The Botpress blue chat bubble appears at the bottom-right on every page.</p>
     </div>
-  </main>
+  </div>
 
-  <footer>
-    © 2025 US States Dashboard &nbsp;|&nbsp; Botpress Integrated
-  </footer>
+  <script type="module">
+    import { mountChrome } from './assets/controller.js';
+    mountChrome('bot');
+  </script>
 
-<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-<script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script></body>
+  <!-- Botpress (only blue bubble) -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
+  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
 </html>
