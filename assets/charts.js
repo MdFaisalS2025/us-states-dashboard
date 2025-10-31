@@ -1,108 +1,85 @@
-/* Chart rendering wired to localStorage "states" */
-import { getStates, formatMoney, formatNumber } from './utils.js';
+import * as model from './model.js';
 
-let charts = [];
+let pie, bar, line;
+document.addEventListener('DOMContentLoaded', () => {
+  model.seedIfEmpty();
+  render();
+  window.addEventListener('storage', render); // reflect cross-tab changes
+});
 
-function destroyCharts(){
-  charts.forEach(c => c.destroy());
-  charts = [];
+function render(){
+  const rows = model.list();
+
+  /* guard: empty -> clear canvases & show passive band (keeps page pretty) */
+  const empty = !rows || rows.length === 0;
+  const band = document.querySelector('#emptyBand');
+  if (band){ band.style.display = empty ? 'block' : 'none'; }
+
+  const topPop = rows.slice().sort((a,b)=>b.population-a.population).slice(0,6);
+  const topGDP = rows.slice().sort((a,b)=>b.gdp-b.gdp).slice(0,8);
+  const topArea= rows.slice().sort((a,b)=>b.area-b.area).slice(0,10);
+
+  /* Pie: population share */
+  pie = draw(pie, '#pie', {
+    type:'doughnut',
+    data:{
+      labels: topPop.map(x=>x.name),
+      datasets:[{ data: topPop.map(x=>x.population) }]
+    },
+    options: baseOptions('Population Share (Top 6)')
+  });
+
+  /* Bar: GDP */
+  bar = draw(bar, '#bar', {
+    type:'bar',
+    data:{
+      labels: topGDP.map(x=>x.name),
+      datasets:[{ data: topGDP.map(x=>x.gdp) }]
+    },
+    options: baseOptions('GDP by State (Top 8)', {xTicks: true, format:'currency'})
+  });
+
+  /* Line: land area */
+  line = draw(line, '#line', {
+    type:'line',
+    data:{
+      labels: topArea.map(x=>x.name),
+      datasets:[{ data: topArea.map(x=>x.area), fill:false, tension:.35, pointRadius:3 }]
+    },
+    options: baseOptions('Land Area (Top 10)', {yLabel:'km²'})
+  });
 }
 
-function pickTop(arr, key, n){
-  return [...arr].sort((a,b)=> (b[key]||0)-(a[key]||0)).slice(0,n);
+function draw(instance, selector, cfg){
+  const ctx = document.querySelector(selector)?.getContext('2d');
+  if (!ctx) return instance;
+  if (instance) instance.destroy();
+  const opts = cfg.options||{};
+  return new Chart(ctx, {
+    ...cfg,
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{ labels:{ color:'#d9edf4' } },
+        title:{ display:true, text:opts.title || '', color:'#d9edf4', font:{weight:'bold', size:16} },
+        tooltip:{ callbacks:{
+          label: (c)=>{
+            const v = c.parsed;
+            return opts.format==='currency'
+              ? `$${Intl.NumberFormat('en-US').format(v)}`
+              : Intl.NumberFormat('en-US').format(v) + (opts.yLabel?` ${opts.yLabel}`:'');
+          }
+        }}
+      },
+      scales:{
+        x:{ ticks:{ color:'#cfe4eb' }, grid:{ color:'rgba(205,233,240,.10)'} },
+        y:{ ticks:{ color:'#cfe4eb', callback:(v)=> opts.format==='currency' ? `$${Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(v)}` : Intl.NumberFormat('en-US').format(v) }, grid:{ color:'rgba(205,233,240,.10)' } }
+      }
+    }
+  });
 }
 
-function moneyTick(value){ return '$' + formatMoney(value); }
-
-function buildCharts(){
-  const states = getStates();
-
-  destroyCharts();
-
-  // ---- Doughnut: Population share (Top 6) ----
-  const popTop = pickTop(states,'population',6);
-  const popCtx = document.getElementById('chartPop');
-  if(popCtx){
-    charts.push(new Chart(popCtx, {
-      type:'doughnut',
-      data:{
-        labels: popTop.map(s=>s.name),
-        datasets:[{
-          data: popTop.map(s=>s.population),
-          borderWidth:0,
-          hoverOffset:8
-        }]
-      },
-      options:{
-        plugins:{
-          legend:{position:'bottom', labels:{color:'#dfecee', boxWidth:14}},
-          tooltip:{callbacks:{label: c => `${c.label}: ${formatNumber(c.parsed)} people`}}
-        },
-        cutout:'58%',
-      }
-    }));
-  }
-
-  // ---- Horizontal bar: GDP (Top 8) ----
-  const gdpTop = pickTop(states,'gdp',8);
-  const gdpCtx = document.getElementById('chartGdp');
-  if(gdpCtx){
-    charts.push(new Chart(gdpCtx, {
-      type:'bar',
-      data:{
-        labels:gdpTop.map(s=>s.name),
-        datasets:[{
-          label:'GDP (USD)',
-          data:gdpTop.map(s=>s.gdp),
-          borderWidth:0,
-        }]
-      },
-      options:{
-        indexAxis:'y',
-        scales:{
-          x:{ticks:{color:'#cfe0e6', callback: moneyTick}, grid:{color:'#254656'}},
-          y:{ticks:{color:'#cfe0e6'}, grid:{display:false}}
-        },
-        plugins:{
-          legend:{display:false},
-          tooltip:{callbacks:{label: c => moneyTick(c.parsed.x)}}
-        }
-      }
-    }));
-  }
-
-  // ---- Line: Land Area (Top 10) ----
-  const areaTop = pickTop(states,'area_km2',10).reverse(); // small to large left->right
-  const areaCtx = document.getElementById('chartArea');
-  if(areaCtx){
-    charts.push(new Chart(areaCtx, {
-      type:'line',
-      data:{
-        labels: areaTop.map(s=>s.name),
-        datasets:[{
-          label:'Land Area (km²)',
-          data: areaTop.map(s=>s.area_km2),
-          borderWidth:3,
-          pointRadius:4,
-          tension:.35,
-          fill:false
-        }]
-      },
-      options:{
-        scales:{
-          x:{ticks:{color:'#cfe0e6'}, grid:{color:'#244453'}},
-          y:{ticks:{color:'#cfe0e6', callback:v=>formatNumber(v)+' km²'}, grid:{color:'#244453'}}
-        },
-        plugins:{
-          legend:{labels:{color:'#dfecee'}},
-          tooltip:{callbacks:{label:c=>`${formatNumber(c.parsed.y)} km²`}}
-        }
-      }
-    }));
-  }
+function baseOptions(title, extra={}){
+  return { title, ...extra };
 }
-
-document.addEventListener('DOMContentLoaded', buildCharts);
-
-// Re-render if other pages modify the dataset and dispatch an event
-window.addEventListener('states:updated', buildCharts);
