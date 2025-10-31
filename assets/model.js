@@ -14,26 +14,11 @@ const SEED = [
   { id:'MI', name:'Michigan',   region:'Midwest',   capital:'Lansing',    population:10000000, gdp: 600000000000, area:250487, cities:533 }
 ];
 
-function ensureSeed(){
-  if(!localStorage.getItem(KEY)){
-    localStorage.setItem(KEY, JSON.stringify(SEED));
-  }
-}
-function all(){
-  try{ return JSON.parse(localStorage.getItem(KEY)) || []; }
-  catch{ return []; }
-}
+function ensureSeed(){ if(!localStorage.getItem(KEY)){ localStorage.setItem(KEY, JSON.stringify(SEED)); } }
+function all(){ try{ return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } }
 function save(rows){ localStorage.setItem(KEY, JSON.stringify(rows)); }
-
-function upsert(s){
-  const rows = all();
-  const i = rows.findIndex(r=>r.id.toUpperCase()===s.id.toUpperCase());
-  if(i>=0) rows[i]=s; else rows.push(s);
-  save(rows);
-}
-function remove(id){
-  save(all().filter(r=>r.id.toUpperCase()!==id.toUpperCase()));
-}
+function upsert(s){ const rows = all(); const i = rows.findIndex(r=>r.id.toUpperCase()===s.id.toUpperCase()); if(i>=0) rows[i]=s; else rows.push(s); save(rows); }
+function remove(id){ save(all().filter(r=>r.id.toUpperCase()!==id.toUpperCase())); }
 function byId(id){ return all().find(r=>r.id.toUpperCase()===id.toUpperCase()); }
 
 export const DB = { ensureSeed, all, save, upsert, remove, byId, fmtNumber, fmtMoney };

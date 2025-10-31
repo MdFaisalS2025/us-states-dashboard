@@ -27,28 +27,32 @@
   <main class="container section">
     <div class="panel"><div class="panel-inner">
       <h2 class="m0">About this Project</h2>
-      <p class="mt8">A lightweight CRUD dashboard for exploring US states. Data is stored in your browser (<code>localStorage</code>) and powers both the table and charts.</p>
+      <p class="mt8">A lightweight MVC CRUD dashboard for exploring US states. Data is stored in your browser (<code>localStorage</code>) and powers both the table and charts. External insights are fetched via the World Bank API (read-only).</p>
 
       <div class="cards mt16">
-        <div class="card">
-          <h3>Tech Stack</h3>
-          <small>Vanilla HTML/CSS/JS • ES Modules • Chart.js 4.x</small>
-        </div>
-        <div class="card">
-          <h3>Features</h3>
-          <small>CRUD, Search/Filter, Auto-seeded data, Responsive UI</small>
-        </div>
-        <div class="card">
-          <h3>Authors</h3>
-          <small>Faisal • Hongxu • Jonathan</small>
-        </div>
+        <div class="card"><h3>Tech Stack</h3><small>Vanilla HTML/CSS/JS • ES Modules • Chart.js 4.x • World Bank API</small></div>
+        <div class="card"><h3>Features</h3><small>CRUD, Search/Filter, Auto-seeded data, Responsive UI</small></div>
+        <div class="card"><h3>Repository</h3><small><a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub README (technical details)</a></small></div>
       </div>
 
-      <div class="cards mt24">
-        <div class="card"><img class="img-team" src="assets/faisal.JPG" alt="Faisal"/></div>
-        <div class="card"><img class="img-team" src="assets/hongxu.JPG" alt="Hongxu"/></div>
-        <div class="card"><img class="img-team" src="assets/jonathan.jpg" alt="Jonathan"/></div>
+      <!-- Team -->
+      <h3 class="mt24 m0">Team</h3>
+      <div class="cards mt16">
+        <div class="card"><img class="img-team" src="assets/faisal.JPG" alt="Faisal"/><small>Faisal — PM & Backend</small></div>
+        <div class="card"><img class="img-team" src="assets/hongxu.JPG" alt="Hongxu"/><small>Hongxu — Data & API</small></div>
+        <div class="card"><img class="img-team" src="assets/jonathan.jpg" alt="Jonathan"/><small>Jonathan — UI/Charts</small></div>
       </div>
+
+      <!-- ERD -->
+      <h3 class="mt24 m0">Logical Data Model (ERD)</h3>
+      <p class="mt8">Final ERD used for the project’s data design. Changes in the CRUD flow are reflected here.</p>
+      <a href="assets/logical_data_model_v3.png?v=20251031" target="_blank" rel="noopener" title="Open full-size ERD">
+        <img class="img-erd mt12" src="assets/logical_data_model_v3.png?v=20251031" alt="Logical Data Model ERD (logical_data_model_v3.png)"/>
+      </a>
+      <small class="mt8" style="display:block;color:#a9bfcd">Tip: click the diagram to view full size.</small>
+      <!-- If your PNG is at the project root instead, use:
+        <a href="logical_data_model_v3.png?v=20251031" ...><img src="logical_data_model_v3.png?v=20251031" ...></a>
+      -->
     </div></div>
   </main>
 
@@ -56,5 +60,9 @@
     <span>© 2025 US States Dashboard</span>
     <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
   </footer>
+
+  <!-- Botpress -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
+  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
 </html>
