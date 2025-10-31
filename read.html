@@ -1,33 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>US States Dashboard — Data Table</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <h3 style="margin-top:0">States</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th><th>Name</th><th>Capital</th><th>Population</th>
-            <th>GDP (USD)</th><th>Area (km²)</th><th>Cities</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+  <div class="navbar">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">US States Dashboard</a>
+      <div class="nav-center">
+        <a href="read.html">Data Table</a><a href="create.html">Create</a>
+        <a href="update.html">Update</a><a href="delete.html">Delete</a>
+        <a href="data.html">Charts</a><a href="about.html">About</a>
+      </div>
+      <div class="nav-right"><a href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a></div>
     </div>
   </div>
 
-  <script type="module">
-    import { mountChrome, initRead } from './assets/controller.js';
-    mountChrome('read'); initRead();
-  </script>
+  <main class="container">
+    <div class="card">
+      <div class="h1">States</div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Capital</th><th>Population</th><th>GDP (USD)</th><th>Area (km²)</th><th>Cities</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="states-body"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <div class="footer">
+    <span>© 2025 US States Dashboard</span>
+    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
+  </div>
 
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>

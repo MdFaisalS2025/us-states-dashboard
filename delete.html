@@ -1,39 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Delete — US States Dashboard</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <h3>Delete a State</h3>
-      <p class="subtle">This action cannot be undone.</p>
-      <form class="form-grid">
-        <div class="full">
-          <label>Choose by ID</label>
-          <select id="sel" class="input"></select>
-        </div>
-        <div class="full">
-          <label>Or enter ID manually</label>
-          <input id="manual" class="input" placeholder="e.g., CA" maxlength="2"/>
-        </div>
-        <div class="full actions mt-2">
-          <button class="btn danger" type="submit">Delete</button>
-          <a class="btn ghost" href="read.html">Cancel</a>
-        </div>
-      </form>
+  <div class="navbar">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">US States Dashboard</a>
+      <div class="nav-center">
+        <a href="read.html">Data Table</a><a href="create.html">Create</a>
+        <a href="update.html">Update</a><a href="delete.html">Delete</a>
+        <a href="data.html">Charts</a><a href="about.html">About</a>
+      </div>
+      <div class="nav-right"><a class="btn ghost" href="read.html">Back</a></div>
     </div>
   </div>
 
-  <script type="module">
-    import { mountChrome, initDelete } from './assets/controller.js';
-    mountChrome('delete'); initDelete();
-  </script>
+  <main class="container">
+    <div class="card">
+      <div class="h1">Delete a State</div>
+      <p class="muted">This action cannot be undone.</p>
+
+      <form id="delete-form" style="display:grid; gap:12px; max-width:520px">
+        <div><label>Choose by ID</label><select id="delete-select"></select></div>
+        <div><label>Or enter ID manually</label><input id="delete-id" placeholder="e.g., CA"/></div>
+        <div style="display:flex; gap:10px">
+          <button class="btn danger" type="submit">Delete</button>
+          <a class="btn secondary" href="read.html">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <div class="footer">
+    <span>© 2025 US States Dashboard</span>
+    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
+  </div>
 
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>
