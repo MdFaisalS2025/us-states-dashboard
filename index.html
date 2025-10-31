@@ -1,65 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>US States Dashboard — Home</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <div class="container">
-    <div class="grid grid-3">
-      <div class="card kpi">
-        <h3>Total Population</h3>
-        <div id="kpi-pop" class="value">0</div>
-        <div class="subtle">Across all states in the dataset</div>
+  <!-- NAV -->
+  <div class="navbar">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">US States Dashboard</a>
+      <div class="nav-center">
+        <a href="read.html">Data Table</a>
+        <a href="create.html">Create</a>
+        <a href="update.html">Update</a>
+        <a href="delete.html">Delete</a>
+        <a href="data.html">Charts</a>
+        <a href="about.html">About</a>
       </div>
-      <div class="card kpi">
-        <h3>Total GDP</h3>
-        <div id="kpi-gdp" class="value">$0</div>
-        <div class="subtle">Aggregate (USD)</div>
-      </div>
-      <div class="card kpi">
-        <h3>Total Land Area</h3>
-        <div id="kpi-area" class="value">0</div>
-        <div class="subtle">km²</div>
-      </div>
-    </div>
-
-    <div class="card mt-3">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 style="margin:0">External Insights</h3>
-        <button id="btn-refresh" class="btn ghost">Refresh</button>
-      </div>
-      <div class="grid grid-2 mt-2">
-        <div class="card soft">
-          <div class="subtle">USA GDP (current US$)</div>
-          <div id="wb-gdp" class="value">$—</div>
-          <div id="wb-gdp-meta" class="subtle mt-2">Source: World Bank Open Data</div>
-        </div>
-        <div class="card soft">
-          <div class="subtle">USA Population</div>
-          <div id="wb-pop" class="value">—</div>
-          <div id="wb-pop-meta" class="subtle mt-2">Source: World Bank Open Data</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mt-3">
-      <h3>Get Started</h3>
-      <p class="subtle">Use CRUD pages to manage records. Charts update automatically.</p>
-      <a class="btn" href="create.html">Add a State</a>
+      <div class="nav-right"><a href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a></div>
     </div>
   </div>
 
-  <!-- JS -->
-  <script type="module">
-    import { mountChrome, initHome } from './assets/controller.js';
-    mountChrome('home'); initHome();
-  </script>
+  <main class="container">
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="h2">Total Population</div>
+        <div id="total-pop" class="kpi">0</div>
+        <div class="muted">Across all states in the dataset</div>
+      </div>
+      <div class="card">
+        <div class="h2">Total GDP</div>
+        <div id="total-gdp" class="kpi">$0</div>
+        <div class="muted">Aggregate (USD)</div>
+      </div>
+      <div class="card">
+        <div class="h2">Total Land Area</div>
+        <div id="total-area" class="kpi">0</div>
+        <div class="muted">km²</div>
+      </div>
+    </div>
 
-  <!-- Botpress (single blue bubble) -->
+    <div class="card soft" style="margin-top:18px">
+      <div class="h2" style="display:flex;justify-content:space-between;align-items:center">
+        <span>External Insights</span>
+        <button id="refresh-insights" class="btn small ghost">Refresh</button>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="h2">USA GDP (current US$)</div>
+          <div id="gdp-val" class="kpi" style="font-size:28px">—</div>
+          <div class="muted">Source: World Bank Open Data</div>
+        </div>
+        <div class="card">
+          <div class="h2">USA Population</div>
+          <div id="pop-val" class="kpi" style="font-size:28px">—</div>
+          <div class="muted">Source: World Bank Open Data</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card soft" style="margin-top:18px">
+      <div class="h2">Get Started</div>
+      <p class="muted">Use CRUD pages to manage records. Charts update automatically.</p>
+      <a class="btn" href="create.html" style="width:100%">Add a State</a>
+    </div>
+  </main>
+
+  <div class="footer">
+    <span>© 2025 US States Dashboard</span>
+    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
+  </div>
+
+  <!-- Botpress -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
+
+  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>

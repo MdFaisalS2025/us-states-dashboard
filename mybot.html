@@ -1,25 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Bot — US States Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>StateBot — US States Dashboard</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <div class="container">
-    <div class="card center" style="padding:48px">
-      <h2 style="margin:0 0 8px">Chat with StateBot</h2>
-      <p class="subtle">The Botpress blue chat bubble appears at the bottom-right on every page.</p>
+  <div class="navbar">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">US States Dashboard</a>
+      <div class="nav-center">
+        <a href="read.html">Data Table</a><a href="create.html">Create</a>
+        <a href="update.html">Update</a><a href="delete.html">Delete</a>
+        <a href="data.html">Charts</a><a href="about.html">About</a>
+      </div>
+      <div class="nav-right"><a href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a></div>
     </div>
   </div>
 
-  <script type="module">
-    import { mountChrome } from './assets/controller.js';
-    mountChrome('bot');
-  </script>
+  <main class="container">
+    <div class="card" style="text-align:center; padding:40px">
+      <div class="h1">Chat with StateBot</div>
+      <p class="muted">The chat widget is available at the bottom-right corner on every page.</p>
+    </div>
+  </main>
 
-  <!-- Botpress (only blue bubble) -->
+  <div class="footer">
+    <span>© 2025 US States Dashboard</span>
+    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
+  </div>
+
+  <!-- Single Botpress embed (shared with other pages) -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>

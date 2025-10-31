@@ -1,44 +1,49 @@
-import { LS_KEY } from './utils.js';
+import {load, save} from './utils.js';
 
-/** Seed dataset so the app is never empty.  Persist in localStorage. */
-const seed = [
-  { id:'CA', name:'California',  region:'West',      capital:'Sacramento', population:39500000, gdp:3100000000000, area:423967, cities:482 },
-  { id:'TX', name:'Texas',       region:'South',     capital:'Austin',     population:30000000, gdp:2800000000000, area:268596, cities:1214 },
-  { id:'FL', name:'Florida',     region:'South',     capital:'Tallahassee',population:21900000, gdp:1200000000000, area:170312, cities:411 },
-  { id:'NY', name:'New York',    region:'Northeast', capital:'Albany',     population:19400000, gdp:2500000000000, area:141297, cities:62 },
-  { id:'IL', name:'Illinois',    region:'Midwest',   capital:'Springfield',population:12500000, gdp: 870000000000, area:149995, cities:1297 },
-  { id:'PA', name:'Pennsylvania',region:'Northeast', capital:'Harrisburg', population:12900000, gdp: 950000000000, area:119280, cities:256 }
+const KEY = 'us_states';
+
+const SEED = [
+  {id:'CA', name:'California', region:'West', capital:'Sacramento', cities:482, population:39500000, gdp:3100000000000, area:423967},
+  {id:'TX', name:'Texas',      region:'South',capital:'Austin',      cities:1214,population:30000000, gdp:2800000000000, area:268596},
+  {id:'FL', name:'Florida',    region:'South',capital:'Tallahassee', cities:411, population:21900000, gdp:1200000000000, area:170312},
+  {id:'NY', name:'New York',   region:'Northeast',capital:'Albany',  cities:62,  population:19400000, gdp:2500000000000, area:141297},
+  {id:'IL', name:'Illinois',   region:'Midwest', capital:'Springfield',cities:1297,population:12500000,gdp:870000000000, area:149995},
+  {id:'PA', name:'Pennsylvania',region:'Northeast',capital:'Harrisburg',cities:256,population:12900000,gdp:950000000000, area:119280}
 ];
 
-function load(){
-  const raw = localStorage.getItem(LS_KEY);
-  if(!raw){ localStorage.setItem(LS_KEY, JSON.stringify(seed)); return [...seed] }
-  try{ return JSON.parse(raw) }catch{ localStorage.setItem(LS_KEY, JSON.stringify(seed)); return [...seed] }
+function ensure(){
+  const cur = load(KEY, null);
+  if(!cur || !Array.isArray(cur) || cur.length===0){ save(KEY, SEED); }
 }
-function save(rows){ localStorage.setItem(LS_KEY, JSON.stringify(rows)) }
 
 export const Model = {
-  getAll(){ return load() },
-  get(id){ return load().find(x=>x.id===id) },
-  create(row){
-    const rows = load();
-    if(rows.some(r=>r.id===row.id)) throw new Error('ID already exists.');
-    rows.push(row); save(rows); return row;
+  init(){ ensure(); },
+  all(){ return load(KEY, []); },
+  get(id){ return this.all().find(s=>s.id===id) || null; },
+  add(rec){
+    const list = this.all();
+    if(list.some(x=>x.id===rec.id)) throw new Error('Duplicate ID');
+    list.push(rec); save(KEY,list); return rec;
   },
   update(id, patch){
-    const rows = load(); const i = rows.findIndex(r=>r.id===id);
+    const list = this.all();
+    const i = list.findIndex(x=>x.id===id);
     if(i<0) throw new Error('Not found');
-    rows[i] = {...rows[i], ...patch}; save(rows); return rows[i];
+    list[i] = {...list[i], ...patch};
+    // normalize id change
+    if(patch.id){ list[i].id = patch.id.toUpperCase(); }
+    save(KEY,list); return list[i];
   },
   remove(id){
-    const rows = load().filter(r=>r.id!==id); save(rows);
+    const list = this.all().filter(x=>x.id!==id);
+    save(KEY,list);
   },
   totals(){
-    const rows = load();
+    const d = this.all();
     return {
-      population: rows.reduce((a,b)=>a+(+b.population||0),0),
-      gdp: rows.reduce((a,b)=>a+(+b.gdp||0),0),
-      area: rows.reduce((a,b)=>a+(+b.area||0),0)
-    }
+      population: d.reduce((a,b)=>a+(+b.population||0),0),
+      gdp:        d.reduce((a,b)=>a+(+b.gdp||0),0),
+      area:       d.reduce((a,b)=>a+(+b.area||0),0)
+    };
   }
 };
