@@ -1,53 +1,60 @@
-/* assets/charts.js */
-import Model from "./model.js";
+import { currentData } from './controller.js';
+import { fmtInt } from './utils.js';
 
-const fmtShort = (n)=> new Intl.NumberFormat("en-US",{notation:"compact",maximumFractionDigits:1}).format(n||0);
+let chart1, chart2, chart3;
 
-export function renderCharts() {
-  donutTopPopulation();
-  barTopGDP();
-  lineTopArea();
-}
+export async function initCharts(){
+  const { Chart, registerables } = window.Chart;
+  Chart.register(...registerables);
 
-function donutTopPopulation(){
-  const data = Model.topBy("population",6);
-  new Chart(document.getElementById("popDonut"),{
-    type:"doughnut",
+  const data = currentData();
+
+  // Donut: Population share (top 6)
+  const topPop = [...data].sort((a,b)=>b.population-a.population).slice(0,6);
+  chart1 = new Chart(document.getElementById('c1'), {
+    type:'doughnut',
     data:{
-      labels:data.map(d=>d.name),
-      datasets:[{ data:data.map(d=>d.population) }]
-    },
-    options:{ plugins:{legend:{position:"bottom"}}, cutout:"55%" }
-  });
-}
-
-function barTopGDP(){
-  const data = Model.topBy("gdp",8).reverse();
-  new Chart(document.getElementById("gdpBar"),{
-    type:"bar",
-    data:{
-      labels:data.map(d=>d.name),
-      datasets:[{ label:"GDP", data:data.map(d=>d.gdp)}]
+      labels: topPop.map(x=>x.name),
+      datasets:[{ data: topPop.map(x=>x.population) }]
     },
     options:{
-      indexAxis:"y",
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>"$"+fmtShort(ctx.raw)}}},
-      scales:{ x:{ ticks:{ callback:(v)=>"$"+fmtShort(v) } } }
+      plugins:{ legend:{ labels:{ color:'#eaf4ff' } } },
+      cutout:'55%',
     }
   });
-}
 
-function lineTopArea(){
-  const data = Model.topBy("area",10);
-  new Chart(document.getElementById("areaLine"),{
-    type:"line",
+  // Column: GDP by state (top 8)
+  const topGdp = [...data].sort((a,b)=>b.gdp-a.gdp).slice(0,8);
+  chart2 = new Chart(document.getElementById('c2'), {
+    type:'bar',
     data:{
-      labels:data.map(d=>d.name),
-      datasets:[{ label:"Land Area (km²)", data:data.map(d=>d.area), tension:.3 }]
+      labels: topGdp.map(x=>x.name),
+      datasets:[{ label:'GDP', data: topGdp.map(x=>x.gdp) }]
     },
     options:{
-      plugins:{legend:{position:"bottom"}},
-      scales:{ y:{ ticks:{ callback:(v)=>fmtShort(v) } } }
+      scales:{
+        x:{ ticks:{ color:'#cfe3f7' } },
+        y:{ ticks:{ color:'#cfe3f7',
+          callback:(v)=>'$'+Intl.NumberFormat('en-US',{notation:'compact'}).format(v) } }
+      },
+      plugins:{ legend:{ labels:{ color:'#eaf4ff' } } }
+    }
+  });
+
+  // Line: Land area
+  const topArea = [...data].sort((a,b)=>b.area-a.area).slice(0,10);
+  chart3 = new Chart(document.getElementById('c3'), {
+    type:'line',
+    data:{
+      labels: topArea.map(x=>x.name),
+      datasets:[{ label:'Land Area (km²)', data: topArea.map(x=>x.area), tension:.3 }]
+    },
+    options:{
+      plugins:{ legend:{ labels:{ color:'#eaf4ff' } } },
+      scales:{
+        x:{ ticks:{ color:'#cfe3f7', maxRotation:0, autoSkip:true } },
+        y:{ ticks:{ color:'#cfe3f7', callback:(v)=>fmtInt(v) } }
+      }
     }
   });
 }

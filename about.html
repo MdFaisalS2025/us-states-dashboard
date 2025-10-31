@@ -2,114 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>About — US States Dashboard</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="assets/styles.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
-  <nav class="navbar navbar-dark navbar-expand-lg sticky-top">
-    <div class="container container-narrow">
-      <a class="navbar-brand fw-bold" href="index.html">US States Dashboard</a>
-      <div class="ms-auto">
-        <a class="me-3" href="read.html">Data Table</a>
-        <a class="me-3" href="create.html">Create</a>
-        <a class="me-3" href="update.html">Update</a>
-        <a class="me-3" href="delete.html">Delete</a>
-        <a class="me-3" href="data.html">Charts</a>
-        <a class="me-3" href="about.html">About</a>
-        <a class="btn btn-outline-light btn-sm" href="README.html">README (Tech)</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="container container-narrow py-4">
-    <div class="card p-4">
-      <h5 class="mb-3">About Us</h5>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <div class="card p-3 team-card h-100">
-            <div class="d-flex align-items-center gap-3">
-              <img src="assets/team_faisal.jpg" alt="Mohamed Faisal Sindhi">
-              <div>
-                <div class="fw-semibold">Mohamed Faisal Sindhi</div>
-                <div class="text-muted-2 small">Frontend, deployment, chatbot</div>
-              </div>
-            </div>
-            <div class="mt-3 d-flex gap-2">
-              <a class="btn btn-outline-light btn-sm" href="https://github.com/">GitHub Repository</a>
-              <a class="btn btn-outline-light btn-sm" href="README.html">README (Technical Details)</a>
+  <div class="container">
+    <div class="card">
+      <h3>About Us</h3>
+      <div class="team-grid mt-2">
+        <div class="member">
+          <img src="assets/faisal.jpg" alt="Mohamed Faisal Sindhi"/>
+          <div>
+            <h4>Mohamed Faisal Sindhi</h4>
+            <small>Frontend, deployment, chatbot</small>
+            <div class="actions mt-2">
+              <a class="btn" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub Repository</a>
+              <a class="btn ghost" href="README.md" target="_blank" rel="noopener">README (Technical Details)</a>
             </div>
           </div>
         </div>
-
-        <div class="col-md-4">
-          <div class="card p-3 team-card h-100">
-            <div class="d-flex align-items-center gap-3">
-              <img src="assets/team_hongxu.jpg" alt="Hongxu Yang">
-              <div>
-                <div class="fw-semibold">Hongxu Yang</div>
-                <div class="text-muted-2 small">UI/UX, ERD & documentation</div>
-              </div>
-            </div>
+        <div class="member">
+          <img src="assets/hongxu.jpg" alt="Hongxu Yang"/>
+          <div>
+            <h4>Hongxu Yang</h4>
+            <small>UI/UX, ERD & documentation</small>
           </div>
         </div>
-
-        <div class="col-md-4">
-          <div class="card p-3 team-card h-100">
-            <div class="d-flex align-items-center gap-3">
-              <img src="assets/team_jonathan.jpg" alt="Jonathan James">
-              <div>
-                <div class="fw-semibold">Jonathan James</div>
-                <div class="text-muted-2 small">Controllers, charts, data service</div>
-              </div>
-            </div>
+        <div class="member">
+          <img src="assets/jonathan.jpg" alt="Jonathan James"/>
+          <div>
+            <h4>Jonathan James</h4>
+            <small>Controllers, charts, data service</small>
           </div>
         </div>
-      </div> <!-- row -->
-    </div>
-
-    <div class="card p-4 mt-4">
-      <h5>Data Model (ERD)</h5>
-      <div class="erd-wrap mt-3">
-        <img src="assets/logical_data_model_v3.png" alt="ERD diagram">
       </div>
     </div>
 
-    <div class="card p-4 mt-4">
-      <h5>Overview of CRUD Implementation</h5>
-      <p class="text-muted-2">
-        The application follows a simple MVC structure on the client. The <strong>Model</strong> is a
-        singleton backed by <code>localStorage</code> with a versioned key. On first run, a seed
-        of 12 representative states is written to storage. The <strong>Controller</strong> exposes
-        page-level functions for rendering KPI cards, tables, forms, and charts; it also performs
-        input parsing/validation and delegates persistence to the Model. The <strong>Views</strong> are
-        HTML pages styled with a shared stylesheet. Create, Update, and Delete write through the
-        Model and redirect back to the table; the Charts and Home KPIs compute aggregates live from
-        the same source of truth, so updates are immediately reflected without reloading any data file.
+    <div class="erd-wrap mt-3">
+      <h3 style="margin-top:0">Data Model (ERD)</h3>
+      <img src="assets/logical_data_model_v3.png" alt="ERD diagram"/>
+    </div>
+
+    <div class="card mt-3">
+      <h3 style="margin-top:0">Overview of CRUD Implementation</h3>
+      <p>
+        The application follows a lightweight MVC structure. <strong>Model</strong> logic in
+        <code>assets/model.js</code> manages persistent state in <code>localStorage</code> (key <code>us_states_v1</code>),
+        exposing <code>getAll/create/update/remove</code> and aggregate <code>totals()</code>.
+        <strong>Controller</strong> code in <code>assets/controller.js</code> binds form events, renders tables,
+        updates views, and injects a shared navbar/footer for consistent layout.
+        <strong>Views</strong> are the HTML pages. Charts are rendered with Chart.js in <code>assets/charts.js</code>.
+      </p>
+      <p>
+        When a record is created/updated/deleted, the table, KPIs, and charts reflect the change immediately
+        because all pages read from the same persisted model. External Insights use the World Bank API for GDP
+        and population (read-only) with a local fallback if the request is blocked.
       </p>
     </div>
 
-    <div class="card p-4 mt-4">
-      <h5>Notable Technical Challenges & Solutions</h5>
-      <ul class="text-muted-2">
-        <li><strong>Empty homepage and charts:</strong> Introduced a schema-versioned seed and aggregate helpers so the UI always has coherent totals and top-N series.</li>
-        <li><strong>External API instability:</strong> Wrapped World Bank requests with a compact fetcher that falls back to cached values and marks the source explicitly.</li>
-        <li><strong>Layout overflow:</strong> Clamped KPI typography and made tables fully responsive with right-aligned numeric columns for readability.</li>
-        <li><strong>Consistency across pages:</strong> Centralized the navbar and repeated Botpress embed so navigation and the chat entry point behave uniformly.</li>
+    <div class="card mt-3">
+      <h3 style="margin-top:0">Notable Technical Challenges and Solutions</h3>
+      <ul>
+        <li><strong>Empty dataset during grading:</strong> Seeded a realistic initial dataset in <code>model.js</code> so the
+            dashboard is never blank and still behaves like a CRUD app through local persistence.</li>
+        <li><strong>Cross-origin blocks on APIs:</strong> Wrapped the World Bank calls with a try/catch and added a local
+            fallback snapshot to keep the homepage informative when network policies block requests.</li>
+        <li><strong>Design consistency:</strong> Centralized theme tokens and shared chrome injection to guarantee identical
+            navigation, typography, colors, and spacing across all pages.</li>
+        <li><strong>Large ERD image:</strong> Contained and scaled with a responsive wrapper to avoid layout overflow.</li>
       </ul>
     </div>
-  </main>
-
-<footer class="container container-narrow py-4">
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-    <span>© 2025 US States Dashboard</span>
-    <span class="text-muted-2">
-      Built with <span aria-label="love">❤️</span> by Faisal, Hongxu & Jonathan
-    </span>
   </div>
-</footer>
 
+  <script type="module">
+    import { mountChrome } from './assets/controller.js';
+    mountChrome('about');
+  </script>
 
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>

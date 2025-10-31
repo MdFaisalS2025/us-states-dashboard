@@ -1,33 +1,28 @@
-/* assets/api.js
-   World Bank (USA) fetch with graceful fallback.
-   GDP indicator: NY.GDP.MKTP.CD, POP: SP.POP.TOTL
-*/
-const WB = {
-  gdp: "https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json&per_page=2",
-  pop: "https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json&per_page=2",
-};
-
-const Fallback = {
-  year: 2024,
-  gdp: 29184890000000,      // World Bank “current US$” approx.
-  population: 340110988
-};
-
+/** World Bank External Insights with graceful fallback */
 export async function fetchWorldBank() {
-  try {
-    const [gdpRes, popRes] = await Promise.all([
-      fetch(WB.gdp), fetch(WB.pop)
+  const endpoints = {
+    gdp: 'https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json',
+    pop: 'https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json'
+  };
+  try{
+    const [g,p] = await Promise.all([
+      fetch(endpoints.gdp).then(r=>r.json()),
+      fetch(endpoints.pop).then(r=>r.json())
     ]);
-    const [gdpJson, popJson] = await Promise.all([gdpRes.json(), popRes.json()]);
-    const gdpRow = Array.isArray(gdpJson?.[1]) ? gdpJson[1].find(r=>r.value!==null) : null;
-    const popRow = Array.isArray(popJson?.[1]) ? popJson[1].find(r=>r.value!==null) : null;
+    const gdpRow = g?.[1]?.find(r=>r.value!=null);
+    const popRow = p?.[1]?.find(r=>r.value!=null);
     return {
-      year: (gdpRow?.date && +gdpRow.date) || (popRow?.date && +popRow.date) || Fallback.year,
-      gdp:  gdpRow?.value ?? Fallback.gdp,
-      population: popRow?.value ?? Fallback.population,
-      source: "World Bank Open Data"
+      ok:true,
+      gdp: { value:gdpRow?.value ?? null, year:gdpRow?.date ?? '—' },
+      pop: { value:popRow?.value ?? null, year:popRow?.date ?? '—' }
     };
-  } catch {
-    return { ...Fallback, source: "Fallback (cached)" };
+  }catch(e){
+    console.warn('World Bank fetch failed, using fallback', e);
+    // Fallback (static)
+    return {
+      ok:false,
+      gdp:{ value:29184890000000, year:'2024' },
+      pop:{ value:340110988, year:'2024' }
+    };
   }
 }
