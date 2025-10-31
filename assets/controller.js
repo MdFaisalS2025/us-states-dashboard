@@ -1,151 +1,147 @@
-import * as model from './model.js';
+import { $, $$ } from './utils.js';
+import { api } from './api.js';
 
-/* boot */
-document.addEventListener('DOMContentLoaded', () => {
-  model.seedIfEmpty();             // ensure table isn’t empty on first load
-  route();
-});
+/* ---------- Home ---------- */
+export function bootHome() {
+  api.init();
+  const rows = api.list();
+  const totalPop  = rows.reduce((a,s)=>a+(+s.population||0),0);
+  const totalGDP  = rows.reduce((a,s)=>a+(+s.gdp||0),0);
+  const totalArea = rows.reduce((a,s)=>a+(+s.area||0),0);
 
-/* very small “router” by page */
-function route(){
-  const here = location.pathname.split('/').pop();
-  if (here === 'read.html') mountTable();
-  if (here === 'create.html') mountCreate();
-  if (here === 'update.html') mountUpdate();
-  if (here === 'delete.html') mountDelete();
-  if (here === 'index.html')  mountHome();
+  $('#metric-pop').textContent   = api.fmtNumber(totalPop);
+  $('#metric-gdp').textContent   = api.fmtMoney(totalGDP);
+  $('#metric-area').textContent  = api.fmtNumber(totalArea);
+  $('#metric-states').textContent= api.fmtNumber(rows.length);
 }
 
-/* ------- HOME (index.html) ------- */
-function mountHome(){
-  // Totals
-  const t = model.totals();
-  setText('#totalPopulation', num(t.population));
-  setText('#totalGDP', money(t.gdp));
-  setText('#totalArea', num(t.area));
+/* ---------- Data Table (data.html & read.html) ---------- */
+export function bootTable() {
+  api.init();
+  const tbody  = $('#states-body');
+  const q      = $('#q');
+  const region = $('#filter-region');
+  const all    = api.list();
 
-  // External insights copy is just styling; values come from api.js already
-}
-
-/* ------- TABLE (read.html) ------- */
-function mountTable(){
-  const body = document.querySelector('#rows');
-  if (!body) return;
-  body.innerHTML = '';
-
-  for (const r of model.list()){
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><a href="update.html?id=${encodeURIComponent(r.id)}">${escape(r.id)}</a></td>
-      <td>${escape(r.name)}</td>
-      <td>${escape(r.capital)}</td>
-      <td>${num(r.population)}</td>
-      <td>${money(r.gdp)}</td>
-      <td>${num(r.area)} km²</td>
-      <td>${num(r.cities)}</td>
-      <td>
-        <a class="btn ghost" href="update.html?id=${encodeURIComponent(r.id)}">Edit</a>
-        <button class="btn" style="background:var(--danger);border-color:#b51d1d"
-          data-act="del" data-id="${escape(r.id)}">Delete</button>
-      </td>`;
-    body.appendChild(tr);
+  function render(data) {
+    tbody.innerHTML = data.map(s => `
+      <tr>
+        <td>${s.id}</td>
+        <td>${s.name}</td>
+        <td>${s.capital}</td>
+        <td>${api.fmtNumber(s.population)}</td>
+        <td>${api.fmtMoney(s.gdp)}</td>
+        <td>${api.fmtNumber(s.area)}</td>
+        <td>${api.fmtNumber(s.cities)}</td>
+        <td class="actions">
+          <a class="btn" href="update.html?id=${encodeURIComponent(s.id)}">Edit</a>
+          <a class="btn" href="delete.html?id=${encodeURIComponent(s.id)}">Delete</a>
+        </td>
+      </tr>
+    `).join('');
   }
 
-  body.addEventListener('click', e=>{
-    const btn = e.target.closest('[data-act="del"]');
-    if (!btn) return;
-    const id = btn.dataset.id;
-    if (confirm(`Delete state ${id}?`)){
-      model.remove(id);
-      mountTable();
+  function apply() {
+    const text = (q?.value||'').toLowerCase();
+    const reg  = region?.value || '';
+    const filtered = all.filter(s => {
+      const hitText = !text || [s.id,s.name,s.capital].some(v => String(v).toLowerCase().includes(text));
+      const hitReg  = !reg || s.region === reg;
+      return hitText && hitReg;
+    }).sort((a,b)=>a.name.localeCompare(b.name));
+    render(filtered);
+  }
+
+  // Build region options
+  if (region) {
+    const regions = [...new Set(all.map(s=>s.region))].sort();
+    for (const r of regions) {
+      const o = document.createElement('option'); o.value=r; o.textContent=r; region.appendChild(o);
+    }
+    region.addEventListener('change', apply);
+  }
+  q?.addEventListener('input', apply);
+
+  apply();
+}
+
+/* ---------- Create ---------- */
+export function bootCreate() {
+  api.init();
+  const form = $('#create-form');
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const fd = new FormData(form);
+    const s  = Object.fromEntries(fd.entries());
+    const st = {
+      id:s.id.toUpperCase().trim(),
+      name:s.name.trim(),
+      region:s.region,
+      capital:s.capital.trim(),
+      population:+s.population||0,
+      gdp:+s.gdp||0,
+      area:+s.area||0,
+      cities:+s.cities||0
+    };
+    if (!st.id || st.id.length!==2) return alert('ID must be a 2-letter USPS code (e.g., CA).');
+    api.upsert(st);
+    form.reset();
+    alert('State saved.');
+  });
+}
+
+/* ---------- Update ---------- */
+export function bootUpdate() {
+  api.init();
+  const data   = api.list();
+  const select = $('#select-state');
+  const form   = $('#update-form');
+
+  // build dropdown
+  for(const s of data.sort((a,b)=>a.name.localeCompare(b.name))){
+    const opt=document.createElement('option'); opt.value=s.id; opt.textContent=`${s.name} (${s.id})`; select.appendChild(opt);
+  }
+  // preselect via ?id=
+  const pre = new URLSearchParams(location.search).get('id'); if (pre) select.value = pre;
+
+  function hydrate(){
+    const s = api.get(select.value); if(!s) return;
+    form.id.value = s.id; form.name.value=s.name; form.region.value=s.region;
+    form.capital.value=s.capital; form.population.value=s.population;
+    form.gdp.value=s.gdp; form.area.value=s.area; form.cities.value=s.cities;
+  }
+  select.addEventListener('change', hydrate);
+  hydrate();
+
+  form.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const fd = new FormData(form);
+    const s  = Object.fromEntries(fd.entries());
+    api.upsert({
+      id:s.id.toUpperCase(), name:s.name, region:s.region, capital:s.capital,
+      population:+s.population||0, gdp:+s.gdp||0, area:+s.area||0, cities:+s.cities||0
+    });
+    alert('State updated.');
+  });
+}
+
+/* ---------- Delete ---------- */
+export function bootDelete() {
+  api.init();
+  const data   = api.list();
+  const select = $('#select-del');
+
+  for(const s of data.sort((a,b)=>a.name.localeCompare(b.name))){
+    const opt=document.createElement('option'); opt.value=s.id; opt.textContent=`${s.name} (${s.id})`; select.appendChild(opt);
+  }
+  const pre = new URLSearchParams(location.search).get('id'); if (pre) select.value = pre;
+
+  $('#btn-del').addEventListener('click', ()=>{
+    const id = select.value; if(!id) return;
+    if(confirm(`Delete ${id}? This cannot be undone.`)){
+      api.remove(id);
+      alert('Deleted.');
+      location.href='data.html';
     }
   });
 }
-
-/* ------- CREATE (create.html) ------- */
-function mountCreate(){
-  const form = document.querySelector('form');
-  if (!form) return;
-  form.addEventListener('submit', e=>{
-    e.preventDefault();
-    const v = readForm(form);
-    model.add({
-      id: v.id.trim().toUpperCase(),
-      name: v.name.trim(),
-      region: v.region,
-      capital: v.capital.trim(),
-      cities: +v.cities||0,
-      population: +v.population||0,
-      gdp: +v.gdp||0,
-      area: +v.area||0
-    });
-    location.href = 'read.html';
-  });
-}
-
-/* ------- UPDATE (update.html) ------- */
-function mountUpdate(){
-  const sel = document.querySelector('#selectId');
-  const form = document.querySelector('form');
-  const urlId = new URLSearchParams(location.search).get('id');
-
-  // populate dropdown
-  for (const r of model.list()){
-    const opt = document.createElement('option');
-    opt.value = r.id; opt.textContent = `${r.name} (${r.id})`;
-    if (urlId && urlId === r.id) opt.selected = true;
-    sel.appendChild(opt);
-  }
-
-  function load(id){
-    const r = model.get(id);
-    if (!r) return;
-    form.id.value = r.id;
-    form.name.value = r.name;
-    form.region.value = r.region;
-    form.capital.value = r.capital;
-    form.cities.value = r.cities;
-    form.population.value = r.population;
-    form.gdp.value = r.gdp;
-    form.area.value = r.area;
-  }
-  sel.addEventListener('change',()=>load(sel.value));
-  document.querySelector('#btnLoad')?.addEventListener('click',()=>load(sel.value));
-  if (urlId) load(urlId);
-
-  form.addEventListener('submit', e=>{
-    e.preventDefault();
-    const v = readForm(form);
-    model.update(v.id, {
-      name:v.name, region:v.region, capital:v.capital,
-      cities:+v.cities||0, population:+v.population||0,
-      gdp:+v.gdp||0, area:+v.area||0
-    });
-    location.href = 'read.html';
-  });
-}
-
-/* ------- DELETE (delete.html) ------- */
-function mountDelete(){
-  const sel = document.querySelector('#deleteId');
-  if (!sel) return;
-  for (const r of model.list()){
-    const opt = document.createElement('option');
-    opt.value = r.id; opt.textContent = `${r.name} (${r.id})`;
-    sel.appendChild(opt);
-  }
-}
-
-/* ------- helpers ------- */
-function setText(selector, text){
-  const el = document.querySelector(selector);
-  if (el) el.textContent = text;
-}
-function readForm(form){
-  const fd = new FormData(form); const v = {};
-  for (const [k,val] of fd.entries()) v[k]=String(val);
-  return v;
-}
-function num(n){ return (+n||0).toLocaleString('en-US'); }
-function money(n){ return `${(+n||0).toLocaleString('en-US',{maximumFractionDigits:0})} USD`; }
-function escape(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
