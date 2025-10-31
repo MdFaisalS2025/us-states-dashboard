@@ -1,50 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Charts — US States Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="stylesheet" href="assets/styles.css"/>
+  <title>US States Dashboard – Charts</title>
+  <link rel="stylesheet" href="./assets/styles.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script type="module">
-    import { renderCharts } from './assets/charts.js';
-    window.addEventListener('DOMContentLoaded', renderCharts);
-  </script>
+  <script type="module" src="./assets/charts.js" defer></script>
 </head>
 <body>
   <header class="header">
-    <div class="container row">
-      <a class="brand-badge" href="index.html">US States Dashboard</a>
+    <div class="container">
+      <a class="brand" href="./index.html">US States Dashboard</a>
       <nav class="nav">
-        <a href="read.html">Data Table</a>
-        <a href="create.html">Create</a>
-        <a href="update.html">Update</a>
-        <a href="delete.html">Delete</a>
-        <a class="active" href="data.html">Charts</a>
-        <a href="about.html">About</a>
+        <a href="./read.html">Data Table</a>
+        <a href="./create.html">Create</a>
+        <a href="./update.html">Update</a>
+        <a href="./delete.html">Delete</a>
+        <a class="active" href="./data.html">Charts</a>
+        <a href="./about.html">About</a>
+        <a class="pill" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
       </nav>
-      <a class="gh-pill" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
   </header>
 
-  <main class="container section">
-    <div class="grid grid-3">
-      <div class="card"><h3 class="card-title">Population Share (Top 6)</h3><canvas id="ch-pop" height="220"></canvas></div>
-      <div class="card"><h3 class="card-title">GDP by State (Top 8)</h3><canvas id="ch-gdp" height="220"></canvas></div>
-      <div class="card"><h3 class="card-title">Land Area (Top 10)</h3><canvas id="ch-area" height="220"></canvas></div>
-    </div>
-
-    <section class="section">
-      <div class="card"><span id="chart-source" class="help"></span></div>
+  <main class="page">
+    <section class="grid cols-3">
+      <div class="card chart-card"><canvas id="chartPop"></canvas></div>
+      <div class="card chart-card"><canvas id="chartGdp"></canvas></div>
+      <div class="card chart-card"><canvas id="chartArea"></canvas></div>
     </section>
+
+    <section class="section alt">
+      <h3>External Insights</h3>
+      <p>Charts reflect your current local dataset; World Bank insights are fetched on the <a href="./index.html">Home</a> page.</p>
+      <a class="btn secondary" href="./index.html">See on Home</a>
+    </section>
+
+    <div class="footer container">
+      <div>© 2025 US States Dashboard</div>
+      <div class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</div>
+    </div>
   </main>
-
-  <footer class="container footer">
-    <span>© 2025 US States Dashboard</span>
-    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
-  </footer>
-
-  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
 </html>
