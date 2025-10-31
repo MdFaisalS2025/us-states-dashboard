@@ -1,100 +1,53 @@
-// assets/charts.js
-import { getAllStates } from './model.js';
-import { fmt } from './utils.js';
+/* assets/charts.js */
+import Model from "./model.js";
 
-let charts = [];
+const fmtShort = (n)=> new Intl.NumberFormat("en-US",{notation:"compact",maximumFractionDigits:1}).format(n||0);
 
-function destroyAll() {
-  charts.forEach(c => c.destroy());
-  charts = [];
+export function renderCharts() {
+  donutTopPopulation();
+  barTopGDP();
+  lineTopArea();
 }
 
-function noDataCard(el, msg = 'No data to display.') {
-  el.innerHTML = `<div class="empty-card">${msg}</div>`;
-}
-
-function buildDonut(el) {
-  const data = getAllStates().slice().sort((a,b)=>b.population-a.population).slice(0,6);
-  if (!data.length) return noDataCard(el);
-  const ctx = el.getContext('2d');
-  const chart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: data.map(d => d.name),
-      datasets: [{
-        data: data.map(d => d.population),
-        hoverOffset: 6
-      }]
+function donutTopPopulation(){
+  const data = Model.topBy("population",6);
+  new Chart(document.getElementById("popDonut"),{
+    type:"doughnut",
+    data:{
+      labels:data.map(d=>d.name),
+      datasets:[{ data:data.map(d=>d.population) }]
     },
-    options: {
-      plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 14 } },
-        tooltip: { callbacks: { label: (c)=> `${c.label}: ${fmt.int(c.parsed)}` } }
-      },
-      cutout: '60%'
+    options:{ plugins:{legend:{position:"bottom"}}, cutout:"55%" }
+  });
+}
+
+function barTopGDP(){
+  const data = Model.topBy("gdp",8).reverse();
+  new Chart(document.getElementById("gdpBar"),{
+    type:"bar",
+    data:{
+      labels:data.map(d=>d.name),
+      datasets:[{ label:"GDP", data:data.map(d=>d.gdp)}]
+    },
+    options:{
+      indexAxis:"y",
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>"$"+fmtShort(ctx.raw)}}},
+      scales:{ x:{ ticks:{ callback:(v)=>"$"+fmtShort(v) } } }
     }
   });
-  charts.push(chart);
 }
 
-function buildBar(el) {
-  const data = getAllStates().slice().sort((a,b)=>b.gdp-a.gdp).slice(0,8);
-  if (!data.length) return noDataCard(el);
-  const ctx = el.getContext('2d');
-  const chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: data.map(d => d.name),
-      datasets: [{
-        label: 'GDP',
-        data: data.map(d => d.gdp)
-      }]
+function lineTopArea(){
+  const data = Model.topBy("area",10);
+  new Chart(document.getElementById("areaLine"),{
+    type:"line",
+    data:{
+      labels:data.map(d=>d.name),
+      datasets:[{ label:"Land Area (km²)", data:data.map(d=>d.area), tension:.3 }]
     },
-    options: {
-      maintainAspectRatio: false,
-      scales: {
-        y: { ticks: { callback: (v)=>'$'+fmt.bigAbbrev(v) }, grid: { color: 'rgba(255,255,255,.06)' } },
-        x: { grid: { display:false } }
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: (c)=> `GDP: ${fmt.money(c.parsed.y)}` } }
-      }
+    options:{
+      plugins:{legend:{position:"bottom"}},
+      scales:{ y:{ ticks:{ callback:(v)=>fmtShort(v) } } }
     }
   });
-  charts.push(chart);
-}
-
-function buildLine(el) {
-  const data = getAllStates().slice().sort((a,b)=>b.area-a.area).slice(0,10);
-  if (!data.length) return noDataCard(el);
-  const ctx = el.getContext('2d');
-  const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: data.map(d => d.name),
-      datasets: [{
-        label: 'Land Area (km²)',
-        data: data.map(d => d.area),
-        tension: 0.35,
-        pointRadius: 3
-      }]
-    },
-    options: {
-      maintainAspectRatio: false,
-      scales: {
-        y: { ticks: { callback: (v)=>fmt.bigAbbrev(v) }, grid: { color: 'rgba(255,255,255,.06)' } },
-        x: { grid: { display:false } }
-      },
-      plugins: { legend: { position: 'bottom' } }
-    }
-  });
-  charts.push(chart);
-}
-
-export function renderAllCharts() {
-  destroyAll();
-  buildDonut(document.getElementById('popChart'));
-  buildBar(document.getElementById('gdpChart'));
-  buildLine(document.getElementById('areaChart'));
 }
