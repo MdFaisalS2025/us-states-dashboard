@@ -2,32 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>US States Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css"/>
+  <link rel="stylesheet" href="assets/styles.css?v=20251031"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
   <script type="module">
-    import { bootHome } from './assets/controller.js';
-    import { bootChartsOnHome } from './assets/charts.js';
-    window.addEventListener('DOMContentLoaded', ()=>{ bootHome(); bootChartsOnHome(); });
+    import { bootHome } from './assets/controller.js?v=20251031';
+    import { bootCharts } from './assets/charts.js?v=20251031';
+    window.addEventListener('DOMContentLoaded', ()=>{ bootHome(); bootCharts(); });
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <a class="brand" href="index.html">US States Dashboard</a>
+  <header class="header">
+    <div class="container row">
+      <a class="brand-badge" href="index.html">US States Dashboard</a>
       <nav class="nav">
         <a class="active" href="index.html">Home</a>
         <a href="data.html">Data Table</a>
         <a href="create.html">Create</a>
         <a href="update.html">Update</a>
         <a href="delete.html">Delete</a>
+        <a href="charts.html">Charts</a>
         <a href="about.html">About</a>
-        <a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
       </nav>
+      <a class="gh-pill" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
+  </header>
 
+  <main class="container section">
     <div class="panel"><div class="panel-inner">
       <div class="cards">
         <div class="card"><h3>Total Population</h3><div id="metric-pop" class="big">0</div><small>Across all states</small></div>
@@ -47,7 +50,15 @@
       <canvas id="gdpChart" class="mt16" height="120"></canvas>
     </div></div>
 
-    <div class="footer">© 2025 US States Dashboard • Built with ❤️ by Faisal, Hongxu & Jonathan</div>
-  </div>
+    <div class="panel mt24"><div class="panel-inner">
+      <span class="badge">External Insights</span>
+      <p class="mt8">These metrics reflect your local dataset (stored in your browser). Add or edit states and totals update instantly.</p>
+    </div></div>
+  </main>
+
+  <footer class="container footer">
+    <span>© 2025 US States Dashboard</span>
+    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+  </footer>
 </body>
 </html>

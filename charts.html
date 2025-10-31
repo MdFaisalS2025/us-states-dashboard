@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Delete — US States</title>
+  <title>Charts — US States</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css?v=20251031"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
   <script type="module">
-    import { bootDelete } from './assets/controller.js?v=20251031';
-    window.addEventListener('DOMContentLoaded', bootDelete);
+    import { bootCharts } from './assets/charts.js?v=20251031';
+    window.addEventListener('DOMContentLoaded', bootCharts);
   </script>
 </head>
 <body>
@@ -20,8 +21,8 @@
         <a href="data.html">Data Table</a>
         <a href="create.html">Create</a>
         <a href="update.html">Update</a>
-        <a class="active" href="delete.html">Delete</a>
-        <a href="charts.html">Charts</a>
+        <a href="delete.html">Delete</a>
+        <a class="active" href="charts.html">Charts</a>
         <a href="about.html">About</a>
       </nav>
       <a class="gh-pill" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
@@ -30,13 +31,13 @@
 
   <main class="container section">
     <div class="panel"><div class="panel-inner">
-      <label class="label" for="select-del">Choose a state to delete</label>
-      <select id="select-del" class="input"></select>
-      <div class="mt16">
-        <button id="btn-del" class="btn danger">Delete</button>
-        <a class="btn secondary" href="data.html">Cancel</a>
-      </div>
-      <p class="mt12">This action cannot be undone.</p>
+      <h3 class="m0">Top 10 States by Population</h3>
+      <canvas id="popChart" class="mt16" height="120"></canvas>
+    </div></div>
+
+    <div class="panel mt24"><div class="panel-inner">
+      <h3 class="m0">Top 10 States — GDP (billions)</h3>
+      <canvas id="gdpChart" class="mt16" height="120"></canvas>
     </div></div>
   </main>
 

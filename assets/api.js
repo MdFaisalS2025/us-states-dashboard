@@ -1,11 +1,10 @@
-// Thin API layer in case you swap to a real backend later
-import { StateDB } from './model.js';
+import { DB } from './model.js';
 export const api = {
-  init: () => StateDB.ensureSeed(),
-  list: () => StateDB.getAll(),
-  get: (id) => StateDB.findById(id),
-  upsert: (s) => StateDB.upsert(s),
-  remove: (id) => StateDB.removeById(id),
-  fmtNumber: StateDB.fmtNumber,
-  fmtMoney:  StateDB.fmtMoney
+  init: () => DB.ensureSeed(),
+  list: () => DB.all(),
+  get:  (id) => DB.byId(id),
+  upsert: (s) => DB.upsert(s),
+  remove: (id) => DB.remove(id),
+  fmtNumber: DB.fmtNumber,
+  fmtMoney:  DB.fmtMoney
 };

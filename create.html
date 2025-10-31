@@ -2,72 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Create State — US States</title>
+  <title>Create — US States</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css"/>
+  <link rel="stylesheet" href="assets/styles.css?v=20251031"/>
   <script type="module">
-    import { bootCreate } from './assets/controller.js';
+    import { bootCreate } from './assets/controller.js?v=20251031';
     window.addEventListener('DOMContentLoaded', bootCreate);
   </script>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <a class="brand" href="index.html">US States Dashboard</a>
+  <header class="header">
+    <div class="container row">
+      <a class="brand-badge" href="index.html">US States Dashboard</a>
       <nav class="nav">
         <a href="index.html">Home</a>
         <a href="data.html">Data Table</a>
         <a class="active" href="create.html">Create</a>
         <a href="update.html">Update</a>
         <a href="delete.html">Delete</a>
+        <a href="charts.html">Charts</a>
         <a href="about.html">About</a>
-        <a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
       </nav>
+      <a class="gh-pill" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
+  </header>
 
+  <main class="container section">
     <div class="panel"><div class="panel-inner">
       <form id="create-form" class="form-grid">
-        <div>
-          <label class="label">ID (USPS)</label>
-          <input class="input" name="id" placeholder="e.g., CA" required maxlength="2"/>
-        </div>
-        <div>
-          <label class="label">State Name</label>
-          <input class="input" name="name" placeholder="California" required/>
-        </div>
+        <div><label class="label">ID (USPS)</label><input class="input" name="id" placeholder="e.g., CA" required maxlength="2"/></div>
+        <div><label class="label">State Name</label><input class="input" name="name" placeholder="California" required/></div>
         <div>
           <label class="label">Region</label>
           <select class="input" name="region">
             <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
           </select>
         </div>
-        <div>
-          <label class="label">Capital</label>
-          <input class="input" name="capital" placeholder="Sacramento"/>
-        </div>
-        <div>
-          <label class="label">Population</label>
-          <input class="input" name="population" type="number" min="0" step="1"/>
-        </div>
-        <div>
-          <label class="label">GDP (USD)</label>
-          <input class="input" name="gdp" type="number" min="0" step="1"/>
-        </div>
-        <div>
-          <label class="label">Area (km²)</label>
-          <input class="input" name="area" type="number" min="0" step="1"/>
-        </div>
-        <div>
-          <label class="label"># Cities</label>
-          <input class="input" name="cities" type="number" min="0" step="1"/>
-        </div>
+        <div><label class="label">Capital</label><input class="input" name="capital" placeholder="Sacramento"/></div>
+        <div><label class="label">Population</label><input class="input" name="population" type="number" min="0"/></div>
+        <div><label class="label">GDP (USD)</label><input class="input" name="gdp" type="number" min="0"/></div>
+        <div><label class="label">Area (km²)</label><input class="input" name="area" type="number" min="0"/></div>
+        <div><label class="label"># Cities</label><input class="input" name="cities" type="number" min="0"/></div>
         <div class="full mt8">
           <button class="btn" type="submit">Save State</button>
           <a class="btn secondary" href="data.html">Back to Table</a>
         </div>
       </form>
     </div></div>
-  </div>
+  </main>
+
+  <footer class="container footer">
+    <span>© 2025 US States Dashboard</span>
+    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+  </footer>
 </body>
 </html>
