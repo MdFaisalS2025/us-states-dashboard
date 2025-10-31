@@ -1,146 +1,125 @@
-import { $, $$, on, fmtInt, fmtUsd } from './utils.js';
-import { Model } from './model.js';
-import { hydrateInsights } from './api.js';
+import { getStates, upsertState, deleteState, findState } from './model.js';
 
-/* ---------- NAV (active link) ---------- */
-(function setActive(){
-  const path = location.pathname.split('/').pop() || 'index.html';
-  $$('.nav-center a').forEach(a=>{
-    const href = a.getAttribute('href')||'';
-    if(href.endsWith(path)) a.classList.add('active');
-  });
-})();
-
-/* ---------- BOOT ---------- */
-Model.init();
-
-/* ---------- HOME ---------- */
-(function home(){
-  if(!$('#total-pop')) return;
-  const t = Model.totals();
-  $('#total-pop').textContent = fmtInt(t.population);
-  $('#total-gdp').textContent = fmtUsd(t.gdp);
-  $('#total-area').textContent = fmtInt(t.area);
-  on($('#refresh-insights'),'click', hydrateInsights);
-  hydrateInsights();
-})();
+/* Pretty number formatting */
+export function fmt(n, unit=''){
+  if(n===undefined || n===null || n==='') return '—';
+  const val = Number(n);
+  return isNaN(val) ? String(n) : val.toLocaleString('en-US') + (unit?` ${unit}`:'');
+}
 
 /* ---------- READ (table) ---------- */
-(function read(){
-  const tbody = $('#states-body');
+export function renderTable(){
+  const tbody = document.querySelector('#states-tbody');
   if(!tbody) return;
-
-  const draw = ()=>{
-    const list = Model.all();
-    tbody.innerHTML = list.map(s=>`
-      <tr>
-        <td><a href="update.html?id=${s.id}">${s.id}</a></td>
-        <td>${s.name}</td>
-        <td>${s.capital}</td>
-        <td>${fmtInt(s.population)}</td>
-        <td>${fmtUsd(s.gdp)}</td>
-        <td>${fmtInt(s.area)}</td>
-        <td>${fmtInt(s.cities)}</td>
-        <td>
-          <a class="btn small ghost" href="update.html?id=${s.id}">Edit</a>
-          <button class="btn small danger" data-del="${s.id}">Delete</button>
-        </td>
-      </tr>
-    `).join('') || `<tr><td colspan="8" class="muted">No records yet. Use Create.</td></tr>`;
-    // wire delete
-    $$('button[data-del]').forEach(b=>{
-      on(b,'click', ()=>{
-        if(confirm('Delete this state?')){ Model.remove(b.dataset.del); draw(); }
-      });
-    });
-  };
-  draw();
-})();
+  const data = getStates();
+  tbody.innerHTML = data.map(s => `
+    <tr>
+      <td><span class="badge">${s.id}</span></td>
+      <td>${s.name}</td>
+      <td>${s.capital}</td>
+      <td>${fmt(s.population)}</td>
+      <td>${fmt(s.gdp,'USD')}</td>
+      <td>${fmt(s.area,'km²')}</td>
+      <td>${fmt(s.cities)}</td>
+      <td>
+        <a class="btn secondary" href="update.html?id=${encodeURIComponent(s.id)}">Edit</a>
+        <a class="btn warning" style="margin-left:8px" href="delete.html?id=${encodeURIComponent(s.id)}">Delete</a>
+      </td>
+    </tr>
+  `).join('');
+}
 
 /* ---------- CREATE ---------- */
-(function create(){
-  const form = $('#create-form');
+export function bindCreate(){
+  const form = document.querySelector('#create-form');
   if(!form) return;
-
-  on(form,'submit', (e)=>{
+  form.addEventListener('submit', e=>{
     e.preventDefault();
     const fd = new FormData(form);
-    const rec = {
-      id: (fd.get('id')||'').toUpperCase().trim(),
-      name: fd.get('name').trim(),
+    const state = {
+      id: (fd.get('id')||'').trim().toUpperCase(),
+      name: (fd.get('name')||'').trim(),
       region: fd.get('region'),
-      capital: fd.get('capital').trim(),
-      population: +fd.get('population')||0,
-      gdp: +fd.get('gdp')||0,
-      area: +fd.get('area')||0,
-      cities: +fd.get('cities')||0
+      capital: (fd.get('capital')||'').trim(),
+      population: Number(fd.get('population')||0),
+      gdp: Number(fd.get('gdp')||0),
+      area: Number(fd.get('area')||0),
+      cities: Number(fd.get('cities')||0),
     };
-    try{
-      Model.add(rec);
-      location.href = 'read.html';
-    }catch(err){
-      alert(err.message);
-    }
+    if(!state.id || !state.name){ alert('ID and Name are required.'); return; }
+    upsertState(state);
+    window.location.href = 'read.html';
   });
-})();
+}
 
 /* ---------- UPDATE ---------- */
-(function update(){
-  const form = $('#update-form');
+export function bindUpdate(){
+  const form = document.querySelector('#update-form');
   if(!form) return;
 
-  const select = $('#select-state');
-  const idFromQuery = new URLSearchParams(location.search).get('id') || '';
+  const url = new URL(window.location.href);
+  const idParam = url.searchParams.get('id');
 
-  // options
-  const list = Model.all();
-  select.innerHTML = list.map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
+  // Dropdown
+  const picker = document.querySelector('#pick-state');
+  const states = getStates();
+  picker.innerHTML = `<option value="">Select…</option>` +
+    states.map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
+  if(idParam) picker.value = idParam;
 
-  const loadRecord = (id)=>{
-    const s = Model.get(id);
+  function loadToForm(id){
+    const s = findState(id);
     if(!s) return;
     form.id.value = s.id;
     form.name.value = s.name;
     form.region.value = s.region;
     form.capital.value = s.capital;
-    form.cities.value = s.cities;
     form.population.value = s.population;
     form.gdp.value = s.gdp;
     form.area.value = s.area;
-  };
+    form.cities.value = s.cities;
+  }
 
-  loadRecord(idFromQuery || select.value);
-  on($('#btn-load'),'click', ()=> loadRecord(select.value));
+  picker.addEventListener('change', ()=> loadToForm(picker.value));
+  document.querySelector('#load-btn').addEventListener('click', ()=> loadToForm(picker.value));
 
-  on(form,'submit',(e)=>{
+  if(idParam) loadToForm(idParam);
+
+  form.addEventListener('submit', e=>{
     e.preventDefault();
     const fd = new FormData(form);
-    try{
-      Model.update(form.id.value.toUpperCase(), {
-        id: (fd.get('id')||'').toUpperCase(),
-        name: fd.get('name'),
-        region: fd.get('region'),
-        capital: fd.get('capital'),
-        cities: +fd.get('cities')||0,
-        population: +fd.get('population')||0,
-        gdp: +fd.get('gdp')||0,
-        area: +fd.get('area')||0
-      });
-      location.href = 'read.html';
-    }catch(err){ alert(err.message); }
+    const s = {
+      id: (fd.get('id')||'').trim().toUpperCase(),
+      name: (fd.get('name')||'').trim(),
+      region: fd.get('region'),
+      capital: (fd.get('capital')||'').trim(),
+      population: Number(fd.get('population')||0),
+      gdp: Number(fd.get('gdp')||0),
+      area: Number(fd.get('area')||0),
+      cities: Number(fd.get('cities')||0),
+    };
+    upsertState(s);
+    window.location.href = 'read.html';
   });
-})();
+}
 
 /* ---------- DELETE ---------- */
-(function remove(){
-  const sel = $('#delete-select');
-  if(!sel) return;
-  const list = Model.all();
-  sel.innerHTML = `<option value="">— Select —</option>` + list.map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
-  on($('#delete-form'),'submit', (e)=>{
+export function bindDelete(){
+  const form = document.querySelector('#delete-form');
+  if(!form) return;
+
+  const picker = document.querySelector('#delete-pick');
+  const idInput = document.querySelector('#delete-id');
+  const states = getStates();
+  picker.innerHTML = `<option value="">— Select —</option>` +
+    states.map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
+
+  form.addEventListener('submit', e=>{
     e.preventDefault();
-    const id = sel.value || $('#delete-id').value.toUpperCase().trim();
-    if(!id) return;
-    if(confirm('Delete this state?')){ Model.remove(id); location.href='read.html'; }
+    const id = (idInput.value || picker.value || '').toUpperCase().trim();
+    if(!id){ alert('Pick or enter an ID to delete.'); return; }
+    if(!confirm(`Delete ${id}? This cannot be undone.`)) return;
+    deleteState(id);
+    window.location.href = 'read.html';
   });
-})();
+}
