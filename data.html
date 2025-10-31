@@ -2,34 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Charts — US States Dashboard</title>
-  <link rel="stylesheet" href="assets/styles.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="assets/styles.css" rel="stylesheet"/>
 </head>
 <body>
-  <div class="container">
-    <div class="grid grid-3">
-      <div class="chart-box"><canvas id="c1" aria-label="Population share"></canvas></div>
-      <div class="chart-box"><canvas id="c2" aria-label="GDP"></canvas></div>
-      <div class="chart-box"><canvas id="c3" aria-label="Area"></canvas></div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container justify-content-between">
+      <a class="navbar-brand fw-bold badge rounded-pill bg-primary-subtle text-white-50 px-3 py-2" href="index.html">US States Dashboard</a>
+      <ul class="navbar-nav mx-auto gap-3">
+        <li class="nav-item"><a class="nav-link" href="read.html">Data Table</a></li>
+        <li class="nav-item"><a class="nav-link" href="create.html">Create</a></li>
+        <li class="nav-item"><a class="nav-link" href="update.html">Update</a></li>
+        <li class="nav-item"><a class="nav-link" href="delete.html">Delete</a></li>
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="data.html"><u>Charts</u></a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+      <a class="btn btn-outline-info btn-sm" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
+  </nav>
 
-    <div class="card mt-3">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 style="margin:0">External Insights</h3>
-        <a class="btn ghost" href="index.html#insights">See on Home</a>
+  <main class="container py-5">
+    <div class="row g-4">
+      <div class="col-12 col-lg-4">
+        <div class="card p-3 chart-card">
+          <h6 class="text-secondary">Population Share (Top 6)</h6>
+          <canvas id="chartPopulation"></canvas>
+        </div>
       </div>
-      <p class="subtle">Charts above reflect your current local dataset; insights are fetched from the World Bank on the Home page.</p>
+      <div class="col-12 col-lg-4">
+        <div class="card p-3 chart-card">
+          <h6 class="text-secondary">GDP by State (Top 8)</h6>
+          <canvas id="chartGDP"></canvas>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="card p-3 chart-card">
+          <h6 class="text-secondary">Land Area (Top 10)</h6>
+          <canvas id="chartArea"></canvas>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <script type="module">
-    import { mountChrome } from './assets/controller.js';
-    import { initCharts } from './assets/charts.js';
-    mountChrome('charts'); initCharts();
-  </script>
+    <div id="demoNotice" class="alert alert-warning mt-4 d-none">
+      Charts are currently using demo data because your local data table is empty. Add records on the <a href="create.html" class="alert-link">Create</a> page and refresh.
+    </div>
 
+    <div class="card p-3 mt-4">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="mb-1">External Insights</h6>
+          <small class="text-muted">Charts reflect local dataset; World Bank insights are fetched on the Home page.</small>
+        </div>
+        <a class="btn btn-outline-light btn-sm" href="index.html#insights">See on Home</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="container py-4">
+    <div class="d-flex justify-content-between align-items-center small text-muted-2">
+      <span>© 2025 US States Dashboard</span>
+      <span>Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+    </div>
+  </footer>
+
+  <!-- Scripts: order matters -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="assets/charts.js"></script>
+
+  <!-- Botpress (blue bubble only) -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
