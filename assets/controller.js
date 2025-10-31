@@ -1,169 +1,139 @@
-// assets/controller.js
-import { getAllStates, getStateById, totals, createState, updateState, deleteState } from './model.js';
-import { fmt, bindNavActive } from './utils.js';
-import { getUsaGdpAndPop } from './api.js';
-import { renderAllCharts } from './charts.js';
+/* assets/controller.js */
+import Model from "./model.js";
+import { fetchWorldBank } from "./api.js";
 
-// run on every page
-document.addEventListener('DOMContentLoaded', () => {
-  bindNavActive();
-  mountBot(); // <- floating bot everywhere
+// ---------- formatting ----------
+const fmt = {
+  num: (n) => new Intl.NumberFormat("en-US").format(+n || 0),
+  usd: (n) => "$" + new Intl.NumberFormat("en-US").format(+n || 0),
+};
 
-  const page = document.body.dataset.page;
-
-  if (page === 'home') initHome();
-  if (page === 'read') initRead();
-  if (page === 'create') initCreate();
-  if (page === 'update') initUpdate();
-  if (page === 'delete') initDelete();
-  if (page === 'charts') initCharts(); // data.html
-  if (page === 'about') initAbout();
-});
-
-
-// -------- HOME ----------
-async function initHome() {
-  // KPIs from local storage
-  const t = totals();
-  document.getElementById('kpiPopulation').textContent = fmt.int(t.population);
-  document.getElementById('kpiGdp').textContent        = fmt.money(t.gdp);
-  document.getElementById('kpiArea').textContent       = fmt.int(t.area);
-
-  // External insights
-  fillInsights();
-  document.getElementById('btnInsightsRefresh').addEventListener('click', fillInsights);
+// ---------- homepage KPIs ----------
+export function renderKPIs() {
+  const t = Model.totals();
+  document.querySelector("#kpi-pop").textContent = fmt.num(t.population);
+  document.querySelector("#kpi-gdp").textContent = fmt.usd(t.gdp);
+  document.querySelector("#kpi-area").textContent = fmt.num(t.area);
 }
 
-async function fillInsights() {
-  const gdpEl = document.getElementById('insGdp');
-  const popEl = document.getElementById('insPop');
-  if (!gdpEl || !popEl) return;
-  gdpEl.textContent = 'Loading...';
-  popEl.textContent = 'Loading...';
-  const data = await getUsaGdpAndPop();
-  gdpEl.innerHTML = `<strong>${fmt.money(data.gdp.value)}</strong> <span class="muted">(Year: ${data.gdp.year})</span><div class="src">Source: ${data.source}</div>`;
-  popEl.innerHTML = `<strong>${fmt.int(data.pop.value)}</strong> <span class="muted">(Year: ${data.pop.year})</span><div class="src">Source: ${data.source}</div>`;
+// ---------- external insights ----------
+export async function renderExternal() {
+  const boxGDP = document.querySelector("#ext-gdp");
+  const boxPOP = document.querySelector("#ext-pop");
+  boxGDP.textContent = "Loading…";
+  boxPOP.textContent = "Loading…";
+  const info = await fetchWorldBank();
+  boxGDP.innerHTML = `${fmt.usd(info.gdp)} <span class="text-muted-2">(Year: ${info.year})</span>`;
+  boxPOP.innerHTML = `${fmt.num(info.population)} <span class="text-muted-2">(Year: ${info.year})</span>`;
+  document.querySelectorAll(".ext-source").forEach(e => e.textContent = info.source);
 }
 
-// -------- READ ----------
-function initRead() {
-  const tbody = document.querySelector('#statesBody');
-  renderTable();
-
-  function renderTable() {
-    const rows = getAllStates().map(s => `
-      <tr>
-        <td><span class="badge">${s.id}</span></td>
-        <td>${s.name}</td>
-        <td>${s.capital}</td>
-        <td class="num">${fmt.int(s.population)}</td>
-        <td class="num">${fmt.money(s.gdp)}</td>
-        <td class="num">${fmt.int(s.area)}</td>
-        <td class="num">${fmt.int(s.cities)}</td>
-        <td class="actions">
-          <a class="btn btn-xs" href="update.html?id=${s.id}">Edit</a>
-          <a class="btn btn-xs danger" href="delete.html?id=${s.id}">Delete</a>
-        </td>
-      </tr>
-    `).join('');
-    tbody.innerHTML = rows || `<tr><td colspan="8" class="empty-row">0 record(s)</td></tr>`;
-  }
-}
-
-// -------- CREATE ----------
-function initCreate() {
-  const form = document.getElementById('createForm');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fd = new FormData(form);
-    try {
-      createState({
-        id: fd.get('id').toUpperCase().trim(),
-        name: fd.get('name').trim(),
-        region: fd.get('region'),
-        capital: fd.get('capital').trim(),
-        population: fd.get('population'),
-        gdp: fd.get('gdp'),
-        area: fd.get('area'),
-        cities: fd.get('cities'),
-      });
-      location.href = 'read.html';
-    } catch (err) {
-      alert(err.message);
-    }
+// ---------- table (read.html) ----------
+export function renderTable() {
+  const tbody = document.querySelector("#states-body");
+  tbody.innerHTML = "";
+  Model.list().forEach(s => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><span class="badge bg-slate">${s.id}</span></td>
+      <td>${s.name}</td>
+      <td>${s.capital}</td>
+      <td class="text-end">${fmt.num(s.population)}</td>
+      <td class="text-end">${fmt.usd(s.gdp)}</td>
+      <td class="text-end">${fmt.num(s.area)}</td>
+      <td class="text-end">${fmt.num(s.cities)}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-info" href="update.html?id=${encodeURIComponent(s.id)}">Edit</a>
+        <a class="btn btn-sm btn-outline-danger ms-1" href="delete.html?id=${encodeURIComponent(s.id)}">Delete</a>
+      </td>`;
+    tbody.appendChild(tr);
   });
 }
 
-// -------- UPDATE ----------
-function initUpdate() {
-  const select = document.getElementById('stateChooser');
-  const states = getAllStates();
-  select.innerHTML = states.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
-  const params = new URLSearchParams(location.search);
-  const initial = params.get('id');
-  if (initial && states.some(s => s.id === initial)) select.value = initial;
-  document.getElementById('btnLoad').addEventListener('click', loadSelected);
-  loadSelected();
+// ---------- create ----------
+export function bindCreate() {
+  const form = document.querySelector("#create-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const data = formToState(new FormData(form));
+    if (!data.id) return alert("ID is required (2-letter code).");
+    if (Model.get(data.id)) return alert("ID already exists.");
+    Model.upsert(data);
+    location.href = "read.html";
+  });
+}
 
-  function loadSelected() {
-    const s = getStateById(select.value);
+// ---------- update ----------
+export function initUpdate() {
+  const select = document.querySelector("#state-select");
+  const form = document.querySelector("#update-form");
+  // populate dropdown
+  select.innerHTML = Model.list().map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join("");
+  // if ?id=XX preselect
+  const urlId = new URLSearchParams(location.search).get("id");
+  if (urlId) select.value = urlId;
+
+  document.querySelector("#btn-load").addEventListener("click", () => {
+    const s = Model.get(select.value);
     if (!s) return;
-    document.getElementById('u_id').value = s.id;
-    document.getElementById('u_name').value = s.name;
-    document.getElementById('u_region').value = s.region;
-    document.getElementById('u_capital').value = s.capital;
-    document.getElementById('u_cities').value = s.cities;
-    document.getElementById('u_population').value = s.population;
-    document.getElementById('u_gdp').value = s.gdp;
-    document.getElementById('u_area').value = s.area;
-  }
-
-  document.getElementById('updateForm').addEventListener('submit', (e) => {
+    fillForm(form, s);
+  });
+  form.addEventListener("submit", (e)=>{
     e.preventDefault();
-    const id = document.getElementById('u_id').value;
-    updateState(id, {
-      name: document.getElementById('u_name').value,
-      region: document.getElementById('u_region').value,
-      capital: document.getElementById('u_capital').value,
-      cities: document.getElementById('u_cities').value,
-      population: document.getElementById('u_population').value,
-      gdp: document.getElementById('u_gdp').value,
-      area: document.getElementById('u_area').value
-    });
-    alert('Saved.');
+    const data = formToState(new FormData(form));
+    if (!data.id) return alert("ID is required.");
+    Model.upsert(data);
+    alert("Saved.");
+    location.href = "read.html";
   });
 }
 
-// -------- DELETE ----------
-function initDelete() {
-  const select = document.getElementById('delChooser');
-  const states = getAllStates();
+// ---------- delete ----------
+export function initDelete() {
+  const select = document.querySelector("#delete-select");
+  const manual = document.querySelector("#delete-id");
+  const confirmBox = document.querySelector("#delete-confirm");
   select.innerHTML = `<option value="">— Select —</option>` +
-    states.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
-  const params = new URLSearchParams(location.search);
-  const initial = params.get('id');
-  if (initial && states.some(s => s.id === initial)) select.value = initial;
+    Model.list().map(s=>`<option value="${s.id}">${s.name} (${s.id})</option>`).join("");
+  const choose = () => {
+    const id = manual.value.trim().toUpperCase() || select.value;
+    const s = id ? Model.get(id) : null;
+    confirmBox.textContent = s ? `${s.name} (${s.id})` : "Select a record below.";
+    return id;
+  };
+  select.addEventListener("change", choose);
+  manual.addEventListener("input", choose);
 
-  document.getElementById('deleteForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const chosen = document.getElementById('delChooser').value || document.getElementById('delManual').value;
-    if (!chosen) return alert('Pick an ID.');
-    if (!getStateById(chosen)) return alert('ID not found.');
-    if (confirm(`Delete state ${chosen}? This cannot be undone.`)) {
-      deleteState(chosen);
-      location.href = 'read.html';
+  document.querySelector("#btn-delete").addEventListener("click", ()=>{
+    const id = choose();
+    if (!id) return;
+    if (confirm(`Delete ${id}? This action cannot be undone.`)) {
+      Model.remove(id);
+      location.href = "read.html";
     }
   });
 }
 
-// -------- CHARTS ----------
-function initCharts() {
-  renderAllCharts();
-  // also mirror insights block (if present)
-  fillInsights();
+// ---------- helpers ----------
+function formToState(fd) {
+  return {
+    id: (fd.get("id")||"").toUpperCase(),
+    name: fd.get("name")||"",
+    region: fd.get("region")||"",
+    capital: fd.get("capital")||"",
+    population: +(fd.get("population")||0),
+    gdp: +(fd.get("gdp")||0),
+    area: +(fd.get("area")||0),
+    cities: +(fd.get("cities")||0),
+  };
 }
-
-// -------- ABOUT ----------
-function initAbout() {
-  // placeholder
+function fillForm(form, s) {
+  form.id.value = s.id;
+  form.name.value = s.name;
+  form.region.value = s.region;
+  form.capital.value = s.capital;
+  form.population.value = s.population;
+  form.gdp.value = s.gdp;
+  form.area.value = s.area;
+  form.cities.value = s.cities;
 }

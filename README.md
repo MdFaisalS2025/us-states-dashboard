@@ -1,74 +1,173 @@
-# U.S. States Data Dashboard
+# US States Dashboard
+
+**Live Website:** [https://mdfaisals2025.github.io/us-states-dashboard/](https://mdfaisals2025.github.io/us-states-dashboard/)  
+**GitHub Repository:** [https://github.com/MdFaisalS2025/us-states-dashboard](https://github.com/MdFaisalS2025/us-states-dashboard)
+
+---
 
 ## Overview
-U.S. States Data Dashboard is a fully client-side web application built for ISM 6225 (Application Development for Analytics). It allows users to view and manage state-level data (population, GDP, area, etc.), visualize trends using Chart.js, and interact with an AI chatbot powered by Botpress.
 
-This project is designed around:
-- MVC architecture
-- Persistent localStorage data
-- CRUD operations
-- External API read-only integration
-- Azure deployment
+The **US States Dashboard** is a dynamic web application that visualizes and manages data about U.S. states using a complete MVC architecture.  
+It includes full CRUD functionality (Create, Read, Update, Delete), API integration, data persistence, and an embedded chatbot assistant.  
+The project demonstrates end-to-end web development skills, including frontend design, JavaScript-based data handling, API consumption, and Azure deployment readiness.
 
-## Features
-- Responsive Bootstrap 5 UI with dark mode toggle
-- CRUD pages (Create / Read / Update / Delete)
-- State data persisted in the browser using a singleton-style Model service
-- Chart.js visualizations for GDP, population share, and land area
-- Botpress chatbot (StateBot) using our dataset as a knowledge base
-- “External insight” panel powered by an API fetch (read-only)
-- About Us page with ERD diagram and team roles
+---
 
-## Architecture (MVC)
-**Model:**  
-`assets/model.js` exposes `StateDataService`, which manages all state data. Data is stored in `localStorage`, so it persists across refreshes.
+## Project Objectives
 
-**View:**  
-HTML pages plus render helpers.  
-- `read.html` renders a table of states.  
-- `data.html` renders three charts using Chart.js.  
-- The layout is styled with `assets/styles.css`.
+- Implement a dynamic and fully functional MVC web application.  
+- Provide data management through persistent local storage.  
+- Integrate an API for external data insights.  
+- Include CRUD operations that update dynamically across pages.  
+- Host a chatbot using **Botpress Cloud** to assist users in exploring state data.  
+- Deploy the final web application to **Azure** (and GitHub Pages for demo).
 
-**Controller:**  
-`assets/controller.js` wires user actions (form submits, edit, delete) to the model and then updates the tables/charts. For example:
-- `initCreatePage()` handles adding a new state
-- `initUpdatePage()` loads and saves edits
-- `initDeletePage()` removes a state
-- `refreshReadTable()` rebuilds the table dynamically
+---
 
-**charts.js** regenerates the charts based on the latest data in `StateDataService`.
+## Technology Stack
 
-## Data Model / ERD
-We model:
-- Region → State (1-to-many)
-- State → City (1-to-many)
+- **Frontend:** HTML5, CSS3 (Bootstrap 5), JavaScript (ES6)
+- **Architecture:** MVC (Model–View–Controller)
+- **Data Management:** Local Storage (persistent between sessions)
+- **API Integration:** World Bank Open Data API (for GDP and Population)
+- **Version Control:** Git & GitHub
+- **Deployment:** GitHub Pages / Azure Static Web Apps
+- **Chatbot:** Botpress Cloud (embedded across all pages)
 
-In the prototype, each `State` record includes:
-- id (PK / state code)
-- name
-- region (FK to Region)
-- capital
-- population
-- gdp
-- area
-- citiesCount (summary of how many cities)
+---
 
-In the About page, we display the ERD and explain how this would map to a relational database in a production environment.
+## MVC Architecture Implementation
+
+- **Model Layer (`model.js`)**  
+  Handles all data management operations, including reading, writing, and updating state data in local storage.  
+  Acts as the single source of truth for the app’s state data.
+
+- **View Layer (`index.html`, `read.html`, etc.)**  
+  Displays structured data and charts. Pages update dynamically when CRUD actions are performed.
+
+- **Controller Layer (`controller.js`)**  
+  Connects user interactions with model updates and view rendering. Ensures smooth data flow across components.
+
+---
+
+## CRUD Implementation
+
+- **Create (`create.html`):**  
+  Allows users to add a new U.S. state record with details such as ID, Name, Capital, Region, Population, GDP, and Area.
+
+- **Read (`read.html`):**  
+  Displays all state data in a responsive table format. Dynamically updated as new records are created or modified.
+
+- **Update (`update.html`):**  
+  Enables users to select and modify existing state data.
+
+- **Delete (`delete.html`):**  
+  Allows safe removal of any state record from the dataset, updating all visualizations automatically.
+
+All CRUD operations are connected to the **local storage** model, ensuring that changes are retained between browser sessions.
+
+---
 
 ## API Integration
-The dashboard uses a read-only API fetch (see `assets/api.js`) to display a supplemental insight card. This satisfies the “API Integration” rubric requirement: external facts are fetched and displayed, but not used as the persistent data store.
+
+The dashboard integrates data from the **World Bank Open Data API**, specifically:
+- **GDP (current US$)**  
+- **Population (total)**  
+
+These values are dynamically fetched and displayed in the “External Insights” section of the homepage.  
+The API provides real-time global metrics, helping users compare U.S. state-level data with national totals.
+
+---
+
+## Chatbot Integration
+
+The embedded **Botpress Cloud Chatbot** (StateBot) assists users by:
+- Answering queries about states (e.g., GDP, capital, population)
+- Providing general navigation guidance (e.g., “How can I add a state?”)
+- Offering educational facts about U.S. regions and data visualization insights
+
+The bot appears as a floating blue icon on every page for consistent accessibility.
+
+---
+
+## About Us
+
+| Team Member | Role | Image |
+|--------------|------|--------|
+| **Mohamed Faisal Sindhi** | Frontend Development, Deployment, Chatbot Integration | ![Faisal](assets/team_faisal.JPGJPG) |
+| **Hongxu Yang** | UI/UX Design, ERD & Documentation | ![Hongxu](assets/team_hongxu.JPGPG) |
+| **Jonathan James** | Controllers, Charts, Data Services | ![Jonathan](assets/team_jonathan.jpgjpg) |
+
+---
+
+## Data Model (ERD)
+
+![ERD Diagram](assets/logical_data_model_v3.png)
+
+The ERD above shows the logical structure connecting **Region**, **State**, and **Metrics** tables.  
+It ensures normalization and clarity in the application’s data relationships.
+
+---
+
+## Technical Details
+
+### API Endpoints
+**World Bank Open Data API**
+- GDP: `https://api.worldbank.org/v2/country/US/indicator/NY.GDP.MKTP.CD?format=json`
+- Population: `https://api.worldbank.org/v2/country/US/indicator/SP.POP.TOTL?format=json`
+
+### Data Persistence
+All CRUD operations are saved to the browser’s **Local Storage**, ensuring data consistency across reloads.
+
+### Charting
+Uses **Chart.js** to visualize:
+- GDP distribution
+- Population comparisons
+- Regional summaries
+
+---
+
+## Notable Technical Challenges & Solutions
+
+**Challenge 1: Persistent Data Storage**  
+LocalStorage initially failed to synchronize across CRUD operations.  
+**Solution:** Implemented a Singleton data model pattern to ensure that all pages access and modify a single unified dataset.
+
+**Challenge 2: API Data Rendering Delay**  
+API responses were slow due to asynchronous fetching.  
+**Solution:** Used `async/await` with loading states and fallback placeholders to ensure the UI doesn’t break.
+
+**Challenge 3: Chart Updates After CRUD Operations**  
+Charts were not refreshing when records changed.  
+**Solution:** Triggered a custom event listener to reload chart data after each model update.
+
+**Challenge 4: Responsive Layout for ERD and Cards**  
+The ERD image overflowed and caused layout distortion.  
+**Solution:** Added responsive scaling and CSS constraints to make it mobile-friendly.
+
+---
 
 ## Deployment
-This project is intended to be deployed on Azure as a static web app:
-- All code is client-side (HTML, CSS, JS)
-- No server runtime required
-- Chatbot embed runs from Botpress Cloud
-- localStorage ensures state CRUD persistence per user session
 
-## Contributors
-- Mohamed Faisal Sindhi — Frontend structure, integration, hosting, chatbot
-- Hongxu Yang — Visual design, dark mode, responsive CSS, ERD diagram
-- Jonathan James — CRUD logic, Chart.js visualizations, controller wiring, localStorage model
+- **Azure Static Web App (Primary Deployment)**  
+  Hosted with all assets, scripts, and pages accessible publicly.
 
-## Notes
-This project went through an iterative Git process, including multiple branches and corrected repos. We resolved merge conflicts, enforced branch protection for `main`, and used feature branches for CSS, JS, and Botpress integration. This taught us proper collaboration workflows and version control discipline.
+- **GitHub Pages (Backup)**  
+  [https://mdfaisals2025.github.io/us-states-dashboard/](https://mdfaisals2025.github.io/us-states-dashboard/)
+
+Both deployments ensure accessibility and demonstrate continuous integration workflows.
+
+---
+
+## Final Team Reflection
+
+Working on the **US States Dashboard** allowed our team to bring together UI/UX design, data modeling, and real-world web application logic.  
+Through this project, we learned how to implement a clean MVC architecture, integrate APIs, and handle persistent data.  
+We faced challenges related to data binding, API latency, and responsive design, which helped strengthen our understanding of modern web development.
+
+Overall, this project showcased our teamwork and technical growth, transforming a static concept into a fully dynamic, interactive web platform.
+
+---
+
+**Built with love and collaboration by Faisal, Hongxu, and Jonathan**  
+© 2025 US States Dashboard
