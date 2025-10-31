@@ -1,47 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Delete — US States Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" href="assets/styles.css"/>
+  <script type="module">
+    import { bindDelete } from './assets/controller.js';
+    window.addEventListener('DOMContentLoaded', bindDelete);
+  </script>
 </head>
 <body>
-  <div class="navbar">
-    <div class="nav-inner">
-      <a class="brand" href="index.html">US States Dashboard</a>
-      <div class="nav-center">
-        <a href="read.html">Data Table</a><a href="create.html">Create</a>
-        <a href="update.html">Update</a><a href="delete.html">Delete</a>
-        <a href="data.html">Charts</a><a href="about.html">About</a>
-      </div>
-      <div class="nav-right"><a class="btn ghost" href="read.html">Back</a></div>
+  <header class="header">
+    <div class="container row">
+      <a class="brand-badge" href="index.html">US States Dashboard</a>
+      <nav class="nav">
+        <a href="read.html">Data Table</a>
+        <a href="create.html">Create</a>
+        <a href="update.html">Update</a>
+        <a class="active" href="delete.html">Delete</a>
+        <a href="data.html">Charts</a>
+        <a href="about.html">About</a>
+      </nav>
+      <a class="gh-pill" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
-  </div>
+  </header>
 
-  <main class="container">
+  <main class="container section">
     <div class="card">
-      <div class="h1">Delete a State</div>
-      <p class="muted">This action cannot be undone.</p>
-
-      <form id="delete-form" style="display:grid; gap:12px; max-width:520px">
-        <div><label>Choose by ID</label><select id="delete-select"></select></div>
-        <div><label>Or enter ID manually</label><input id="delete-id" placeholder="e.g., CA"/></div>
-        <div style="display:flex; gap:10px">
-          <button class="btn danger" type="submit">Delete</button>
-          <a class="btn secondary" href="read.html">Cancel</a>
+      <h3 class="card-title">Delete a State</h3>
+      <p class="help">This action cannot be undone.</p>
+      <form id="delete-form" class="row-3" style="align-items:end">
+        <div>
+          <label>Choose by ID</label>
+          <select id="delete-pick"></select>
+        </div>
+        <div>
+          <label>Or enter ID manually</label>
+          <input id="delete-id" placeholder="e.g., CA"/>
+        </div>
+        <div>
+          <button class="btn warning" type="submit">Delete</button>
+          <a class="btn secondary" href="read.html" style="margin-left:10px">Cancel</a>
         </div>
       </form>
     </div>
   </main>
 
-  <div class="footer">
+  <footer class="container footer">
     <span>© 2025 US States Dashboard</span>
-    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
-  </div>
+    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+  </footer>
 
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
-  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>

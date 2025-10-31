@@ -1,47 +1,56 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Create — US States Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" href="assets/styles.css"/>
+  <script type="module">
+    import { bindCreate } from './assets/controller.js';
+    window.addEventListener('DOMContentLoaded', bindCreate);
+  </script>
 </head>
 <body>
-  <div class="navbar">
-    <div class="nav-inner">
-      <a class="brand" href="index.html">US States Dashboard</a>
-      <div class="nav-center">
-        <a href="read.html">Data Table</a><a href="create.html">Create</a>
-        <a href="update.html">Update</a><a href="delete.html">Delete</a>
-        <a href="data.html">Charts</a><a href="about.html">About</a>
-      </div>
-      <div class="nav-right"><a class="btn ghost" href="read.html">Back to Table</a></div>
+  <header class="header">
+    <div class="container row">
+      <a class="brand-badge" href="index.html">US States Dashboard</a>
+      <nav class="nav">
+        <a href="read.html">Data Table</a>
+        <a class="active" href="create.html">Create</a>
+        <a href="update.html">Update</a>
+        <a href="delete.html">Delete</a>
+        <a href="data.html">Charts</a>
+        <a href="about.html">About</a>
+      </nav>
+      <a class="gh-pill" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
-  </div>
+  </header>
 
-  <main class="container">
+  <main class="container section">
     <div class="card">
-      <div class="h1">Add a New State</div>
+      <h3 class="card-title">Add a New State</h3>
       <form id="create-form">
-        <div class="form-row-3">
+        <div class="row-3">
           <div><label>ID (USPS)</label><input name="id" placeholder="e.g., CA" required/></div>
           <div><label>Name</label><input name="name" required/></div>
-          <div><label>Region</label>
-            <select name="region" required>
-              <option value="">Select Region</option>
+          <div>
+            <label>Region</label>
+            <select name="region">
               <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
             </select>
           </div>
         </div>
-        <div class="form-row-3" style="margin-top:6px">
-          <div><label>Capital</label><input name="capital" required/></div>
+
+        <div class="row-3" style="margin-top:10px">
+          <div><label>Capital</label><input name="capital"/></div>
           <div><label>Population (people)</label><input name="population" type="number" min="0"/></div>
           <div><label>GDP (USD)</label><input name="gdp" type="number" min="0"/></div>
         </div>
-        <div class="form-row-3" style="margin-top:6px">
+
+        <div class="row-3" style="margin-top:10px">
           <div><label>Area (km²)</label><input name="area" type="number" min="0"/></div>
           <div><label># Cities</label><input name="cities" type="number" min="0"/></div>
-          <div style="display:flex;align-items:flex-end;gap:10px">
+          <div style="display:flex; align-items:flex-end; gap:10px">
             <button class="btn" type="submit">Create</button>
             <a class="btn secondary" href="read.html">Cancel</a>
           </div>
@@ -50,13 +59,12 @@
     </div>
   </main>
 
-  <div class="footer">
+  <footer class="container footer">
     <span>© 2025 US States Dashboard</span>
-    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
-  </div>
+    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+  </footer>
 
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
-  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>

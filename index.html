@@ -1,83 +1,97 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>US States Dashboard — Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" href="assets/styles.css"/>
+  <script type="module">
+    import { totals } from './assets/model.js';
+    import { fmt } from './assets/controller.js';
+    async function main(){
+      const t = totals();
+      document.getElementById('kpi-pop').textContent = fmt(t.population);
+      document.getElementById('kpi-gdp').textContent = fmt(t.gdp,'USD');
+      document.getElementById('kpi-area').textContent = fmt(t.area,'km²');
+    }
+    window.addEventListener('DOMContentLoaded', main);
+  </script>
 </head>
 <body>
-  <!-- NAV -->
-  <div class="navbar">
-    <div class="nav-inner">
-      <a class="brand" href="index.html">US States Dashboard</a>
-      <div class="nav-center">
+  <header class="header">
+    <div class="container row">
+      <a class="brand-badge" href="index.html">US States Dashboard</a>
+      <nav class="nav">
         <a href="read.html">Data Table</a>
         <a href="create.html">Create</a>
         <a href="update.html">Update</a>
         <a href="delete.html">Delete</a>
         <a href="data.html">Charts</a>
-        <a href="about.html">About</a>
-      </div>
-      <div class="nav-right"><a href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a></div>
+        <a class="active" href="about.html">About</a>
+      </nav>
+      <a class="gh-pill" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
-  </div>
+  </header>
 
-  <main class="container">
+  <main class="container section">
     <div class="grid grid-3">
       <div class="card">
-        <div class="h2">Total Population</div>
-        <div id="total-pop" class="kpi">0</div>
-        <div class="muted">Across all states in the dataset</div>
+        <h3 class="card-title">Total Population</h3>
+        <div id="kpi-pop" class="kpi">0</div>
+        <div class="help">Across all states in the dataset</div>
       </div>
       <div class="card">
-        <div class="h2">Total GDP</div>
-        <div id="total-gdp" class="kpi">$0</div>
-        <div class="muted">Aggregate (USD)</div>
+        <h3 class="card-title">Total GDP</h3>
+        <div id="kpi-gdp" class="kpi">$0</div>
+        <div class="help">Aggregate (USD)</div>
       </div>
       <div class="card">
-        <div class="h2">Total Land Area</div>
-        <div id="total-area" class="kpi">0</div>
-        <div class="muted">km²</div>
+        <h3 class="card-title">Total Land Area</h3>
+        <div id="kpi-area" class="kpi">0</div>
+        <div class="help">km²</div>
       </div>
     </div>
 
-    <div class="card soft" style="margin-top:18px">
-      <div class="h2" style="display:flex;justify-content:space-between;align-items:center">
-        <span>External Insights</span>
-        <button id="refresh-insights" class="btn small ghost">Refresh</button>
+    <section class="section">
+      <div class="card">
+        <h3 class="card-title">External Insights</h3>
+        <div id="wb-gdp" class="help" style="margin-bottom:6px">USA GDP (current US$)</div>
+        <div id="wb-pop" class="help">USA Population</div>
+        <button id="wb-refresh" class="btn secondary" style="margin-top:12px">Refresh</button>
       </div>
+    </section>
 
-      <div class="grid grid-2">
-        <div class="card">
-          <div class="h2">USA GDP (current US$)</div>
-          <div id="gdp-val" class="kpi" style="font-size:28px">—</div>
-          <div class="muted">Source: World Bank Open Data</div>
-        </div>
-        <div class="card">
-          <div class="h2">USA Population</div>
-          <div id="pop-val" class="kpi" style="font-size:28px">—</div>
-          <div class="muted">Source: World Bank Open Data</div>
-        </div>
+    <section class="section">
+      <div class="card">
+        <h3 class="card-title">Get Started</h3>
+        <a class="btn" href="create.html" style="width:100%; text-align:center">Add a State</a>
       </div>
-    </div>
-
-    <div class="card soft" style="margin-top:18px">
-      <div class="h2">Get Started</div>
-      <p class="muted">Use CRUD pages to manage records. Charts update automatically.</p>
-      <a class="btn" href="create.html" style="width:100%">Add a State</a>
-    </div>
+    </section>
   </main>
 
-  <div class="footer">
+  <footer class="container footer">
     <span>© 2025 US States Dashboard</span>
-    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
-  </div>
+    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+  </footer>
 
-  <!-- Botpress -->
+  <!-- Botpress (blue widget only) -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 
-  <script type="module" src="assets/controller.js"></script>
+  <!-- World Bank (fetch on click to keep simple and avoid rate limits) -->
+  <script>
+    async function fetchNumber(url){ const r=await fetch(url); const j=await r.json(); return j[1]?.[0]?.value; }
+    async function loadWB(){
+      const [gdp,pop] = await Promise.all([
+        fetchNumber('https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json'),
+        fetchNumber('https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json')
+      ]);
+      document.getElementById('wb-gdp').textContent = `USA GDP: $${Number(gdp||0).toLocaleString()} (Year: 2024) • Source: World Bank Open Data`;
+      document.getElementById('wb-pop').textContent = `USA Population: ${Number(pop||0).toLocaleString()} (Year: 2024) • Source: World Bank Open Data`;
+    }
+    document.getElementById('wb-refresh').addEventListener('click', loadWB);
+    // Load once at start
+    loadWB().catch(()=>{});
+  </script>
 </body>
 </html>
