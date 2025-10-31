@@ -2,30 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Data Table — US States</title>
+  <title>US States Dashboard — Data Table</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css"/>
+  <link rel="stylesheet" href="assets/styles.css?v=20251031"/>
   <script type="module">
-    import { bootTable } from './assets/controller.js';
+    import { bootTable } from './assets/controller.js?v=20251031';
     window.addEventListener('DOMContentLoaded', bootTable);
   </script>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <a class="brand" href="index.html">US States Dashboard</a>
+  <header class="header">
+    <div class="container row">
+      <a class="brand-badge" href="index.html">US States Dashboard</a>
       <nav class="nav">
         <a href="index.html">Home</a>
         <a class="active" href="data.html">Data Table</a>
         <a href="create.html">Create</a>
         <a href="update.html">Update</a>
         <a href="delete.html">Delete</a>
+        <a href="charts.html">Charts</a>
         <a href="about.html">About</a>
-        <a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
       </nav>
+      <a class="gh-pill" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
+  </header>
 
+  <main class="container section">
     <div class="panel"><div class="panel-inner">
       <div class="form-grid mt8">
         <div>
@@ -37,6 +40,7 @@
           <select id="filter-region" class="input"><option value="">All regions</option></select>
         </div>
       </div>
+
       <div class="table-wrap mt16">
         <table class="table">
           <thead>
@@ -50,8 +54,11 @@
         </table>
       </div>
     </div></div>
+  </main>
 
-    <div class="footer">Tip: use <strong>Create</strong> to add more states.</div>
-  </div>
+  <footer class="container footer">
+    <span>© 2025 US States Dashboard</span>
+    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+  </footer>
 </body>
 </html>

@@ -1,8 +1,6 @@
-// Simple localStorage-backed model with seed data
 import { fmtNumber, fmtMoney } from './utils.js';
 
-const STORAGE_KEY = 'us_states_v1';
-
+const KEY = 'us_states_v1';
 const SEED = [
   { id:'CA', name:'California', region:'West',      capital:'Sacramento', population:38970000, gdp:3600000000000, area:423967, cities:482 },
   { id:'TX', name:'Texas',      region:'South',     capital:'Austin',     population:30400000, gdp:2300000000000, area:695662, cities:1214 },
@@ -12,32 +10,30 @@ const SEED = [
   { id:'IL', name:'Illinois',   region:'Midwest',   capital:'Springfield',population:12500000, gdp:1000000000000, area:149995, cities:1299 },
   { id:'OH', name:'Ohio',       region:'Midwest',   capital:'Columbus',   population:11800000, gdp: 780000000000, area:116098, cities:931 },
   { id:'GA', name:'Georgia',    region:'South',     capital:'Atlanta',    population:11100000, gdp: 800000000000, area:153910, cities:535 },
-  { id:'NC', name:'North Carolina', region:'South', capital:'Raleigh',    population:10800000, gdp: 730000000000, area:139391, cities:552 },
+  { id:'NC', name:'North Carolina',region:'South',  capital:'Raleigh',    population:10800000, gdp: 730000000000, area:139391, cities:552 },
   { id:'MI', name:'Michigan',   region:'Midwest',   capital:'Lansing',    population:10000000, gdp: 600000000000, area:250487, cities:533 }
 ];
 
-function ensureSeed() {
-  if (!localStorage.getItem(STORAGE_KEY)) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED));
+function ensureSeed(){
+  if(!localStorage.getItem(KEY)){
+    localStorage.setItem(KEY, JSON.stringify(SEED));
   }
 }
-function getAll() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
+function all(){
+  try{ return JSON.parse(localStorage.getItem(KEY)) || []; }
+  catch{ return []; }
 }
-function saveAll(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function save(rows){ localStorage.setItem(KEY, JSON.stringify(rows)); }
 
-function upsert(state) {
-  const data = getAll();
-  const i = data.findIndex(s => s.id.toUpperCase() === state.id.toUpperCase());
-  if (i >= 0) data[i] = state; else data.push(state);
-  saveAll(data);
+function upsert(s){
+  const rows = all();
+  const i = rows.findIndex(r=>r.id.toUpperCase()===s.id.toUpperCase());
+  if(i>=0) rows[i]=s; else rows.push(s);
+  save(rows);
 }
-function removeById(id) {
-  saveAll(getAll().filter(s => s.id.toUpperCase() !== id.toUpperCase()));
+function remove(id){
+  save(all().filter(r=>r.id.toUpperCase()!==id.toUpperCase()));
 }
-function findById(id) {
-  return getAll().find(s => s.id.toUpperCase() === id.toUpperCase());
-}
+function byId(id){ return all().find(r=>r.id.toUpperCase()===id.toUpperCase()); }
 
-export const StateDB = { ensureSeed, getAll, upsert, removeById, findById, fmtNumber, fmtMoney };
+export const DB = { ensureSeed, all, save, upsert, remove, byId, fmtNumber, fmtMoney };

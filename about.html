@@ -2,37 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>About — US States</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css"/>
+  <link rel="stylesheet" href="assets/styles.css?v=20251031"/>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <a class="brand" href="index.html">US States Dashboard</a>
+  <header class="header">
+    <div class="container row">
+      <a class="brand-badge" href="index.html">US States Dashboard</a>
       <nav class="nav">
         <a href="index.html">Home</a>
         <a href="data.html">Data Table</a>
         <a href="create.html">Create</a>
         <a href="update.html">Update</a>
         <a href="delete.html">Delete</a>
+        <a href="charts.html">Charts</a>
         <a class="active" href="about.html">About</a>
-        <a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
       </nav>
+      <a class="gh-pill" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
     </div>
+  </header>
 
+  <main class="container section">
     <div class="panel"><div class="panel-inner">
       <h2 class="m0">About this Project</h2>
-      <p class="mt8">A simple CRUD dashboard for exploring US states. Data is stored in your browser using <code>localStorage</code>, so you can edit freely without a backend.</p>
+      <p class="mt8">A lightweight CRUD dashboard for exploring US states. Data is stored in your browser (<code>localStorage</code>) and powers both the table and charts.</p>
+
       <div class="cards mt16">
-        <div class="card"><h3>Tech</h3><small>Vanilla HTML/CSS/JS + Chart.js</small></div>
-        <div class="card"><h3>Authors</h3><small>Faisal • Hongxu • Jonathan</small></div>
-        <div class="card"><h3>License</h3><small>MIT (student project)</small></div>
+        <div class="card">
+          <h3>Tech Stack</h3>
+          <small>Vanilla HTML/CSS/JS • ES Modules • Chart.js 4.x</small>
+        </div>
+        <div class="card">
+          <h3>Features</h3>
+          <small>CRUD, Search/Filter, Auto-seeded data, Responsive UI</small>
+        </div>
+        <div class="card">
+          <h3>Authors</h3>
+          <small>Faisal • Hongxu • Jonathan</small>
+        </div>
+      </div>
+
+      <div class="cards mt24">
+        <div class="card"><img class="img-team" src="assets/faisal.JPG" alt="Faisal"/></div>
+        <div class="card"><img class="img-team" src="assets/hongxu.JPG" alt="Hongxu"/></div>
+        <div class="card"><img class="img-team" src="assets/jonathan.jpg" alt="Jonathan"/></div>
       </div>
     </div></div>
+  </main>
 
-    <div class="footer">© 2025 US States Dashboard</div>
-  </div>
+  <footer class="container footer">
+    <span>© 2025 US States Dashboard</span>
+    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+  </footer>
 </body>
 </html>
