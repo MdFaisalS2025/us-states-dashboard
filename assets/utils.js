@@ -1,13 +1,27 @@
-export const $ = (sel, ctx=document) => ctx.querySelector(sel);
-export const $$ = (sel, ctx=document) => [...ctx.querySelectorAll(sel)];
+export function getStates(){
+  const raw = localStorage.getItem('states');
+  try{
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  }catch{
+    return [];
+  }
+}
 
-export const fmtInt = (n) => (isNaN(n)||n===null)?'0':Number(n).toLocaleString('en-US');
-export const fmtUsd = (n) => '$' + fmtInt(n);
+export function setStates(arr){
+  localStorage.setItem('states', JSON.stringify(arr||[]));
+  window.dispatchEvent(new CustomEvent('states:updated'));
+}
 
-export const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-export const load = (k, d=[]) => {
-  try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; }
-  catch { return d; }
-};
+export function formatNumber(n){
+  if(n==null || isNaN(n)) return '0';
+  return Number(n).toLocaleString('en-US');
+}
 
-export const on = (el, evt, fn) => el && el.addEventListener(evt, fn);
+export function formatMoney(n){
+  const v = Number(n||0);
+  if(v>=1_000_000_000_000) return (v/1_000_000_000_000).toFixed(1)+'T';
+  if(v>=1_000_000_000)     return (v/1_000_000_000).toFixed(1)+'B';
+  if(v>=1_000_000)         return (v/1_000_000).toFixed(1)+'M';
+  return v.toLocaleString('en-US');
+}

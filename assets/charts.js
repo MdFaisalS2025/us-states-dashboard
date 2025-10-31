@@ -1,82 +1,108 @@
-import { getStates, topBy } from './model.js';
+/* Chart rendering wired to localStorage "states" */
+import { getStates, formatMoney, formatNumber } from './utils.js';
 
 let charts = [];
 
 function destroyCharts(){
-  charts.forEach(c=>c.destroy());
+  charts.forEach(c => c.destroy());
   charts = [];
 }
 
-function donutPopulation(ctx){
-  const top = topBy('population', 6);
-  const labels = top.map(s=>s.name);
-  const data = top.map(s=>Number(s.population)||0);
-  return new Chart(ctx, {
-    type:'doughnut',
-    data:{ labels, datasets:[{ data }]},
-    options:{ plugins:{ legend:{ position:'bottom', labels:{color:'#DDECF3'} } }, cutout:'55%' }
-  });
+function pickTop(arr, key, n){
+  return [...arr].sort((a,b)=> (b[key]||0)-(a[key]||0)).slice(0,n);
 }
 
-function barGDP(ctx){
-  const top = topBy('gdp', 8).reverse(); // small at top
-  const labels = top.map(s=>s.name);
-  const data = top.map(s=>Number(s.gdp)||0);
-  return new Chart(ctx,{
-    type:'bar',
-    data:{ labels, datasets:[{ label:'GDP (USD)', data }]},
-    options:{
-      indexAxis:'y',
-      scales:{
-        x:{ ticks:{ color:'#CFE3EE', callback:v=>'$'+Number(v).toLocaleString() }, grid:{color:'rgba(255,255,255,.06)'}},
-        y:{ ticks:{ color:'#CFE3EE' }, grid:{display:false}}
-      },
-      plugins:{ legend:{display:false} }
-    }
-  });
-}
+function moneyTick(value){ return '$' + formatMoney(value); }
 
-function lineArea(ctx){
-  const top = topBy('area', 10);
-  const labels = top.map(s=>s.name);
-  const data = top.map(s=>Number(s.area)||0);
-  return new Chart(ctx,{
-    type:'line',
-    data:{ labels, datasets:[{ label:'Land Area (km²)', data, fill:false, tension:.3 }]},
-    options:{
-      scales:{
-        x:{ ticks:{ color:'#CFE3EE' }, grid:{display:false}},
-        y:{ ticks:{ color:'#CFE3EE', callback:v=>Number(v).toLocaleString()+' km²' }, grid:{color:'rgba(255,255,255,.06)'}}
-      },
-      plugins:{ legend:{ position:'bottom', labels:{color:'#DDECF3'} } }
-    }
-  });
-}
-
-export function renderCharts(){
-  const a = document.getElementById('ch-pop');
-  const b = document.getElementById('ch-gdp');
-  const c = document.getElementById('ch-area');
-  if(!a||!b||!c) return;
+function buildCharts(){
+  const states = getStates();
 
   destroyCharts();
 
-  // When no data, show placeholders but still render empty charts gracefully
-  const haveData = getStates().length > 0;
-  charts.push(donutPopulation(a.getContext('2d')));
-  charts.push(barGDP(b.getContext('2d')));
-  charts.push(lineArea(c.getContext('2d')));
+  // ---- Doughnut: Population share (Top 6) ----
+  const popTop = pickTop(states,'population',6);
+  const popCtx = document.getElementById('chartPop');
+  if(popCtx){
+    charts.push(new Chart(popCtx, {
+      type:'doughnut',
+      data:{
+        labels: popTop.map(s=>s.name),
+        datasets:[{
+          data: popTop.map(s=>s.population),
+          borderWidth:0,
+          hoverOffset:8
+        }]
+      },
+      options:{
+        plugins:{
+          legend:{position:'bottom', labels:{color:'#dfecee', boxWidth:14}},
+          tooltip:{callbacks:{label: c => `${c.label}: ${formatNumber(c.parsed)} people`}}
+        },
+        cutout:'58%',
+      }
+    }));
+  }
 
-  // Badge under charts indicating live source from local storage (no “demo” banner anymore)
-  const info = document.getElementById('chart-source');
-  if(info){
-    info.textContent = haveData
-      ? 'Charts reflect the states you have stored in the Data Table.'
-      : 'No records yet. Add states on the Create page to populate charts.';
+  // ---- Horizontal bar: GDP (Top 8) ----
+  const gdpTop = pickTop(states,'gdp',8);
+  const gdpCtx = document.getElementById('chartGdp');
+  if(gdpCtx){
+    charts.push(new Chart(gdpCtx, {
+      type:'bar',
+      data:{
+        labels:gdpTop.map(s=>s.name),
+        datasets:[{
+          label:'GDP (USD)',
+          data:gdpTop.map(s=>s.gdp),
+          borderWidth:0,
+        }]
+      },
+      options:{
+        indexAxis:'y',
+        scales:{
+          x:{ticks:{color:'#cfe0e6', callback: moneyTick}, grid:{color:'#254656'}},
+          y:{ticks:{color:'#cfe0e6'}, grid:{display:false}}
+        },
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label: c => moneyTick(c.parsed.x)}}
+        }
+      }
+    }));
+  }
+
+  // ---- Line: Land Area (Top 10) ----
+  const areaTop = pickTop(states,'area_km2',10).reverse(); // small to large left->right
+  const areaCtx = document.getElementById('chartArea');
+  if(areaCtx){
+    charts.push(new Chart(areaCtx, {
+      type:'line',
+      data:{
+        labels: areaTop.map(s=>s.name),
+        datasets:[{
+          label:'Land Area (km²)',
+          data: areaTop.map(s=>s.area_km2),
+          borderWidth:3,
+          pointRadius:4,
+          tension:.35,
+          fill:false
+        }]
+      },
+      options:{
+        scales:{
+          x:{ticks:{color:'#cfe0e6'}, grid:{color:'#244453'}},
+          y:{ticks:{color:'#cfe0e6', callback:v=>formatNumber(v)+' km²'}, grid:{color:'#244453'}}
+        },
+        plugins:{
+          legend:{labels:{color:'#dfecee'}},
+          tooltip:{callbacks:{label:c=>`${formatNumber(c.parsed.y)} km²`}}
+        }
+      }
+    }));
   }
 }
 
-/* Refresh if localStorage changes (other tab or after save-then-open) */
-window.addEventListener('storage', (e)=>{
-  if(e.key && e.key.endsWith('_v')) renderCharts();
-});
+document.addEventListener('DOMContentLoaded', buildCharts);
+
+// Re-render if other pages modify the dataset and dispatch an event
+window.addEventListener('states:updated', buildCharts);
