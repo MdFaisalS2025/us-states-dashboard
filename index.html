@@ -1,97 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>US States Dashboard — Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>US States Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css"/>
   <script type="module">
-    import { totals } from './assets/model.js';
-    import { fmt } from './assets/controller.js';
-    async function main(){
-      const t = totals();
-      document.getElementById('kpi-pop').textContent = fmt(t.population);
-      document.getElementById('kpi-gdp').textContent = fmt(t.gdp,'USD');
-      document.getElementById('kpi-area').textContent = fmt(t.area,'km²');
-    }
-    window.addEventListener('DOMContentLoaded', main);
+    import { bootHome } from './assets/controller.js';
+    import { bootChartsOnHome } from './assets/charts.js';
+    window.addEventListener('DOMContentLoaded', ()=>{ bootHome(); bootChartsOnHome(); });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header class="header">
-    <div class="container row">
-      <a class="brand-badge" href="index.html">US States Dashboard</a>
+  <div class="container">
+    <div class="header">
+      <a class="brand" href="index.html">US States Dashboard</a>
       <nav class="nav">
-        <a href="read.html">Data Table</a>
+        <a class="active" href="index.html">Home</a>
+        <a href="data.html">Data Table</a>
         <a href="create.html">Create</a>
         <a href="update.html">Update</a>
         <a href="delete.html">Delete</a>
-        <a href="data.html">Charts</a>
-        <a class="active" href="about.html">About</a>
+        <a href="about.html">About</a>
+        <a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
       </nav>
-      <a class="gh-pill" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
-    </div>
-  </header>
-
-  <main class="container section">
-    <div class="grid grid-3">
-      <div class="card">
-        <h3 class="card-title">Total Population</h3>
-        <div id="kpi-pop" class="kpi">0</div>
-        <div class="help">Across all states in the dataset</div>
-      </div>
-      <div class="card">
-        <h3 class="card-title">Total GDP</h3>
-        <div id="kpi-gdp" class="kpi">$0</div>
-        <div class="help">Aggregate (USD)</div>
-      </div>
-      <div class="card">
-        <h3 class="card-title">Total Land Area</h3>
-        <div id="kpi-area" class="kpi">0</div>
-        <div class="help">km²</div>
-      </div>
     </div>
 
-    <section class="section">
-      <div class="card">
-        <h3 class="card-title">External Insights</h3>
-        <div id="wb-gdp" class="help" style="margin-bottom:6px">USA GDP (current US$)</div>
-        <div id="wb-pop" class="help">USA Population</div>
-        <button id="wb-refresh" class="btn secondary" style="margin-top:12px">Refresh</button>
+    <div class="panel"><div class="panel-inner">
+      <div class="cards">
+        <div class="card"><h3>Total Population</h3><div id="metric-pop" class="big">0</div><small>Across all states</small></div>
+        <div class="card"><h3>Total GDP</h3><div id="metric-gdp" class="big">$0</div><small>Aggregate (USD)</small></div>
+        <div class="card"><h3>Total Land Area</h3><div id="metric-area" class="big">0</div><small>km²</small></div>
+        <div class="card"><h3>States Tracked</h3><div id="metric-states" class="big">0</div><small>Count</small></div>
       </div>
-    </section>
+    </div></div>
 
-    <section class="section">
-      <div class="card">
-        <h3 class="card-title">Get Started</h3>
-        <a class="btn" href="create.html" style="width:100%; text-align:center">Add a State</a>
-      </div>
-    </section>
-  </main>
+    <div class="panel mt24"><div class="panel-inner">
+      <h3 class="m0">Top 10 by Population</h3>
+      <canvas id="popChart" class="mt16" height="120"></canvas>
+    </div></div>
 
-  <footer class="container footer">
-    <span>© 2025 US States Dashboard</span>
-    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
-  </footer>
+    <div class="panel mt24"><div class="panel-inner">
+      <h3 class="m0">Top 10 — GDP (billions)</h3>
+      <canvas id="gdpChart" class="mt16" height="120"></canvas>
+    </div></div>
 
-  <!-- Botpress (blue widget only) -->
-  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
-
-  <!-- World Bank (fetch on click to keep simple and avoid rate limits) -->
-  <script>
-    async function fetchNumber(url){ const r=await fetch(url); const j=await r.json(); return j[1]?.[0]?.value; }
-    async function loadWB(){
-      const [gdp,pop] = await Promise.all([
-        fetchNumber('https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json'),
-        fetchNumber('https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json')
-      ]);
-      document.getElementById('wb-gdp').textContent = `USA GDP: $${Number(gdp||0).toLocaleString()} (Year: 2024) • Source: World Bank Open Data`;
-      document.getElementById('wb-pop').textContent = `USA Population: ${Number(pop||0).toLocaleString()} (Year: 2024) • Source: World Bank Open Data`;
-    }
-    document.getElementById('wb-refresh').addEventListener('click', loadWB);
-    // Load once at start
-    loadWB().catch(()=>{});
-  </script>
+    <div class="footer">© 2025 US States Dashboard • Built with ❤️ by Faisal, Hongxu & Jonathan</div>
+  </div>
 </body>
 </html>

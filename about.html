@@ -3,124 +3,36 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>About — US States Dashboard</title>
+  <title>About — US States</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css"/>
-  <style>
-    /* Increase team image size */
-    .member-photo {
-      width: 150px;
-      height: 150px;
-      border-radius: 14px;
-      object-fit: cover;
-      border: 2px solid #274b59;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-    .member {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 18px;
-    }
-    .team {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: space-around;
-    }
-    @media (max-width: 600px) {
-      .member-photo {
-        width: 120px;
-        height: 120px;
-      }
-    }
-  </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="nav-inner">
+  <div class="container">
+    <div class="header">
       <a class="brand" href="index.html">US States Dashboard</a>
-      <div class="nav-center">
-        <a href="read.html">Data Table</a><a href="create.html">Create</a>
-        <a href="update.html">Update</a><a href="delete.html">Delete</a>
-        <a href="data.html">Charts</a><a href="about.html">About</a>
-      </div>
-      <div class="nav-right">
-        <a href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub</a>
-      </div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="data.html">Data Table</a>
+        <a href="create.html">Create</a>
+        <a href="update.html">Update</a>
+        <a href="delete.html">Delete</a>
+        <a class="active" href="about.html">About</a>
+        <a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub</a>
+      </nav>
     </div>
-  </div>
 
-  <main class="container">
-    <section class="card soft">
-      <div class="h1">About Us</div>
-      <div class="team">
-        <div class="card member">
-          <img class="member-photo" src="assets/faisal.JPG" alt="Mohamed Faisal Sindhi"/>
-          <div>
-            <div class="h2">Mohamed Faisal Sindhi</div>
-            <div class="muted">Frontend, deployment, chatbot</div>
-          </div>
-        </div>
-        <div class="card member">
-          <img class="member-photo" src="assets/hongxu.JPG" alt="Hongxu Yang"/>
-          <div>
-            <div class="h2">Hongxu Yang</div>
-            <div class="muted">UI/UX, ERD & documentation</div>
-          </div>
-        </div>
-        <div class="card member">
-          <img class="member-photo" src="assets/jonathan.jpg" alt="Jonathan James"/>
-          <div>
-            <div class="h2">Jonathan James</div>
-            <div class="muted">Controllers, charts, data service</div>
-          </div>
-        </div>
+    <div class="panel"><div class="panel-inner">
+      <h2 class="m0">About this Project</h2>
+      <p class="mt8">A simple CRUD dashboard for exploring US states. Data is stored in your browser using <code>localStorage</code>, so you can edit freely without a backend.</p>
+      <div class="cards mt16">
+        <div class="card"><h3>Tech</h3><small>Vanilla HTML/CSS/JS + Chart.js</small></div>
+        <div class="card"><h3>Authors</h3><small>Faisal • Hongxu • Jonathan</small></div>
+        <div class="card"><h3>License</h3><small>MIT (student project)</small></div>
       </div>
-    </section>
+    </div></div>
 
-    <section class="card" style="margin-top:18px">
-      <div class="h2">Links & Docs</div>
-      <div class="links-grid">
-        <a class="btn" href="https://github.com/mdfaisals2025/us-states-dashboard" target="_blank" rel="noopener">GitHub Repository</a>
-        <a class="btn secondary" href="README.md" target="_blank" rel="noopener">README (Technical Details)</a>
-      </div>
-    </section>
-
-    <section class="card" style="margin-top:18px">
-      <div class="h2">Data Model (ERD)</div>
-      <img class="erd" src="assets/logical_data_model_v3.png" alt="ERD"/>
-    </section>
-
-    <section class="card" style="margin-top:18px">
-      <div class="h2">Overview of CRUD Implementation</div>
-      <ul>
-        <li><strong>Model:</strong> LocalStorage wrapper (<code>assets/model.js</code>) with seed data and helpers for <em>add, update, remove, list</em>.</li>
-        <li><strong>View:</strong> Plain HTML templates styled with <code>assets/styles.css</code>. Reusable cards/tables.</li>
-        <li><strong>Controller:</strong> <code>assets/controller.js</code> wires forms, table actions, totals, and page routing.</li>
-        <li><strong>Charts:</strong> <code>assets/charts.js</code> renders donut/bar/line using Chart.js from the current dataset.</li>
-        <li><strong>API:</strong> <code>assets/api.js</code> fetches World Bank GDP & Population for the Home page.</li>
-      </ul>
-    </section>
-
-    <section class="card" style="margin-top:18px">
-      <div class="h2">Notable Technical Challenges & Solutions</div>
-      <ul>
-        <li><strong>Inconsistent layout & unreadable text:</strong> Unified a dark theme with higher contrast and consistent spacing.</li>
-        <li><strong>Charts not loading:</strong> Ensured Chart.js is loaded on <code>data.html</code> and corrected canvas IDs & dataset guards.</li>
-        <li><strong>Empty dataset issues:</strong> Added safe seeding and empty-state handling so pages don’t break.</li>
-        <li><strong>Image loading on GitHub Pages:</strong> Fixed <em>case-sensitive</em> filenames (<code>faisal.JPG</code>, <code>hongxu.JPG</code>, <code>jonathan.jpg</code>) and constrained sizes via CSS.</li>
-        <li><strong>Duplicate bot widget:</strong> Kept a single Botpress embed on every page.</li>
-      </ul>
-    </section>
-  </main>
-
-  <div class="footer">
-    <span>© 2025 US States Dashboard</span>
-    <span>Built with <span class="heart">❤️</span> by Faisal, Hongxu & Jonathan</span>
+    <div class="footer">© 2025 US States Dashboard</div>
   </div>
-
-  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
-  <script type="module" src="assets/controller.js"></script>
 </body>
 </html>
