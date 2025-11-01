@@ -122,5 +122,5 @@ main > *, .section > *, .panel > *{margin-left:auto;margin-right:auto}
 
 /* Even smaller ERD option */
 .erd-xxs {
-  max-width: 420px;   
+  max-width: 320px;   
 }
