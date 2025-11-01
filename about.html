@@ -25,16 +25,14 @@
   </header>
 
   <main class="container section">
-    <!-- Project -->
     <div class="panel">
       <div class="panel-inner">
         <h2 class="section-title">About this Project</h2>
-        <p class="section-sub">A lightweight MVC CRUD dashboard for exploring US states. Data persists in <code>localStorage</code>; World Bank API is used for read-only, up-to-date national indicators.</p>
+        <p class="section-sub">MVC CRUD dashboard with persistent <code>localStorage</code> data and World Bank API for read-only insights.</p>
       </div>
     </div>
 
-    <!-- Team -->
-    <div class="panel mt24">
+    <div class="panel section">
       <div class="panel-inner">
         <h2 class="section-title">Team</h2>
         <div class="cards mt16">
@@ -57,68 +55,42 @@
       </div>
     </div>
 
-    <!-- Documentation buttons -->
-    <div class="panel mt24">
+    <div class="panel section">
       <div class="panel-inner center">
         <h2 class="section-title">Documentation</h2>
-        <p class="section-sub">Technical details, endpoints, data model, CRUD flow, challenges.</p>
-        <div class="mt16">
-          <a class="btn" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">Open GitHub Repo</a>
-          <a class="btn outline" href="https://github.com/MdFaisalS2025/us-states-dashboard#readme" target="_blank" rel="noopener">Open README</a>
+        <p class="section-sub">Endpoints, data model, CRUD flow, challenges.</p>
+        <div class="mt12">
+          <a class="btn" href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank">GitHub Repo</a>
+          <a class="btn outline" href="https://github.com/MdFaisalS2025/us-states-dashboard#readme" target="_blank">README</a>
         </div>
       </div>
     </div>
 
-    <!-- API Endpoints -->
-    <div class="panel mt24">
+    <div class="panel section">
       <div class="panel-inner">
-        <h2 class="section-title">API Endpoints Used (Read-only)</h2>
+        <h2 class="section-title">API Endpoints (Read-only)</h2>
         <ul class="mt12">
-          <li>World Bank — GDP (current US$): <code>https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json&amp;per_page=8&amp;date=2019:2025</code></li>
+          <li>World Bank — GDP: <code>https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json&amp;per_page=8&amp;date=2019:2025</code></li>
           <li>World Bank — Population: <code>https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json&amp;per_page=8&amp;date=2019:2025</code></li>
         </ul>
       </div>
     </div>
 
-    <!-- ERD -->
-    <div class="panel mt24">
+    <div class="panel section">
       <div class="panel-inner center">
         <h2 class="section-title">Data Model (ERD)</h2>
-        <p class="section-sub">Logical design used for CRUD entities and relationships.</p>
         <a href="assets/logical_data_model_v3.png?v=20251031" target="_blank" rel="noopener">
           <img class="img-erd mt12" src="assets/logical_data_model_v3.png?v=20251031" alt="Logical Data Model ERD"/>
         </a>
-      </div>
-    </div>
-
-    <!-- CRUD + Challenges -->
-    <div class="panel mt24">
-      <div class="panel-inner">
-        <h2 class="section-title">CRUD Implementation Overview</h2>
-        <ul class="mt12">
-          <li><strong>Create:</strong> <code>create.html</code> → <code>api.upsert()</code> (localStorage).</li>
-          <li><strong>Read:</strong> <code>data.html</code> (search + region filter), <code>index.html</code> aggregates metrics.</li>
-          <li><strong>Update:</strong> <code>update.html</code> loads by ID, saves via <code>api.upsert()</code>.</li>
-          <li><strong>Delete:</strong> <code>delete.html</code> removes via <code>api.remove()</code>.</li>
-        </ul>
-        <div class="hr"></div>
-        <h3 class="m0">Notable Challenges &amp; Solutions</h3>
-        <ul class="mt12">
-          <li><strong>Centering / Consistency:</strong> Introduced container-capped inner panels (<code>max-width</code> + <code>margin-inline:auto</code>).</li>
-          <li><strong>External Insights robustness:</strong> Fetch recent range with graceful fallback when API returns null.</li>
-          <li><strong>Single source of truth:</strong> All UI reads/writes through a singleton <code>api</code> service layered on <code>localStorage</code>.</li>
-          <li><strong>Charts separation:</strong> Moved visualizations to <code>charts.html</code> to keep Home fast and focused.</li>
-        </ul>
       </div>
     </div>
   </main>
 
   <footer class="container footer">
     <span>© 2025 US States Dashboard</span>
-    <span class="built">Built with ❤️ by Faisal, Hongxu & Jonathan</span>
+    <span>Built with ❤️ by Faisal, Hongxu & Jonathan</span>
   </footer>
 
-  <!-- Botpress -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>

@@ -1,13 +1,14 @@
-/* ---------- Reset / Theme ---------- */
+/* --- Centering + theme (drop-in replace) --- */
 *,*::before,*::after{box-sizing:border-box}
 :root{
   --bg:#0b1620; --bg-grad-1:#112433; --bg-grad-2:#0d2230;
-  --panel:#0f2836; --border:#173746;
-  --text:#e8f4fb; --muted:#a9bfcd;
-  --brand:#1fc2a1; --brand-2:#17a2b8; --danger:#ef5350;
+  --panel:#0f2836; --border:#173746; --text:#e8f4fb; --muted:#a9bfcd;
   --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.25);
-  --content:1120px;           /* readable line length */
+  --content:1120px;           /* page max width */
+  --inner:1100px;             /* panel inner width */
 }
+
+/* Base */
 html,body{height:100%}
 body{
   margin:0;
@@ -18,23 +19,18 @@ body{
     var(--bg);
   color:var(--text);
 }
-
-/* Links (no purple visited) */
 a{color:#d9f6ff;text-decoration:none} a:hover{opacity:.95} a:visited{color:#d9f6ff}
 
-/* ---------- Layout (HARD CENTER) ---------- */
+/* >>> HARD CENTER THE PAGE <<< */
 .container{
   width:min(100%, var(--content));
-  margin-inline:auto;          /* center container itself */
+  margin-inline:auto;          /* centers the whole page content */
   padding:0 20px;
 }
 .section{margin:32px 0}
 
-.header{
-  position:sticky;top:0;z-index:20;
-  background:rgba(11,22,32,.7);backdrop-filter:saturate(1.4) blur(8px);
-  border-bottom:1px solid #0e2a36
-}
+/* Header / Nav */
+.header{position:sticky;top:0;z-index:20;background:rgba(11,22,32,.7);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid #0e2a36}
 .header .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-height:64px}
 .brand-badge{display:inline-flex;align-items:center;gap:10px;border:1px solid #113a48;background:#0f2a36;border-radius:999px;padding:10px 14px;font-weight:700;color:#eaf7ff}
 .nav{display:flex;gap:12px;flex-wrap:wrap;margin-left:auto}
@@ -42,62 +38,43 @@ a{color:#d9f6ff;text-decoration:none} a:hover{opacity:.95} a:visited{color:#d9f6
 .nav a.active,.nav a:hover{background:#133a49;border-color:#1d5266}
 .gh-pill{border:1px solid #124155;border-radius:999px;padding:8px 12px}
 
-/* Panels always full width of container; inner is centered and capped */
+/* Panels: full width of container; center the inside */
 .panel{
   background:var(--panel);
   border:1px solid var(--border);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
 }
+/* >>> THIS centers content inside each panel <<< */
 .panel-inner{
-  max-width:1100px;
-  margin-inline:auto;          /* center the content inside the panel */
+  max-width:var(--inner);
+  margin-inline:auto;          /* critical for centering */
   padding:22px;
 }
 
-/* ---------- Sections ---------- */
+/* Helpers / common UI */
 .section-title{margin:0 0 8px 0;font-size:1.25rem}
 .section-sub{margin:0;color:var(--muted)}
-.hr{height:1px;background:#11313f;border:0;margin:22px 0}
-
-/* ---------- Cards / Metrics ---------- */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
-.card{border:1px solid #133845;border-radius:14px;padding:16px;background:#0d2330}
-.card h3{margin:0 0 8px;font-size:1.05rem;opacity:.95}
-.card .big{font-size:1.85rem;font-weight:800;margin:2px 0 4px}
-.card small{color:var(--muted)}
-
-/* ---------- Table ---------- */
 .table-wrap{overflow:auto;border-radius:14px;border:1px solid var(--border);background:var(--panel)}
 .table{width:100%;border-collapse:separate;border-spacing:0}
 .table thead th{position:sticky;top:0;background:#0e2a36;color:#cfe6f3;text-align:left;padding:12px 14px;border-bottom:1px solid var(--border);font-size:.92rem}
 .table tbody td{padding:12px 14px;border-bottom:1px solid #11313f;color:#e8f1f6}
 .table tbody tr:hover{background:#0f2f3d}
-.table .actions{display:flex;gap:10px}
-.table a.btn{padding:6px 10px;border-radius:10px;border:1px solid #1a495b}
-.table a.btn:hover{background:#123745}
-
-/* ---------- Forms / Buttons ---------- */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .form-grid .full{grid-column:1/-1}
 .label{display:block;margin:8px 0 6px;color:#cfe6f3;font-weight:600}
-.input,select{width:100%;padding:12px 12px;background:#0e2430;border:1px solid #173847;border-radius:12px;color:#e9f3f8}
-input::placeholder{color:#6d8595}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:12px 16px;border-radius:12px;border:1px solid #1a495b;background:linear-gradient(180deg,#15505f,#113b49);color:#eaf5fb;font-weight:700;cursor:pointer}
-.btn:hover{filter:saturate(1.05) brightness(1.05)}
+.input,select{width:100%;padding:12px;background:#0e2430;border:1px solid #173847;border-radius:12px;color:#e9f3f8}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid #1a495b;background:linear-gradient(180deg,#15505f,#113b49);color:#eaf5fb;font-weight:700;cursor:pointer}
 .btn.secondary{background:#102a36}
 .btn.danger{background:#3a1d22;border-color:#6a2b36}
 .btn.outline{background:transparent;border-color:#1a495b}
-
-/* ---------- Footer ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.card{border:1px solid #133845;border-radius:14px;padding:16px;background:#0d2330}
+.card h3{margin:0 0 8px}
+.card .big{font-size:1.85rem;font-weight:800;margin:2px 0 4px}
 .footer{display:flex;justify-content:space-between;gap:12px;padding:18px 0;margin-top:28px;color:#a9bfcd;border-top:1px solid #0f2a36}
-.footer a{color:#cdeaf6}
+.center{text-align:center}
 
-/* ---------- Utilities ---------- */
-.m0{margin:0} .mt8{margin-top:8px} .mt12{margin-top:12px} .mt16{margin-top:16px}
-.mt20{margin-top:20px} .mt24{margin-top:24px} .center{text-align:center}
-
-/* Team & ERD */
+/* Images */
 .img-team{width:130px;height:130px;object-fit:cover;border-radius:14px;border:1px solid #1a3f51;box-shadow:var(--shadow)}
 .img-erd{width:100%;max-width:960px;height:auto;border-radius:14px;border:1px solid #1a3f51;box-shadow:var(--shadow);display:block;margin-inline:auto}
