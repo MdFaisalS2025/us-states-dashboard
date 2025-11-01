@@ -28,24 +28,44 @@
     </div>
   </header>
 
-  <main class="container section centered">
-    <div class="panel"><div class="panel-inner">
-      <div class="cards">
-        <div class="card"><h3>Total Population</h3><div id="metric-pop" class="big">0</div><small>Across all states</small></div>
-        <div class="card"><h3>Total GDP</h3><div id="metric-gdp" class="big">$0</div><small>Aggregate (USD)</small></div>
-        <div class="card"><h3>Total Land Area</h3><div id="metric-area" class="big">0</div><small>km²</small></div>
-        <div class="card"><h3>States Tracked</h3><div id="metric-states" class="big">0</div><small>Count</small></div>
+  <main class="container section">
+    <!-- Overview -->
+    <div class="panel">
+      <div class="panel-inner">
+        <h2 class="section-title">Overview</h2>
+        <p class="section-sub">A concise snapshot of all states currently tracked in the application.</p>
+        <div class="cards mt16">
+          <div class="card"><h3>Total Population</h3><div id="metric-pop" class="big">0</div><small>Across all states</small></div>
+          <div class="card"><h3>Total GDP</h3><div id="metric-gdp" class="big">$0</div><small>Aggregate (USD)</small></div>
+          <div class="card"><h3>Total Land Area</h3><div id="metric-area" class="big">0</div><small>km²</small></div>
+          <div class="card"><h3>States Tracked</h3><div id="metric-states" class="big">0</div><small>Count</small></div>
+        </div>
       </div>
-    </div></div>
+    </div>
 
-    <div class="panel mt24"><div class="panel-inner">
-      <span class="badge">External Insights</span>
-      <p class="mt8">Latest USA stats from <span id="ext-source">World Bank Open Data</span> (read-only):</p>
-      <ul class="mt8">
-        <li>USA GDP: <strong id="ext-gdp">Loading…</strong> <small>(Year: <span id="ext-gdp-year">—</span>)</small></li>
-        <li>USA Population: <strong id="ext-pop">Loading…</strong> <small>(Year: <span id="ext-pop-year">—</span>)</small></li>
-      </ul>
-    </div></div>
+    <!-- External Insights -->
+    <div class="panel mt24">
+      <div class="panel-inner">
+        <h2 class="section-title">External Insights</h2>
+        <p class="section-sub">Latest USA indicators from <span id="ext-source">World Bank Open Data</span> (read-only).</p>
+        <ul class="mt12">
+          <li>USA GDP: <strong id="ext-gdp">Loading…</strong> <small>(Year: <span id="ext-gdp-year">—</span>)</small></li>
+          <li>USA Population: <strong id="ext-pop">Loading…</strong> <small>(Year: <span id="ext-pop-year">—</span>)</small></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Next Actions -->
+    <div class="panel mt24">
+      <div class="panel-inner">
+        <h2 class="section-title">What would you like to do next?</h2>
+        <div class="mt12">
+          <a class="btn" href="data.html">Open Data Table</a>
+          <a class="btn secondary" href="create.html">Add a State</a>
+          <a class="btn outline" href="charts.html">View Charts</a>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer class="container footer">

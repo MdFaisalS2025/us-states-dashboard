@@ -28,28 +28,33 @@
     </div>
   </header>
 
-  <main class="container section centered">
-    <div class="panel"><div class="panel-inner">
-      <form id="create-form" class="form-grid">
-        <div><label class="label">ID (USPS)</label><input class="input" name="id" placeholder="e.g., CA" required maxlength="2"/></div>
-        <div><label class="label">State Name</label><input class="input" name="name" placeholder="California" required/></div>
-        <div>
-          <label class="label">Region</label>
-          <select class="input" name="region">
-            <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
-          </select>
-        </div>
-        <div><label class="label">Capital</label><input class="input" name="capital" placeholder="Sacramento"/></div>
-        <div><label class="label">Population</label><input class="input" name="population" type="number" min="0"/></div>
-        <div><label class="label">GDP (USD)</label><input class="input" name="gdp" type="number" min="0"/></div>
-        <div><label class="label">Area (km²)</label><input class="input" name="area" type="number" min="0"/></div>
-        <div><label class="label"># Cities</label><input class="input" name="cities" type="number" min="0"/></div>
-        <div class="full mt8">
-          <button class="btn" type="submit">Save State</button>
-          <a class="btn secondary" href="data.html">Back to Table</a>
-        </div>
-      </form>
-    </div></div>
+  <main class="container section">
+    <div class="panel">
+      <div class="panel-inner">
+        <h2 class="section-title">Create State</h2>
+        <p class="section-sub">Add a new state to the dataset.</p>
+
+        <form id="create-form" class="form-grid mt16">
+          <div><label class="label">ID (USPS)</label><input class="input" name="id" placeholder="e.g., CA" required maxlength="2"/></div>
+          <div><label class="label">State Name</label><input class="input" name="name" placeholder="California" required/></div>
+          <div>
+            <label class="label">Region</label>
+            <select class="input" name="region">
+              <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
+            </select>
+          </div>
+          <div><label class="label">Capital</label><input class="input" name="capital" placeholder="Sacramento"/></div>
+          <div><label class="label">Population</label><input class="input" name="population" type="number" min="0"/></div>
+          <div><label class="label">GDP (USD)</label><input class="input" name="gdp" type="number" min="0"/></div>
+          <div><label class="label">Area (km²)</label><input class="input" name="area" type="number" min="0"/></div>
+          <div><label class="label"># Cities</label><input class="input" name="cities" type="number" min="0"/></div>
+          <div class="full mt8">
+            <button class="btn" type="submit">Save State</button>
+            <a class="btn secondary" href="data.html">Back to Table</a>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 
   <footer class="container footer">

@@ -28,32 +28,37 @@
     </div>
   </header>
 
-  <main class="container section centered">
-    <div class="panel"><div class="panel-inner">
-      <div class="form-grid mt8">
-        <div>
-          <label class="label" for="q">Search</label>
-          <input id="q" class="input" placeholder="Search by name, capital, or code…"/>
-        </div>
-        <div>
-          <label class="label" for="filter-region">Region</label>
-          <select id="filter-region" class="input"><option value="">All regions</option></select>
-        </div>
-      </div>
+  <main class="container section">
+    <div class="panel">
+      <div class="panel-inner">
+        <h2 class="section-title">Data Table</h2>
+        <p class="section-sub">Search, filter, and manage states.</p>
 
-      <div class="table-wrap mt16">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>ID</th><th>Name</th><th>Capital</th>
-              <th>Population</th><th>GDP (USD)</th><th>Area (km²)</th>
-              <th>Cities</th><th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="states-body"></tbody>
-        </table>
+        <div class="form-grid mt16">
+          <div>
+            <label class="label" for="q">Search</label>
+            <input id="q" class="input" placeholder="Search by name, capital, or code…"/>
+          </div>
+          <div>
+            <label class="label" for="filter-region">Region</label>
+            <select id="filter-region" class="input"><option value="">All regions</option></select>
+          </div>
+        </div>
+
+        <div class="table-wrap mt16">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Capital</th>
+                <th>Population</th><th>GDP (USD)</th><th>Area (km²)</th>
+                <th>Cities</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="states-body"></tbody>
+          </table>
+        </div>
       </div>
-    </div></div>
+    </div>
   </main>
 
   <footer class="container footer">
