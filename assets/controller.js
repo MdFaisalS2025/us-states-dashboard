@@ -2,7 +2,7 @@ import { $, param } from './utils.js';
 import { api } from './api.js';
 import { loadExternalInsights } from './external_api.js';
 
-/* ---------- Home ---------- */
+/* ---------- Home (no charts here) ---------- */
 export async function bootHome(){
   api.init();
   const rows = api.list();
@@ -15,22 +15,23 @@ export async function bootHome(){
   $('#metric-area').textContent   = api.fmtNumber(totalArea);
   $('#metric-states').textContent = api.fmtNumber(rows.length);
 
-  // External, read-only insights (not persisted)
+  // External Insights
+  const tgt = { gdp:$('#ext-gdp'), gdpY:$('#ext-gdp-year'), pop:$('#ext-pop'), popY:$('#ext-pop-year'), src:$('#ext-source') };
   try{
     const { gdp, pop, source } = await loadExternalInsights();
-    $('#ext-gdp').textContent = gdp.value ? `$${api.fmtNumber(gdp.value)}` : '—';
-    $('#ext-gdp-year').textContent = gdp.date ?? '—';
-    $('#ext-pop').textContent = pop.value ? api.fmtNumber(pop.value) : '—';
-    $('#ext-pop-year').textContent = pop.date ?? '—';
-    $('#ext-source').textContent = source;
-  }catch(e){
-    $('#ext-gdp').textContent = $('#ext-pop').textContent = 'Unavailable';
-    $('#ext-gdp-year').textContent = $('#ext-pop-year').textContent = '—';
-    $('#ext-source').textContent = '—';
+    tgt.gdp.textContent = gdp.value ? `$${api.fmtNumber(gdp.value)}` : 'Unavailable';
+    tgt.gdpY.textContent = gdp.date ?? '—';
+    tgt.pop.textContent = pop.value ? api.fmtNumber(pop.value) : 'Unavailable';
+    tgt.popY.textContent = pop.date ?? '—';
+    tgt.src.textContent = source;
+  }catch{
+    tgt.gdp.textContent = tgt.pop.textContent = 'Unavailable';
+    tgt.gdpY.textContent = tgt.popY.textContent = '—';
+    tgt.src.textContent = 'World Bank Open Data';
   }
 }
 
-/* ---------- Data Table (data.html / read.html) ---------- */
+/* ---------- Data Table ---------- */
 export function bootTable(){
   api.init();
   const tbody = $('#states-body');
@@ -63,7 +64,6 @@ export function bootTable(){
     }).sort((a,b)=>a.name.localeCompare(b.name));
     render(out);
   }
-  // regions
   if(region){
     [...new Set(all.map(s=>s.region))].sort().forEach(r=>{
       const o=document.createElement('option');o.value=r;o.textContent=r;region.appendChild(o);
@@ -73,7 +73,6 @@ export function bootTable(){
   q?.addEventListener('input', apply);
   apply();
 }
-// keep compatibility if you import renderTable
 export { bootTable as renderTable };
 
 /* ---------- Create ---------- */
