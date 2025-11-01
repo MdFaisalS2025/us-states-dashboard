@@ -6,11 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css?v=20251031"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
   <script type="module">
     import { bootHome } from './assets/controller.js?v=20251031';
-    import { bootCharts } from './assets/charts.js?v=20251031';
-    window.addEventListener('DOMContentLoaded', ()=>{ bootHome(); bootCharts(); });
+    window.addEventListener('DOMContentLoaded', bootHome);
   </script>
 </head>
 <body>
@@ -30,7 +28,7 @@
     </div>
   </header>
 
-  <main class="container section">
+  <main class="container section centered">
     <div class="panel"><div class="panel-inner">
       <div class="cards">
         <div class="card"><h3>Total Population</h3><div id="metric-pop" class="big">0</div><small>Across all states</small></div>
@@ -41,21 +39,11 @@
     </div></div>
 
     <div class="panel mt24"><div class="panel-inner">
-      <h3 class="m0">Top 10 by Population</h3>
-      <canvas id="popChart" class="mt16" height="120"></canvas>
-    </div></div>
-
-    <div class="panel mt24"><div class="panel-inner">
-      <h3 class="m0">Top 10 — GDP (billions)</h3>
-      <canvas id="gdpChart" class="mt16" height="120"></canvas>
-    </div></div>
-
-    <div class="panel mt24"><div class="panel-inner">
       <span class="badge">External Insights</span>
-      <p class="mt8">Latest USA stats from <span id="ext-source">—</span>:</p>
+      <p class="mt8">Latest USA stats from <span id="ext-source">World Bank Open Data</span> (read-only):</p>
       <ul class="mt8">
-        <li>USA GDP: <strong id="ext-gdp">—</strong> <small>(Year: <span id="ext-gdp-year">—</span>)</small></li>
-        <li>USA Population: <strong id="ext-pop">—</strong> <small>(Year: <span id="ext-pop-year">—</span>)</small></li>
+        <li>USA GDP: <strong id="ext-gdp">Loading…</strong> <small>(Year: <span id="ext-gdp-year">—</span>)</small></li>
+        <li>USA Population: <strong id="ext-pop">Loading…</strong> <small>(Year: <span id="ext-pop-year">—</span>)</small></li>
       </ul>
     </div></div>
   </main>

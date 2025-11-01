@@ -24,35 +24,54 @@
     </div>
   </header>
 
-  <main class="container section">
+  <main class="container section centered">
     <div class="panel"><div class="panel-inner">
       <h2 class="m0">About this Project</h2>
       <p class="mt8">A lightweight MVC CRUD dashboard for exploring US states. Data is stored in your browser (<code>localStorage</code>) and powers both the table and charts. External insights are fetched via the World Bank API (read-only).</p>
 
-      <div class="cards mt16">
-        <div class="card"><h3>Tech Stack</h3><small>Vanilla HTML/CSS/JS • ES Modules • Chart.js 4.x • World Bank API</small></div>
-        <div class="card"><h3>Features</h3><small>CRUD, Search/Filter, Auto-seeded data, Responsive UI</small></div>
-        <div class="card"><h3>Repository</h3><small><a href="https://github.com/MdFaisalS2025/us-states-dashboard" target="_blank" rel="noopener">GitHub README (technical details)</a></small></div>
-      </div>
-
       <!-- Team -->
       <h3 class="mt24 m0">Team</h3>
       <div class="cards mt16">
-        <div class="card"><img class="img-team" src="assets/faisal.JPG" alt="Faisal"/><small>Faisal — PM & Backend</small></div>
-        <div class="card"><img class="img-team" src="assets/hongxu.JPG" alt="Hongxu"/><small>Hongxu — Data & API</small></div>
-        <div class="card"><img class="img-team" src="assets/jonathan.jpg" alt="Jonathan"/><small>Jonathan — UI/Charts</small></div>
+        <div class="card"><img class="img-team" src="assets/faisal.JPG" alt="Faisal"/><small><strong>Faisal</strong> — PM &amp; Backend</small></div>
+        <div class="card"><img class="img-team" src="assets/hongxu.JPG" alt="Hongxu"/><small><strong>Hongxu</strong> — Data &amp; API</small></div>
+        <div class="card"><img class="img-team" src="assets/jonathan.jpg" alt="Jonathan"/><small><strong>Jonathan</strong> — UI/Charts</small></div>
       </div>
 
-      <!-- ERD -->
-      <h3 class="mt24 m0">Logical Data Model (ERD)</h3>
-      <p class="mt8">Final ERD used for the project’s data design. Changes in the CRUD flow are reflected here.</p>
+      <!-- Technical README Link -->
+      <h3 class="mt24 m0">Technical Documentation</h3>
+      <p class="mt8"><a href="https://github.com/MdFaisalS2025/us-states-dashboard#readme" target="_blank" rel="noopener">GitHub Repository README</a> — includes endpoints, data model, CRUD details, and challenges.</p>
+
+      <!-- API Endpoints Used -->
+      <h3 class="mt24 m0">API Endpoints Used (Read-only)</h3>
+      <ul class="mt8">
+        <li>World Bank — GDP (current US$): <code>https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json&amp;per_page=8&amp;date=2019:2025</code></li>
+        <li>World Bank — Population: <code>https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json&amp;per_page=8&amp;date=2019:2025</code></li>
+      </ul>
+
+      <!-- Data Model / ERD -->
+      <h3 class="mt24 m0">Data Model (ERD)</h3>
+      <p class="mt8">Final logical data model for the application’s entities and relationships.</p>
       <a href="assets/logical_data_model_v3.png?v=20251031" target="_blank" rel="noopener" title="Open full-size ERD">
-        <img class="img-erd mt12" src="assets/logical_data_model_v3.png?v=20251031" alt="Logical Data Model ERD (logical_data_model_v3.png)"/>
+        <img class="img-erd mt12" src="assets/logical_data_model_v3.png?v=20251031" alt="Logical Data Model ERD"/>
       </a>
-      <small class="mt8" style="display:block;color:#a9bfcd">Tip: click the diagram to view full size.</small>
-      <!-- If your PNG is at the project root instead, use:
-        <a href="logical_data_model_v3.png?v=20251031" ...><img src="logical_data_model_v3.png?v=20251031" ...></a>
-      -->
+
+      <!-- CRUD Overview -->
+      <h3 class="mt24 m0">CRUD Implementation Overview</h3>
+      <ul class="mt8">
+        <li><strong>Create:</strong> <code>create.html</code> posts to <code>api.upsert()</code> (localStorage).</li>
+        <li><strong>Read:</strong> <code>data.html</code> renders from <code>api.list()</code> with search &amp; region filter; <code>index.html</code> aggregates totals.</li>
+        <li><strong>Update:</strong> <code>update.html</code> loads record by ID and saves via <code>api.upsert()</code>.</li>
+        <li><strong>Delete:</strong> <code>delete.html</code> removes a record via <code>api.remove()</code>.</li>
+      </ul>
+
+      <!-- Notable Challenges & Solutions -->
+      <h3 class="mt24 m0">Notable Challenges &amp; Solutions</h3>
+      <ul class="mt8">
+        <li><strong>Consistent Layout:</strong> Content felt left-aligned. Solution: enforce centered containers and panels with <code>margin-inline:auto</code> and fixed max-width.</li>
+        <li><strong>External Insights Reliability:</strong> Occasional null/blocked values. Solution: robust World Bank fetch with recent date range and graceful fallbacks.</li>
+        <li><strong>Single Source of Truth:</strong> Ensured all pages read/write via a singleton <code>api</code> service on top of <code>localStorage</code>.</li>
+        <li><strong>Charts Separation:</strong> Removed Home charts to keep the landing page focused; visualizations live in <code>charts.html</code>.</li>
+      </ul>
     </div></div>
   </main>
 
