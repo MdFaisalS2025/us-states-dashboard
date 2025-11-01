@@ -28,31 +28,36 @@
     </div>
   </header>
 
-  <main class="container section centered">
-    <div class="panel"><div class="panel-inner">
-      <label class="label" for="select-state">Choose a state</label>
-      <select id="select-state" class="input"></select>
+  <main class="container section">
+    <div class="panel">
+      <div class="panel-inner">
+        <h2 class="section-title">Update State</h2>
+        <p class="section-sub">Load an existing state and modify its details.</p>
 
-      <form id="update-form" class="form-grid mt16">
-        <div><label class="label">State ID</label><input class="input" name="id" maxlength="2"/></div>
-        <div><label class="label">State Name</label><input class="input" name="name"/></div>
-        <div>
-          <label class="label">Region</label>
-          <select class="input" name="region">
-            <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
-          </select>
-        </div>
-        <div><label class="label">Capital</label><input class="input" name="capital"/></div>
-        <div><label class="label">Population</label><input class="input" name="population" type="number"/></div>
-        <div><label class="label">GDP (USD)</label><input class="input" name="gdp" type="number"/></div>
-        <div><label class="label">Area (km²)</label><input class="input" name="area" type="number"/></div>
-        <div><label class="label"># Cities</label><input class="input" name="cities" type="number"/></div>
-        <div class="full mt8">
-          <button class="btn" type="submit">Update</button>
-          <a class="btn secondary" href="data.html">Back to Table</a>
-        </div>
-      </form>
-    </div></div>
+        <label class="label mt16" for="select-state">Choose a state</label>
+        <select id="select-state" class="input"></select>
+
+        <form id="update-form" class="form-grid mt16">
+          <div><label class="label">State ID</label><input class="input" name="id" maxlength="2"/></div>
+          <div><label class="label">State Name</label><input class="input" name="name"/></div>
+          <div>
+            <label class="label">Region</label>
+            <select class="input" name="region">
+              <option>West</option><option>South</option><option>Midwest</option><option>Northeast</option>
+            </select>
+          </div>
+          <div><label class="label">Capital</label><input class="input" name="capital"/></div>
+          <div><label class="label">Population</label><input class="input" name="population" type="number"/></div>
+          <div><label class="label">GDP (USD)</label><input class="input" name="gdp" type="number"/></div>
+          <div><label class="label">Area (km²)</label><input class="input" name="area" type="number"/></div>
+          <div><label class="label"># Cities</label><input class="input" name="cities" type="number"/></div>
+          <div class="full mt8">
+            <button class="btn" type="submit">Update</button>
+            <a class="btn secondary" href="data.html">Back to Table</a>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 
   <footer class="container footer">

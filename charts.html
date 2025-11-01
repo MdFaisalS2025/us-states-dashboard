@@ -11,6 +11,9 @@
     import { bootCharts } from './assets/charts.js?v=20251031';
     window.addEventListener('DOMContentLoaded', bootCharts);
   </script>
+  <style>
+    .chart-box{height:420px} /* give each canvas room to breathe */
+  </style>
 </head>
 <body>
   <header class="header">
@@ -29,16 +32,27 @@
     </div>
   </header>
 
-  <main class="container section centered">
-    <div class="panel"><div class="panel-inner">
-      <h3 class="m0">Top 10 States by Population</h3>
-      <canvas id="popChart" class="mt16" height="120"></canvas>
-    </div></div>
+  <main class="container section">
+    <div class="panel">
+      <div class="panel-inner">
+        <h2 class="section-title">Top 10 States by Population</h2>
+        <div class="chart-box mt16"><canvas id="popChart"></canvas></div>
+      </div>
+    </div>
 
-    <div class="panel mt24"><div class="panel-inner">
-      <h3 class="m0">Top 10 States — GDP (billions)</h3>
-      <canvas id="gdpChart" class="mt16" height="120"></canvas>
-    </div></div>
+    <div class="panel mt24">
+      <div class="panel-inner">
+        <h2 class="section-title">Top 10 States — GDP (billions)</h2>
+        <div class="chart-box mt16"><canvas id="gdpChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel mt24">
+      <div class="panel-inner">
+        <h2 class="section-title">Population Share by Region</h2>
+        <div class="chart-box mt16"><canvas id="regionPie"></canvas></div>
+      </div>
+    </div>
   </main>
 
   <footer class="container footer">

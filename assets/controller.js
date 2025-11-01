@@ -2,7 +2,7 @@ import { $, param } from './utils.js';
 import { api } from './api.js';
 import { loadExternalInsights } from './external_api.js';
 
-/* ---------- Home (no charts here) ---------- */
+/* ---------- Home (no charts) ---------- */
 export async function bootHome(){
   api.init();
   const rows = api.list();

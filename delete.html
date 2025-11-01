@@ -28,16 +28,21 @@
     </div>
   </header>
 
-  <main class="container section centered">
-    <div class="panel"><div class="panel-inner">
-      <label class="label" for="select-del">Choose a state to delete</label>
-      <select id="select-del" class="input"></select>
-      <div class="mt16">
-        <button id="btn-del" class="btn danger">Delete</button>
-        <a class="btn secondary" href="data.html">Cancel</a>
+  <main class="container section">
+    <div class="panel">
+      <div class="panel-inner">
+        <h2 class="section-title">Delete State</h2>
+        <p class="section-sub">Choose a state to remove from the dataset.</p>
+
+        <label class="label mt16" for="select-del">Choose a state</label>
+        <select id="select-del" class="input"></select>
+        <div class="mt16">
+          <button id="btn-del" class="btn danger">Delete</button>
+          <a class="btn secondary" href="data.html">Cancel</a>
+        </div>
+        <p class="mt12">This action cannot be undone.</p>
       </div>
-      <p class="mt12">This action cannot be undone.</p>
-    </div></div>
+    </div>
   </main>
 
   <footer class="container footer">
