@@ -42,27 +42,42 @@
       </div>
     </div>
 
-    <div class="panel section">
-      <div class="panel-inner">
-        <h2 class="section-title">External Insights</h2>
-        <p class="section-sub">Latest USA indicators from <span id="ext-source">World Bank Open Data</span>.</p>
-        <ul class="mt12">
-          <li>USA GDP: <strong id="ext-gdp">Loading…</strong> <small>(Year: <span id="ext-gdp-year">—</span>)</small></li>
-          <li>USA Population: <strong id="ext-pop">Loading…</strong> <small>(Year: <span id="ext-pop-year">—</span>)</small></li>
-        </ul>
-      </div>
-    </div>
+<!-- External Insights (replace this whole panel in index.html) -->
+<div class="panel section">
+  <div class="panel-inner">
+    <h2 class="section-title">External Insights</h2>
+    <p class="section-sub">Latest USA indicators from <span id="ext-source">World Bank Open Data</span>.</p>
 
-    <div class="panel section">
-      <div class="panel-inner">
-        <h2 class="section-title">Next actions</h2>
+    <div class="cards mt16">
+      <!-- GDP Card -->
+      <div class="card">
+        <h3>GDP (current US$)</h3>
+        <div class="big" id="ext-gdp">Loading…</div>
+        <small>Year: <span id="ext-gdp-year">—</span></small>
+      </div>
+
+      <!-- Population Card -->
+      <div class="card">
+        <h3>Population</h3>
+        <div class="big" id="ext-pop">Loading…</div>
+        <small>Year: <span id="ext-pop-year">—</span></small>
+      </div>
+
+      <!-- Source / Notes Card -->
+      <div class="card">
+        <h3>Source</h3>
+        <p class="section-sub" style="margin:0">
+          World Bank Open Data (read-only). Values shown are the latest available and do not affect your local data.
+        </p>
         <div class="mt12">
-          <a class="btn" href="data.html">Open Data Table</a>
-          <a class="btn secondary" href="create.html">Add a State</a>
-          <a class="btn outline" href="charts.html">View Charts</a>
+          <a class="btn outline" href="https://data.worldbank.org/indicator/NY.GDP.MKTP.CD" target="_blank" rel="noopener">GDP Indicator</a>
+          <a class="btn outline" href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank" rel="noopener">Population Indicator</a>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   </main>
 
   <footer class="container footer">
