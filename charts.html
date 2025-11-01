@@ -5,10 +5,10 @@
   <title>Charts — US States</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css?v=20251031"/>
+  <link rel="stylesheet" href="assets/styles.css?v=20251031c"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
   <script type="module">
-    import { bootCharts } from './assets/charts.js?v=20251031';
+    import { bootCharts } from './assets/charts.js?v=20251031c';
     window.addEventListener('DOMContentLoaded', bootCharts);
   </script>
   <style>.chart-box{height:420px}</style>
@@ -33,21 +33,21 @@
   <main class="container section">
     <div class="panel">
       <div class="panel-inner">
-        <h2 class="section-title">Top 10 States by Population</h2>
+        <h2 class="section-title">Bar — Top 10 States by Population</h2>
         <div class="chart-box mt16"><canvas id="popChart"></canvas></div>
       </div>
     </div>
 
     <div class="panel section">
       <div class="panel-inner">
-        <h2 class="section-title">Top 10 States — GDP (billions)</h2>
-        <div class="chart-box mt16"><canvas id="gdpChart"></canvas></div>
+        <h2 class="section-title">Line — Top 10 States by GDP (billions)</h2>
+        <div class="chart-box mt16"><canvas id="gdpLine"></canvas></div>
       </div>
     </div>
 
     <div class="panel section">
       <div class="panel-inner">
-        <h2 class="section-title">Population Share by Region</h2>
+        <h2 class="section-title">Pie — Population Share by Region</h2>
         <div class="chart-box mt16"><canvas id="regionPie"></canvas></div>
       </div>
     </div>
@@ -58,6 +58,7 @@
     <span>Built with ❤️ by Faisal, Hongxu & Jonathan</span>
   </footer>
 
+  <!-- Botpress -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js" defer></script>
   <script src="https://files.bpcontent.cloud/2025/10/15/14/20251015145259-9P277TWT.js" defer></script>
 </body>
