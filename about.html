@@ -29,7 +29,13 @@
     <div class="panel">
       <div class="panel-inner">
         <h2 class="section-title">About this Project</h2>
-        <p class="section-sub">A lightweight MVC CRUD dashboard for exploring US states. Data persists in <code>localStorage</code>. Read-only national indicators are fetched from the World Bank API.</p>
+        <p class="section-sub">
+          The <strong>US States Dashboard</strong> is a web application we built to learn how to turn a basic website into a fully functional app using the MVC (Model-View-Controller) structure. 
+          It allows users to add, edit, view, and delete data about U.S. states while keeping the information saved using <code>localStorage</code>. 
+          We also connected it with the <strong>World Bank API</strong> to show live data like GDP and population. 
+          The app includes charts made with <strong>Chart.js</strong> for clear data visualization and a chatbot for user interaction. 
+          Everything is deployed on <strong>Microsoft Azure</strong>, making it a professional and accessible web project that demonstrates real-world CRUD functionality.
+        </p>
       </div>
     </div>
 
@@ -73,9 +79,18 @@
     <div class="panel section">
       <div class="panel-inner">
         <h2 class="section-title">API Endpoints Used (Read-only)</h2>
+        <p class="section-sub">
+          We used the <strong>World Bank Open Data API</strong> to fetch real-time information about the United States. 
+          These APIs help us display up-to-date insights such as GDP and population on the homepage without manually entering data. 
+          This makes our application more dynamic and realistic by including live external data.
+        </p>
         <ul class="mt12">
-          <li>World Bank — GDP (current US$): <code>https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json&amp;per_page=8&amp;date=2019:2025</code></li>
-          <li>World Bank — Population: <code>https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json&amp;per_page=8&amp;date=2019:2025</code></li>
+          <li><strong>GDP (current US$):</strong> 
+            <code>https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD?format=json&amp;per_page=8&amp;date=2019:2025</code>
+          </li>
+          <li><strong>Population (total):</strong> 
+            <code>https://api.worldbank.org/v2/country/USA/indicator/SP.POP.TOTL?format=json&amp;per_page=8&amp;date=2019:2025</code>
+          </li>
         </ul>
       </div>
     </div>
@@ -94,11 +109,16 @@
     <div class="panel section">
       <div class="panel-inner">
         <h2 class="section-title">Overview of CRUD Implementation</h2>
+        <p class="section-sub">
+          Our project is based on the MVC pattern, and we implemented full <strong>CRUD functionality</strong> (Create, Read, Update, Delete) using JavaScript and <code>localStorage</code> for data persistence. 
+          Each page of the app performs a specific part of the CRUD process, and all data changes are synchronized automatically across the dashboard. 
+          This helped us understand how frontend logic and data storage work together in a real application.
+        </p>
         <ul class="mt12">
-          <li><strong>Create:</strong> <code>create.html</code> posts via a form into a singleton data service (<code>api.upsert()</code> → <code>localStorage</code>).</li>
-          <li><strong>Read:</strong> <code>data.html</code> renders the table with search &amp; region filter; <code>index.html</code> shows aggregates.</li>
-          <li><strong>Update:</strong> <code>update.html</code> loads by ID and persists via <code>api.upsert()</code>.</li>
-          <li><strong>Delete:</strong> <code>delete.html</code> removes via <code>api.remove()</code> and navigates back.</li>
+          <li><strong>Create:</strong> Users can add new states using the form on <code>create.html</code>. The data is saved in <code>localStorage</code> through the <code>api.upsert()</code> function.</li>
+          <li><strong>Read:</strong> The list of states is shown on <code>data.html</code>, which loads all saved data from <code>localStorage</code>. The homepage also shows summarized data and charts.</li>
+          <li><strong>Update:</strong> The <code>update.html</code> page lets users edit any existing state’s details and saves the new values back into <code>localStorage</code>.</li>
+          <li><strong>Delete:</strong> The <code>delete.html</code> page allows users to remove a state permanently using the <code>api.remove()</code> function.</li>
         </ul>
       </div>
     </div>
@@ -109,9 +129,9 @@
         <h2 class="section-title">Notable Technical Challenges &amp; Solutions</h2>
         <ul class="mt12">
           <li><strong>Consistent Centering Across Pages:</strong> Introduced <code>.panel-inner</code> with <code>max-width</code> and global centering overrides to prevent left-skew from flex parents.</li>
-          <li><strong>External Insights Reliability:</strong> Fetch recent year ranges from World Bank and gracefully handle nulls, ensuring UI never blocks.</li>
-          <li><strong>Single Source of Truth:</strong> All UI flows through a singleton <code>api</code> service on top of <code>localStorage</code> for predictable CRUD.</li>
-          <li><strong>Charts Separation:</strong> Moved all visualizations to <code>charts.html</code> to keep Home simple and fast.</li>
+          <li><strong>External Insights Reliability:</strong> Fetched recent year ranges from World Bank and handled missing data gracefully, ensuring the UI never breaks.</li>
+          <li><strong>Single Source of Truth:</strong> All UI components use one shared <code>api</code> service built on top of <code>localStorage</code> for reliable data updates.</li>
+          <li><strong>Charts Separation:</strong> Moved all charts to <code>charts.html</code> to keep the homepage clean and improve loading speed.</li>
         </ul>
       </div>
     </div>
