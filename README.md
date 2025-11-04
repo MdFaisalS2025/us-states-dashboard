@@ -1,6 +1,7 @@
 # US States Dashboard
 
-**Live Website:** [https://mdfaisals2025.github.io/us-states-dashboard/](https://mdfaisals2025.github.io/us-states-dashboard/)  
+**Live Website:** [https://usstatesdashboard-dxgda4c9gyd2edag.brazilsouth-01.azurewebsites.net](https://usstatesdashboard-dxgda4c9gyd2edag.brazilsouth-01.azurewebsites.net)
+
 **GitHub Repository:** [https://github.com/MdFaisalS2025/us-states-dashboard](https://github.com/MdFaisalS2025/us-states-dashboard)
 
 ---
