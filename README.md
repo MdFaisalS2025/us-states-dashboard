@@ -103,7 +103,7 @@ The bot appears as a floating blue icon on every page for consistent accessibili
 
 ## Data Model (ERD)
 
-![ERD Diagram](assets/logical_data_model_v3.png)
+![ERD Diagram](wwwroot/assets/logical_data_model_v3.png)
 
 The ERD above shows the logical structure connecting **Region**, **State**, and **Metrics** tables.  
 It ensures normalization and clarity in the application’s data relationships.
